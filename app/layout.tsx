@@ -3,6 +3,18 @@ import { Geist, Geist_Mono, Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
+import { Metadata, Viewport } from "next";
+import PwaRegister from '@/components/PwaRegister'
+
+export const metadata: Metadata = {
+  title: 'Telehealth App',
+  description: 'My first Next.js PWA',
+  manifest: '/manifest.webmanifest',
+}
+
+export const viewport: Viewport = {
+  themeColor: '#000000',
+}
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'})
 
@@ -23,6 +35,7 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
       <body>
+        <PwaRegister />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
