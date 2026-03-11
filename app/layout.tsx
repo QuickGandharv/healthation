@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { Metadata, Viewport } from "next";
 import PwaRegister from '@/components/PwaRegister'
+import Header from "@/components/common/header";
 
 export const metadata: Metadata = {
   title: 'Telehealth App',
