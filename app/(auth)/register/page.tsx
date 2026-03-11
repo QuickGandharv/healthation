@@ -1,14 +1,23 @@
 // auth/register/page.jsx
 'use client';
 
-import AuthForm from '@/components/auth/AuthForm';
-import AuthLayout from '@/components/auth/AuthLayout';
-import SocialLogin from '@/components/auth/SocialLogin';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import AuthForm from '@/components/auth/AuthForm';
+import SocialLogin from '@/components/auth/SocialLogin';
+import AuthLayout from '@/components/auth/AuthLayout';
 
+interface RegisterFormData {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
 
 const RegisterPage = () => {
     const router = useRouter();
+    const [imageError, setImageError] = useState(false);
 
     const fields = [
         {
@@ -41,30 +50,45 @@ const RegisterPage = () => {
         }
     ];
 
-    const handleRegister = async (data) => {
-        // Implement registration logic here
+    const handleRegister = async (data: RegisterFormData) => {
         console.log('Register data:', data);
-
-        // Example API call
-        // const response = await fetch('/api/register', {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify(data)
-        // });
-
-        // if (!response.ok) {
-        //   const error = await response.json();
-        //   throw new Error(error.message);
-        // }
-
-        // router.push('/auth/verify-email');
+        // API call will go here
     };
 
     return (
-        <AuthLayout
-            title="Create Account"
-            subtitle="Join us today and get started"
-        >
+        <AuthLayout title="" subtitle="">
+            {/* Header with Logo */}
+            <div className="text-center mb-8">
+                {/* Logo Section */}
+                <div className="flex justify-center">
+                    {!imageError ? (
+                        <Image
+                            src="/assets/icon/logo-light.png"
+                            alt="Company Logo"
+                            width={120}
+                            height={40}
+                            priority
+                            className="w-auto h-16"
+                            onError={() => setImageError(true)}
+                            unoptimized
+                        />
+                    ) : (
+                        /* Fallback Text Logo */
+                        <div className="flex items-center space-x-3">
+                            <div className="h-12 w-12 rounded-xl bg-primary flex items-center justify-center shadow-md">
+                                <span className="text-2xl font-bold text-primary-foreground">A</span>
+                            </div>
+                            <span className="text-2xl font-bold text-foreground">AppName</span>
+                        </div>
+                    )}
+                </div>
+
+                <p className="text-sm text-muted-foreground mt-3">
+                    Join us today and get started
+                </p>
+            </div>
+
+            {/* Registration Form */}
             <AuthForm
                 fields={fields}
                 buttonText="Sign Up"
@@ -75,6 +99,8 @@ const RegisterPage = () => {
                     linkText: "Sign in"
                 }}
             />
+
+            {/* Social Login Options */}
             <SocialLogin />
         </AuthLayout>
     );

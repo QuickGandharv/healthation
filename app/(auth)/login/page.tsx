@@ -1,14 +1,24 @@
-// auth/login/page.jsx
+// auth/login/page.jsx - Complete fixed version
 'use client';
 
+import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import AuthForm from '@/components/auth/AuthForm';
-import AuthLayout from '@/components/auth/AuthLayout';
 import SocialLogin from '@/components/auth/SocialLogin';
-import { useRouter } from 'next/navigation';
+import AuthLayout from '@/components/auth/AuthLayout';
 
+interface LoginFormData {
+    email: string;
+    password: string;
+}
 
 const LoginPage = () => {
-    const router = useRouter();
+    const [mounted, setMounted] = useState(false);
+    const [imageError, setImageError] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const fields = [
         {
@@ -27,17 +37,43 @@ const LoginPage = () => {
         }
     ];
 
-    const handleLogin = async (data) => {
-
+    const handleLogin = async (data : LoginFormData) => {
         console.log('Login data:', data);
-
     };
 
     return (
-        <AuthLayout
-            title="Welcome Back"
-            subtitle="Sign in to your account to continue"
-        >
+        <AuthLayout title="" subtitle="">
+            <div className="text-center mb-6">
+                {/* Logo */}
+                <div className="flex justify-center mb-4">
+                    {mounted && (
+                        <Image
+                            src="/assets/icon/logo-light.png"
+                            alt="Company Logo"
+                            width={120}
+                            height={40}
+                            priority
+                            className="w-auto h-16"
+                            onError={() => setImageError(true)}
+                            unoptimized
+                        />
+                    )}
+                </div>
+
+                {/* Fallback if image fails */}
+                {imageError && (
+                    <div className="flex justify-center mb-4">
+                        <div className="h-16 w-16 rounded-xl bg-primary flex items-center justify-center">
+                            <span className="text-2xl font-bold text-primary-foreground">A</span>
+                        </div>
+                    </div>
+                )}
+
+                <p className="text-sm text-muted-foreground">
+                    Sign in to your account to continue
+                </p>
+            </div>
+
             <AuthForm
                 fields={fields}
                 buttonText="Sign In"
