@@ -1,7 +1,9 @@
-// auth/login/page.jsx
 'use client';
 
 import { useRouter } from 'next/navigation';
+import AuthLayout from './AuthLayout';
+import AuthForm from './AuthForm';
+import SocialLogin from './SocialLogin';
 
 
 const LoginPage = () => {
@@ -24,7 +26,7 @@ const LoginPage = () => {
         }
     ];
 
-    const handleLogin = async (data) => {
+    const handleLogin = async (data: Record<string, any>) => {
         // Implement login logic here
         console.log('Login data:', data);
         // router.push('/dashboard');

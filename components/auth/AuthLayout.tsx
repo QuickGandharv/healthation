@@ -1,7 +1,14 @@
 // auth/components/AuthLayout.jsx
 import Link from 'next/link';
+import { ReactNode } from 'react';
 
-const AuthLayout = ({ title, subtitle, children }) => {
+interface AuthLayoutProps {
+    title: string;
+    subtitle?: string;
+    children: ReactNode;
+}
+
+const AuthLayout = ({ title, subtitle, children }: AuthLayoutProps) => {
     return (
         <div className="min-h-screen">
             <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">

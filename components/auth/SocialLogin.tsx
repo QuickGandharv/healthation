@@ -1,11 +1,10 @@
-// auth/components/SocialLogin.jsx
 'use client';
 
-import { FcGoogle } from 'react-icons/fc';
-import { FaGithub } from 'react-icons/fa';
+// import { FcGoogle } from 'react-icons/fc';
+// import { FaGithub } from 'react-icons/fa';
 
 const SocialLogin = () => {
-    const handleSocialLogin = (provider) => {
+    const handleSocialLogin = (provider: string) => {
         // Implement social login logic here
         console.log(`Logging in with ${provider}`);
     };
@@ -26,7 +25,7 @@ const SocialLogin = () => {
                     onClick={() => handleSocialLogin('google')}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                    <FcGoogle className="h-5 w-5" />
+                    {/* <FcGoogle className="h-5 w-5" /> */}
                     <span className="text-sm font-medium text-gray-700">Google</span>
                 </button>
 
@@ -34,7 +33,7 @@ const SocialLogin = () => {
                     onClick={() => handleSocialLogin('github')}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                    <FaGithub className="h-5 w-5 text-gray-900" />
+                    {/* <FaGithub className="h-5 w-5 text-gray-900" /> */}
                     <span className="text-sm font-medium text-gray-700">GitHub</span>
                 </button>
             </div>

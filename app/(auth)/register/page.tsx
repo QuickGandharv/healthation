@@ -1,4 +1,3 @@
-// auth/register/page.jsx
 'use client';
 
 import Image from 'next/image';
@@ -7,6 +6,7 @@ import { useState } from 'react';
 import AuthForm from '@/components/auth/AuthForm';
 import SocialLogin from '@/components/auth/SocialLogin';
 import AuthLayout from '@/components/auth/AuthLayout';
+
 
 interface RegisterFormData {
     name: string;
@@ -18,6 +18,7 @@ interface RegisterFormData {
 const RegisterPage = () => {
     const router = useRouter();
     const [imageError, setImageError] = useState(false);
+
 
     const fields = [
         {

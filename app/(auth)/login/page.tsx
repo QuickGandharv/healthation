@@ -1,4 +1,3 @@
-// auth/login/page.jsx - Complete fixed version
 'use client';
 
 import Image from 'next/image';
