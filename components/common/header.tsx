@@ -120,15 +120,15 @@ export default function Header({
       badge: 3, // Example badge count
     },
     {
+      title: 'Appointments',
+      href: '/appointments',
+      icon: <UserIcon className="h-4 w-4" />,
+    },
+    {
       title: 'Notifications',
       href: '/notifications',
       icon: <Bell className="h-4 w-4" />,
       badge: unreadCount,
-    },
-    {
-      title: 'Profile',
-      href: '/profile',
-      icon: <UserIcon className="h-4 w-4" />,
     },
   ];
 
