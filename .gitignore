@@ -29,8 +29,25 @@ yarn-error.log*
 pnpm-debug.log*
 
 # env files
+.env
 .env*.local
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# IDE
+.vscode/
+.idea/
+
+# build and cache
+dist/
+.turbo/
+.swc/
+
+# project files
+package.json
+
+# OS files
+.DS_Store
+Thumbs.db
