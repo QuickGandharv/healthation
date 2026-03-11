@@ -140,6 +140,14 @@
   --font-weight-medium: 500;
   --font-weight-normal: 400;
   --ring: #013220;
+  --success: #1ABE17;
+  --success-light: #E8F9E8;
+  --warning: #EAB300;
+  --warning-light: #FEF8EA;
+  --danger: #FF0000;
+  --danger-light: #FDE9ED;
+  --info: #48A3D7;
+  --info-light: #EDF6FB;
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -234,7 +242,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-@layer base {
+/* @layer base {
   * {
     @apply border-border outline-ring/50;
     }
@@ -244,4 +252,65 @@
   html {
     @apply font-sans;
     }
+} */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  /**
+  * Default typography styles for HTML elements (h1-h4, p, label, button, input).
+  * These are in @layer base, so Tailwind utility classes (like text-sm, text-lg) automatically override them.
+  */
+
+  html {
+    font-size: var(--font-size);
+  }
+
+  h1 {
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h2 {
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  h4 {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  label {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  button {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+  }
+
+  input {
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: 1.5;
+  }
 }

@@ -1,59 +1,3 @@
-// import Image from "next/image"
-// import icon from "@/public/assets/icon/app-logo.png"
-// import Link from "next/link"
-
-// export default function Header() {
-//   return (
-//     <header className="sticky top-0 z-50 w-full border-b border-border bg-white p-4 text-black shadow-sm">
-//       <div className="container mx-auto flex items-center justify-between gap-4">
-//         <div className="flex flex-row items-center gap-1.5">
-//           <Image src={icon} alt="Logo" width={40} height={40} />
-//           <div>
-//             <h1 className="text-sm font-bold">Telehealth App</h1>
-//             <p className="text-xs">Your health, our priority</p>
-//           </div>
-//         </div>
-
-//         <nav>
-//           <ul className="mt-2 flex flex-row gap-4">
-//             <li>
-//               <Link href="/" className="text-sm hover:underline">
-//                 Home
-//               </Link>
-//             </li>
-//             <li>
-//               <Link href="/dashboard" className="text-sm hover:underline">
-//                 Dashboard
-//               </Link>
-//             </li>
-//             <li>
-//               <Link href="/profile" className="text-sm hover:underline">
-//                 My Schedule
-//               </Link>
-//             </li>
-//             <li>
-//               <Link href="/settings" className="text-sm hover:underline">
-//                 Notification
-//               </Link>
-//             </li>
-//           </ul>
-//         </nav>
-
-//         <div>
-//           <div className="size-12 rounded-full bg-green-300">
-//             <span className="flex h-full w-full items-center justify-center text-base font-bold text-white">
-//               JD
-//             </span>
-//           </div>
-//         </div>
-//       </div>
-//     </header>
-//   )
-// }
-
-
-
-// components/layout/header.tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -84,8 +28,10 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import  useMediaQuery from '@/hooks/use-media-query';
+import icon from '@/public/assets/icon/logo-light.png';
 
 import type { User, Notification, NavItem } from '@/types/header';
+import Image from 'next/image';
 
 interface HeaderProps {
   user?: User;
@@ -197,13 +143,14 @@ export default function Header({
         {/* Logo and Brand */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+            {/* <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-primary-foreground font-bold text-lg">HP</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-semibold leading-tight">HealthCare Pro</h1>
               <p className="text-xs text-muted-foreground">Telehealth Platform</p>
-            </div>
+            </div> */}
+            <Image src={icon} alt="Logo" width={180} height={32} />
           </Link>
         </div>
 
