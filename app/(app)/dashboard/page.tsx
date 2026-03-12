@@ -17,7 +17,7 @@ export default function Dashboard() {
   const stats = [
     { label: "Total Appointments", value: "248", icon: Calendar, change: "+12%", color: "text-blue-600" },
     { label: "Today's Sessions", value: "8", icon: Clock, change: "+3", color: "text-emerald-600" },
-    { label: "Active Patients", value: "156", icon: Users, change: "+8%", color: "text-purple-600" },
+    { label: "New Patients", value: "156", icon: Users, change: "+8%", color: "text-purple-600" },
     { label: "Average Rating", value: "4.9", icon: Star, change: "+0.2", color: "text-amber-500" },
   ];
 
