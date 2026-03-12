@@ -27,7 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
-import  useMediaQuery from '@/hooks/use-media-query';
+import useMediaQuery from '@/hooks/use-media-query';
 import icon from '@/public/assets/icon/logo-light.png';
 
 import type { User, Notification, NavItem } from '@/types/header';
@@ -40,17 +40,19 @@ interface HeaderProps {
   onLogout?: () => void;
 }
 
-export default function Header({ 
-  user, 
-  notifications = [], 
+export default function Header({
+  user,
+  notifications = [],
   onNotificationClick,
-  onLogout 
+  onLogout
 }: HeaderProps) {
   const pathname = usePathname();
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
 
   // Navigation items
   const navItems: NavItem[] = [
@@ -92,6 +94,12 @@ export default function Header({
     setUnreadCount(notifications.filter(n => !n.read).length);
   }, [notifications]);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   // Get user initials for avatar fallback
   const getUserInitials = () => {
     if (!user?.name) return 'U';
@@ -107,7 +115,7 @@ export default function Header({
   const formatNotificationTime = (date: Date) => {
     const now = new Date();
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
-    
+
     if (diffInMinutes < 1) return 'Just now';
     if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
@@ -134,8 +142,8 @@ export default function Header({
     <header
       className={cn(
         'sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm',
-        isScrolled 
-          ? 'bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b' 
+        isScrolled
+          ? 'bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b'
           : 'bg-background'
       )}
     >
@@ -171,7 +179,7 @@ export default function Header({
                 {item.icon}
                 <span>{item.title}</span>
                 {item.badge ? (
-                  <Badge 
+                  <Badge
                     variant={pathname === item.href ? 'secondary' : 'default'}
                     className="ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center"
                   >
@@ -227,8 +235,8 @@ export default function Header({
                       <p className="text-xs text-muted-foreground line-clamp-2">
                         {notification.message}
                       </p>
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className={cn('mt-1 text-xs', getNotificationIcon(notification.type))}
                       >
                         {notification.type}
@@ -290,7 +298,7 @@ export default function Header({
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
+              <DropdownMenuItem
                 className="cursor-pointer text-destructive focus:text-destructive"
                 onClick={onLogout}
               >

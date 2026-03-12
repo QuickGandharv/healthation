@@ -1,11 +1,14 @@
+// components/auth/AuthForm.tsx
 'use client';
 
-import { useForm, Path } from 'react-hook-form';
+import { useForm, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
 import { useState } from 'react';
+// ✅ Import your custom InputField
 import { Eye, EyeOff } from 'lucide-react';
+import InputField from '../custom/inputfield';
 
 interface FieldProps {
     name: string;
@@ -18,14 +21,14 @@ interface FieldProps {
 interface AuthFormProps<T extends Record<string, any>> {
     fields: FieldProps[];
     buttonText: string;
-    onSubmit: (data: T) => Promise<void>; 
+    onSubmit: (data: T) => Promise<void>;
     showForgotPassword?: boolean;
     alternateLink?: {
         text: string;
         href: string;
         linkText: string;
     } | null;
-    defaultValues?: Partial<T>; 
+    defaultValues?: Partial<T>;
 }
 
 function AuthForm<T extends Record<string, any>>({
@@ -77,18 +80,19 @@ function AuthForm<T extends Record<string, any>>({
 
     type FormValues = z.infer<typeof finalSchema>;
 
-    const {
-        register,
-        handleSubmit,
-        formState: { errors, isSubmitting },
-        setError,
-    } = useForm<FormValues>({
+    const methods = useForm<FormValues>({
         resolver: zodResolver(finalSchema),
         defaultValues: fields.reduce((acc, field) => ({
             ...acc,
             [field.name]: (defaultValues as any)[field.name] || ''
         }), {}) as FormValues
     });
+
+    const {
+        handleSubmit,
+        formState: { isSubmitting },
+        setError,
+    } = methods;
 
     const togglePasswordVisibility = (fieldName: string) => {
         setShowPasswords(prev => ({
@@ -104,7 +108,7 @@ function AuthForm<T extends Record<string, any>>({
 
     const onSubmitHandler = async (data: FormValues) => {
         try {
-            await onSubmit(data as T);  // ✅ Cast to T
+            await onSubmit(data as T);
         } catch (error: any) {
             setError('root', {
                 type: 'manual',
@@ -113,89 +117,89 @@ function AuthForm<T extends Record<string, any>>({
         }
     };
 
-    // Helper function to get error message
-    const getFieldError = (fieldName: string): string | undefined => {
-        const error = errors[fieldName as keyof typeof errors];
-        return error?.message;
-    };
-
     return (
-        <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-5">
-            {errors.root && (
-                <div className="bg-destructive/10 text-destructive p-3 rounded-lg text-sm border border-destructive/20">
-                    {errors.root.message}
-                </div>
-            )}
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-5">
+                {/* Root form error */}
+                {methods.formState.errors.root && (
+                    <div className="bg-destructive/10 text-destructive p-3 rounded-lg text-sm border border-destructive/20">
+                        {methods.formState.errors.root.message}
+                    </div>
+                )}
 
-            {fields.map((field) => {
-                const fieldError = getFieldError(field.name);
+                {fields.map((field) => (
+                    <div key={field.name} className="relative">
+                        {/* ✅ Using your custom InputField */}
+                        <InputField
+                            name={field.name}
+                            label={field.label}
+                            type={getInputType(field)}
+                            placeholder={field.placeholder}
+                            required={field.required}
+                            disabled={isSubmitting}
+                        />
 
-                return (
-                    <div key={field.name}>
-                        <label className="block text-sm font-medium text-muted-foreground mb-1">
-                            {field.label}
-                            {field.required && <span className="text-destructive ml-1">*</span>}
-                        </label>
-
-                        <div className="relative">
-                            <input
-                                id={field.name}
-                                type={getInputType(field)}
-                                placeholder={field.placeholder}
-                                className={`w-full px-4 py-2 bg-accent/30 text-foreground border rounded-lg transition ${fieldError
-                                        ? 'border-destructive focus:ring-destructive'
-                                        : 'border-border'
-                                    } ${field.type === 'password' ? 'pr-10' : ''}`}
-                                {...register(field.name as Path<FormValues>)}
-                                disabled={isSubmitting}
-                            />
-
-                            {field.type === 'password' && (
-                                <button
-                                    type="button"
-                                    onClick={() => togglePasswordVisibility(field.name)}
-                                    className="absolute right-3 top-1/2 -translate-y-1/2"
-                                    tabIndex={-1}
-                                >
-                                    {showPasswords[field.name] ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                                </button>
-                            )}
-                        </div>
-
-                        {fieldError && (
-                            <p className="mt-1 text-xs text-destructive">
-                                {fieldError}
-                            </p>
+                        {/* Password visibility toggle button - positioned absolutely */}
+                        {field.type === 'password' && (
+                            <button
+                                type="button"
+                                onClick={() => togglePasswordVisibility(field.name)}
+                                className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+                                tabIndex={-1}
+                            >
+                                {showPasswords[field.name] ? (
+                                    <EyeOff className="h-4 w-4" />
+                                ) : (
+                                    <Eye className="h-4 w-4" />
+                                )}
+                            </button>
                         )}
                     </div>
-                );
-            })}
+                ))}
 
-            {showForgotPassword && (
-                <div className="text-right">
-                    <Link href="/forgot-password" className="text-sm text-primary hover:text-primary/80">
-                        Forgot password?
-                    </Link>
-                </div>
-            )}
+                {/* Forgot Password Link */}
+                {showForgotPassword && (
+                    <div className="text-right">
+                        <Link
+                            href="/forgot-password"
+                            className="text-sm text-primary hover:text-primary/80 transition-colors"
+                        >
+                            Forgot password?
+                        </Link>
+                    </div>
+                )}
 
-            <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-2.5 rounded-lg disabled:opacity-50"
-            >
-                {isSubmitting ? 'Processing...' : buttonText}
-            </button>
+                {/* Submit Button */}
+                <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-medium py-2.5 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    {isSubmitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                            <svg className="animate-spin h-5 w-5 text-primary-foreground" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Processing...
+                        </span>
+                    ) : buttonText}
+                </button>
 
-            {alternateLink && (
-                <p className="text-center text-sm text-muted-foreground">
-                    {alternateLink.text}{' '}
-                    <Link href={alternateLink.href} className="text-primary hover:text-primary/80">
-                        {alternateLink.linkText}
-                    </Link>
-                </p>
-            )}
-        </form>
+                {/* Alternate Link */}
+                {alternateLink && (
+                    <p className="text-center text-sm text-muted-foreground">
+                        {alternateLink.text}{' '}
+                        <Link
+                            href={alternateLink.href}
+                            className="text-primary hover:text-primary/80 font-medium transition-colors"
+                        >
+                            {alternateLink.linkText}
+                        </Link>
+                    </p>
+                )}
+            </form>
+        </FormProvider>
     );
 }
 
