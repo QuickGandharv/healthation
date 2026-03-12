@@ -3,12 +3,14 @@
 import Header from '@/components/common/header';
 // app/layout.tsx or app/dashboard/layout.tsx
 import { mockUser, mockNotifications } from '@/lib/mock-data';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const handleNotificationClick = (notification: any) => {
     // Handle notification click
     console.log('Notification clicked:', notification);
@@ -16,9 +18,11 @@ export default function DashboardLayout({
   };
 
   const handleLogout = async () => {
-    // Handle logout logic
-    console.log('Logging out...');
-    // Add your logout logic here
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    document.cookie = 'token=; path=/; max-age=0; samesite=lax';
+
+    router.push('/login');
   };
 
   return (
