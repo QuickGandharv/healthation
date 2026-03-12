@@ -56,7 +56,7 @@ const InputField: React.FC<InputFieldProps> = ({
         disabled={disabled}
         aria-invalid={!!errorMessage}
         className={`font-source-sans bg-accent/30 text-foreground border ${errorMessage ? "border-destructive" : "border-border"
-          } focus:ring-2 focus:ring-primary focus:border-transparent ${type === 'password' ? 'pr-10' : ''}`}
+          } focus:ring-1 focus:ring-primary focus:border-transparent ${type === 'password' ? 'pr-10' : ''}`}
       />
 
       {errorMessage && (
