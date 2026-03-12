@@ -6,6 +6,7 @@ import { useState } from 'react';
 import AuthForm from '@/components/auth/AuthForm';
 import AuthLayout from '@/components/auth/AuthLayout';
 
+
 interface RegisterFormData {
     name: string;
     email: string;
@@ -16,6 +17,7 @@ interface RegisterFormData {
 const RegisterPage = () => {
     const router = useRouter();
     const [imageError, setImageError] = useState(false);
+
 
     const fields = [
         {

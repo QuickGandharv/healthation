@@ -1,10 +1,9 @@
 import Link from 'next/link';
-
-// ✅ Define props type
+import { ReactNode } from 'react';
 interface AuthLayoutProps {
     title: string;
-    subtitle?: string;  // Optional
-    children: React.ReactNode;
+    subtitle?: string;
+    children: ReactNode;
 }
 
 const AuthLayout = ({ title, subtitle, children }: AuthLayoutProps) => {

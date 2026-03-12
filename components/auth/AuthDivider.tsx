@@ -1,9 +1,9 @@
 'use client';
-
-import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import AuthForm from '@/components/auth/AuthForm';
-import AuthLayout from '@/components/auth/AuthLayout';
+import AuthLayout from './AuthLayout';
+import Image from 'next/image';
+import AuthForm from './AuthForm';
 
 // ✅ Define type
 interface LoginFormData {
@@ -36,8 +36,8 @@ const LoginPage = () => {
         }
     ];
 
-    // ✅ Fix: Add type to data parameter
     const handleLogin = async (data: LoginFormData) => {
+        // Implement login logic here
         console.log('Login data:', data);
         // router.push('/dashboard');
     };
