@@ -1,10 +1,8 @@
-// auth/login/page.jsx - Complete fixed version
 'use client';
 
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import AuthForm from '@/components/auth/AuthForm';
-import SocialLogin from '@/components/auth/SocialLogin';
 import AuthLayout from '@/components/auth/AuthLayout';
 
 interface LoginFormData {
@@ -85,7 +83,6 @@ const LoginPage = () => {
                     linkText: "Sign up"
                 }}
             />
-            <SocialLogin />
         </AuthLayout>
     );
 };

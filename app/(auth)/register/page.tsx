@@ -1,11 +1,9 @@
-// auth/register/page.jsx
 'use client';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import AuthForm from '@/components/auth/AuthForm';
-import SocialLogin from '@/components/auth/SocialLogin';
 import AuthLayout from '@/components/auth/AuthLayout';
 
 interface RegisterFormData {
@@ -99,9 +97,6 @@ const RegisterPage = () => {
                     linkText: "Sign in"
                 }}
             />
-
-            {/* Social Login Options */}
-            <SocialLogin />
         </AuthLayout>
     );
 };

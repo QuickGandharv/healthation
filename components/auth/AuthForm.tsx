@@ -1,7 +1,6 @@
-// components/auth/AuthForm.tsx - Complete with Generic
 'use client';
 
-import { useForm, Path, FieldValues } from 'react-hook-form';
+import { useForm, Path } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import Link from 'next/link';
@@ -19,14 +18,14 @@ interface FieldProps {
 interface AuthFormProps<T extends Record<string, any>> {
     fields: FieldProps[];
     buttonText: string;
-    onSubmit: (data: T) => Promise<void>;  // ✅ Generic type
+    onSubmit: (data: T) => Promise<void>; 
     showForgotPassword?: boolean;
     alternateLink?: {
         text: string;
         href: string;
         linkText: string;
     } | null;
-    defaultValues?: Partial<T>;  // ✅ Generic type
+    defaultValues?: Partial<T>; 
 }
 
 function AuthForm<T extends Record<string, any>>({
@@ -143,7 +142,7 @@ function AuthForm<T extends Record<string, any>>({
                                 id={field.name}
                                 type={getInputType(field)}
                                 placeholder={field.placeholder}
-                                className={`w-full px-4 py-2 bg-accent/30 text-foreground border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition ${fieldError
+                                className={`w-full px-4 py-2 bg-accent/30 text-foreground border rounded-lg transition ${fieldError
                                         ? 'border-destructive focus:ring-destructive'
                                         : 'border-border'
                                     } ${field.type === 'password' ? 'pr-10' : ''}`}
