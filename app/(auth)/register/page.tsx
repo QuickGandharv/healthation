@@ -10,6 +10,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { Mail, CheckCircle, ArrowLeft } from 'lucide-react';
+import axios from 'axios';
 
 interface RegisterFormData {
     name: string;
@@ -24,6 +25,7 @@ interface RegisterFormData {
 }
 
 const RegisterPage = () => {
+
     const router = useRouter();
     const [imageError, setImageError] = useState(false);
     
@@ -36,6 +38,7 @@ const RegisterPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [resendDisabled, setResendDisabled] = useState(false);
     const [countdown, setCountdown] = useState(0);
+    const [errorMessage, setErrorMessage] = useState(""); 
 
     // Registration form data
     const [formData, setFormData] = useState<RegisterFormData>({
@@ -54,20 +57,52 @@ const RegisterPage = () => {
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        
+
+        if (!email) {
+            setErrorMessage("Please enter your email");
+            setIsLoading(false);
+            return;
+        }
+
         try {
             // API call to send OTP
-            console.log('Sending OTP to:', email);
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API
+        console.log('Sending OTP to:', email);
+        
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
+            {
+                email: email,
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        console.log("API Response:", response.data);
+
+        if (response.data.success) {
+            // Show success message (optional)
+            console.log(response.data.message);
+            
+            // Store email in localStorage if needed for verification step
+            localStorage.setItem("registrationEmail", response.data.data.email);
             
             setShowOtp(true); // Show OTP field after email submit
             startCountdown();
-        } catch (error) {
+        } else {
+            // Handle unsuccessful response
+            setErrorMessage(response.data.message || "Failed to send verification code");
+        }
+
+        } catch(error) {
             console.error('Error sending OTP:', error);
+            setErrorMessage("Failed to send OTP. Please try again.");
         } finally {
             setIsLoading(false);
         }
-    };
+    }
 
     // Start countdown for resend
     const startCountdown = () => {
@@ -102,28 +137,76 @@ const RegisterPage = () => {
 
     // Handle OTP verification
     const handleOtpVerify = async () => {
-        setIsLoading(true);
-        setOtpError('');
+    setIsLoading(true);
+    setOtpError('');
 
-        const otpString = otp.join('');
-        if (otpString.length !== 6) {
-            setOtpError('Please enter complete 6-digit OTP');
-            setIsLoading(false);
-            return;
-        }
+    const otpString = otp.join('');
+    if (otpString.length !== 6) {
+        setOtpError('Please enter complete 6-digit OTP');
+        setIsLoading(false);
+        return;
+    }
 
-        try {
-            // API call to verify OTP
-            console.log('Verifying OTP:', otpString);
-            await new Promise(resolve => setTimeout(resolve, 1000));
+    try {
+        console.log('Verifying OTP:', otpString);
+        
+        // Get the email from localStorage that was stored during registration
+        const registeredEmail = localStorage.getItem("registrationEmail") || email;
+        
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-email`, // Adjust endpoint as per your API
+            {
+                email: registeredEmail,
+                otp: otpString
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            }
+        );
+
+        console.log("OTP Verification Response:", response.data);
+
+        if (response.data.success) {
+            // Store verification token if provided by API
+            if (response.data.token) {
+                localStorage.setItem("verificationToken", response.data.token);
+            }
             
             setIsEmailVerified(true); // Mark email as verified
-        } catch (error) {
-            setOtpError('Invalid OTP. Please try again.');
-        } finally {
-            setIsLoading(false);
+            
+            // Clear OTP fields
+            setOtp(['', '', '', '', '', '']);
+            
+            // Optional: Show success message
+            console.log("Email verified successfully");
+        } else {
+            setOtpError(response.data.message || "Invalid OTP. Please try again.");
         }
-    };
+    } catch (error: any) {
+        console.error('OTP Verification Error:', error);
+        
+        if (error.response) {
+            // Handle specific error responses
+            if (error.response.status === 400) {
+                setOtpError(error.response.data?.message || "Invalid OTP");
+            } else if (error.response.status === 401) {
+                setOtpError("OTP expired. Please request a new one.");
+            } else if (error.response.status === 404) {
+                setOtpError("Verification session not found. Please register again.");
+            } else {
+                setOtpError(error.response.data?.message || "Verification failed");
+            }
+        } else if (error.request) {
+            setOtpError("No response from server. Please check your connection.");
+        } else {
+            setOtpError("An error occurred. Please try again.");
+        }
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     // Handle resend OTP
     const handleResendOtp = async () => {
@@ -143,10 +226,85 @@ const RegisterPage = () => {
 
     // Handle registration submission
     const handleRegister = async (data: RegisterFormData) => {
-        console.log('Register data:', { ...data, email });
-        // API call will go here
-        router.push('/login?registered=true');
-    };
+    setIsLoading(true);
+    setErrorMessage("");
+
+    try {
+        const registeredEmail = localStorage.getItem("registrationEmail") || email;
+
+        const requestData = {
+            email: registeredEmail,
+            password: data.password,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            gender: data.gender.toLowerCase(), // Ensure it matches API expected format
+            date_of_birth: data.dateOfBirth,
+            mobile_no: data.mobileNo,
+        };
+
+        console.log('Complete Profile Data:', requestData);
+
+        const response = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/auth/complete-profile`, // Updated endpoint
+            requestData,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    // If you received a verification token, include it
+                    ...(localStorage.getItem("verificationToken") && {
+                        "Authorization": `Bearer ${localStorage.getItem("verificationToken")}`
+                    })
+                },
+            }
+        );
+
+        console.log("Registration Response:", response.data);
+
+        if (response.data.success) {
+            // Store user data and token
+            localStorage.setItem("token", response.data.data.token);
+            localStorage.setItem("user", JSON.stringify(response.data.data.user));
+            localStorage.setItem("patient", JSON.stringify(response.data.data.patient));
+            
+            // Set cookie for middleware
+            document.cookie = `token=${response.data.data.token}; path=/; max-age=604800; samesite=lax`;
+            
+            // Clear registration data from localStorage
+            localStorage.removeItem("registrationEmail");
+            localStorage.removeItem("verificationToken");
+            localStorage.removeItem("registrationTimestamp");
+            
+            // Redirect to dashboard
+            router.push("/dashboard");
+        } else {
+            setErrorMessage(response.data.message || "Registration failed");
+        }
+    } catch (error: any) {
+        console.error('Registration Error:', error);
+        
+        if (error.response) {
+            // Handle validation errors
+            if (error.response.status === 422) {
+                const validationErrors = error.response.data.errors;
+                if (validationErrors) {
+                    // If you have field-specific errors, you can set them accordingly
+                    const errorMessages = Object.values(validationErrors).join(', ');
+                    setErrorMessage(errorMessages);
+                } else {
+                    setErrorMessage(error.response.data?.message || "Validation failed");
+                }
+            } else {
+                setErrorMessage(error.response.data?.message || "Registration failed");
+            }
+        } else if (error.request) {
+            setErrorMessage("No response from server. Please check your connection.");
+        } else {
+            setErrorMessage("An error occurred. Please try again.");
+        }
+    } finally {
+        setIsLoading(false);
+    }
+};
 
     // Fields for registration form (only shown after email verification)
     const registrationFields = [
