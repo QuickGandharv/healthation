@@ -162,7 +162,7 @@ function AppointmentsContent() {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedFilter, setSelectedFilter] = useState("all")
   const [selectedType, setSelectedType] = useState("all")
-  const [activeTab, setActiveTab] = useState("all")
+  const [activeTab, setActiveTab] = useState("today")
   const [currentPage, setCurrentPage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
   const itemsPerPage = 9
@@ -178,7 +178,7 @@ function AppointmentsContent() {
     {
       id: 1,
       patient: "Michael Chen",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 45,
       gender: "Male",
       date: "March 11, 2026",
@@ -290,7 +290,7 @@ function AppointmentsContent() {
     {
       id: 2,
       patient: "Emma Wilson",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 32,
       gender: "Female",
       date: "March 11, 2026",
@@ -405,7 +405,7 @@ function AppointmentsContent() {
     {
       id: 3,
       patient: "James Rodriguez",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 28,
       gender: "Male",
       date: "March 11, 2026",
@@ -457,7 +457,7 @@ function AppointmentsContent() {
     {
       id: 4,
       patient: "Sophia Lee",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 56,
       gender: "Female",
       date: "March 11, 2026",
@@ -559,7 +559,7 @@ function AppointmentsContent() {
     {
       id: 5,
       patient: "David Park",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 41,
       gender: "Male",
       date: "March 12, 2026",
@@ -644,7 +644,7 @@ function AppointmentsContent() {
     {
       id: 6,
       patient: "Alice Johnson",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 38,
       gender: "Female",
       date: "March 10, 2026",
@@ -731,7 +731,7 @@ function AppointmentsContent() {
     {
       id: 7,
       patient: "Robert Martinez",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 52,
       gender: "Male",
       date: "March 9, 2026",
@@ -788,7 +788,7 @@ function AppointmentsContent() {
     {
       id: 8,
       patient: "Sarah Johnson",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 29,
       gender: "Female",
       date: "March 8, 2026",
@@ -848,7 +848,7 @@ function AppointmentsContent() {
     {
       id: 9,
       patient: "Thomas Brown",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 61,
       gender: "Male",
       date: "March 7, 2026",
@@ -956,7 +956,7 @@ function AppointmentsContent() {
     {
       id: 10,
       patient: "Lisa Garcia",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 34,
       gender: "Female",
       date: "March 6, 2026",
@@ -1040,7 +1040,7 @@ function AppointmentsContent() {
     {
       id: 11,
       patient: "Kevin Zhang",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 47,
       gender: "Male",
       date: "March 5, 2026",
@@ -1109,7 +1109,7 @@ function AppointmentsContent() {
     {
       id: 12,
       patient: "Maria Santos",
-      avatar: "",
+      avatar: "/assets/images/user.jpg",
       age: 53,
       gender: "Female",
       date: "March 4, 2026",
@@ -1451,7 +1451,7 @@ function AppointmentsContent() {
 
       {/* Filters */}
       <Card className="border-border">
-        <CardContent className="pt-6">
+        <CardContent className="">
           <div className="flex flex-col gap-4 md:flex-row">
             <div className="flex-1">
               <div className="relative">
@@ -1464,7 +1464,7 @@ function AppointmentsContent() {
                 />
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 border rounded">
               <Select value={selectedFilter} onValueChange={setSelectedFilter}>
                 <SelectTrigger className="w-45">
                   <Filter className="mr-2 h-4 w-4" />
@@ -1494,9 +1494,7 @@ function AppointmentsContent() {
 
         {/* All Appointments Tab */}
         <TabsContent value="all" className="mt-6 space-y-6">
-          {/* Add useRouter at top of component */}
-          {/* const router = useRouter(); */}
-          {/* Filter Pills Container */}
+
           <div className="mb-6 flex items-center justify-end">
             <div className="inline-flex items-center rounded-full bg-muted p-1">
               <Button
@@ -1540,7 +1538,7 @@ function AppointmentsContent() {
                   setCurrentPage(1)
                 }}
               >
-                Telehealth
+                Video
               </Button>
             </div>
           </div>

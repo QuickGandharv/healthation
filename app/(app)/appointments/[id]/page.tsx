@@ -3,7 +3,7 @@
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -37,32 +37,32 @@ export default function AppointmentDetailsPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [appointment, setAppointment] = useState<any>(null);
+
+    
     const [loading, setLoading] = useState(true);
+    
 
     useEffect(() => {
         try {
-            // Get data from URL query
             const data = searchParams.get('data');
 
             if (data) {
                 try {
-                    // Decode and parse the data
+                    // Method 1: Try with decode first
                     const decodedData = decodeURIComponent(data);
                     const parsedData = JSON.parse(decodedData);
                     setAppointment(parsedData);
+                } catch (decodeError) {
+                    console.log("Decode failed, trying direct parse...");
 
-                    // Also store in sessionStorage as backup
-                    sessionStorage.setItem(`appointment_${parsedData.id}`, JSON.stringify(parsedData));
-                } catch (parseError) {
-                    console.error("Parse error:", parseError);
-
-                    // Fallback: try without decoding
                     try {
-                        const directParse = JSON.parse(data);
-                        setAppointment(directParse);
-                        sessionStorage.setItem(`appointment_${directParse.id}`, JSON.stringify(directParse));
-                    } catch (e) {
-                        // Try sessionStorage
+                        // Method 2: Try without decoding (already decoded)
+                        const parsedData = JSON.parse(data);
+                        setAppointment(parsedData);
+                    } catch (parseError) {
+                        console.log("Direct parse failed, trying fallback...");
+
+                        // Method 3: Try sessionStorage as fallback
                         const id = Number(params.id);
                         const storedData = sessionStorage.getItem(`appointment_${id}`);
                         if (storedData) {
@@ -71,7 +71,7 @@ export default function AppointmentDetailsPage() {
                     }
                 }
             } else {
-                // Try sessionStorage
+                // If no data in URL, try sessionStorage
                 const id = Number(params.id);
                 const storedData = sessionStorage.getItem(`appointment_${id}`);
                 if (storedData) {
@@ -79,11 +79,14 @@ export default function AppointmentDetailsPage() {
                 }
             }
         } catch (error) {
-            console.error("Error in useEffect:", error);
+            console.error("Error loading appointment:", error);
         } finally {
             setLoading(false);
         }
     }, [searchParams, params.id]);
+
+
+
 
     const getInitials = (name: string) => {
         return name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -180,12 +183,17 @@ export default function AppointmentDetailsPage() {
             </div>
 
             {/* Patient Header Card */}
-            <Card className="border-border mb-6 overflow-hidden">
+            <Card className="border-border mb-6 overflow-hidden py-0">
                 <div className="h-2 bg-primary"></div>
                 <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                         <div className="flex items-center gap-4">
                             <Avatar className="h-20 w-20 border-4 border-primary/20">
+                                <AvatarImage
+                                    src={appointment.avatar || "/default-avatar.png"}
+                                    alt={appointment.patient}
+                                    className="object-cover"
+                                />
                                 <AvatarFallback className="bg-primary/10 text-primary text-2xl">
                                     {getInitials(appointment.patient)}
                                 </AvatarFallback>
@@ -441,7 +449,7 @@ export default function AppointmentDetailsPage() {
                                             {/* <Badge className={lab.status === "normal" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
                                                 {lab.status}
                                             </Badge> */}
-                                            <Button>Veiw All</Button>
+                                            <Button>Veiw Report</Button>
                                         </div>
                                     ))}
                                 </div>
