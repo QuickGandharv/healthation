@@ -1,11 +1,20 @@
-'use client';
+"use client"
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, X, Bell, Calendar, LayoutDashboard, LogOut, Settings, User as UserIcon } from 'lucide-react';
+import { useState, useEffect } from "react"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import {
+  Menu,
+  X,
+  Bell,
+  Calendar,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  User as UserIcon,
+} from "lucide-react"
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,134 +23,136 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from '@/components/ui/sheet';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { cn } from '@/lib/utils';
-import useMediaQuery from '@/hooks/use-media-query';
-import icon from '@/public/assets/icon/logo-light.png';
+} from "@/components/ui/sheet"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { cn } from "@/lib/utils"
+import useMediaQuery from "@/hooks/use-media-query"
+import icon from "@/public/assets/icon/logo-light.png"
 
-import type { User, Notification, NavItem } from '@/types/header';
-import Image from 'next/image';
+import type { User, Notification, NavItem } from "@/types/header"
+import Image from "next/image"
+import { useAuth } from "@/context/AuthContext"
 
 interface HeaderProps {
-  user?: User;
-  notifications?: Notification[];
-  onNotificationClick?: (notification: Notification) => void;
-  onLogout?: () => void;
+  user?: User
+  notifications?: Notification[]
+  onNotificationClick?: (notification: Notification) => void
+  onLogout?: () => void
 }
 
 export default function Header({
-  user,
   notifications = [],
   onNotificationClick,
-  onLogout
+  onLogout,
 }: HeaderProps) {
-  const pathname = usePathname();
-  const isDesktop = useMediaQuery('(min-width: 768px)');
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [mounted, setMounted] = useState(false);
-
+  const { user } = useAuth()
+  const pathname = usePathname()
+  const isDesktop = useMediaQuery("(min-width: 768px)")
+  const [isScrolled, setIsScrolled] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
   // Navigation items
   const navItems: NavItem[] = [
     {
-      title: 'Dashboard',
-      href: '/dashboard',
+      title: "Dashboard",
+      href: "/dashboard",
       icon: <LayoutDashboard className="h-4 w-4" />,
     },
     {
-      title: 'My Schedules',
-      href: '/schedules',
+      title: "My Schedules",
+      href: "/schedules",
       icon: <Calendar className="h-4 w-4" />,
       badge: 3, // Example badge count
     },
     {
-      title: 'Appointments',
-      href: '/appointments',
+      title: "Appointments",
+      href: "/appointments",
       icon: <UserIcon className="h-4 w-4" />,
     },
     {
-      title: 'Notifications',
-      href: '/notifications',
+      title: "Notifications",
+      href: "/notifications",
       icon: <Bell className="h-4 w-4" />,
       badge: unreadCount,
     },
-  ];
+  ]
 
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+      setIsScrolled(window.scrollY > 10)
+    }
+    window.addEventListener("scroll", handleScroll)
+    return () => window.removeEventListener("scroll", handleScroll)
+  }, [])
 
   // Update unread count when notifications change
   useEffect(() => {
-    setUnreadCount(notifications.filter(n => !n.read).length);
-  }, [notifications]);
+    setUnreadCount(notifications.filter((n) => !n.read).length)
+  }, [notifications])
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
-  if (!mounted) return null;
+  if (!mounted) return null
+
+  const name = user ? `${user.first_name} ${user.last_name}` : "User"
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!user?.name) return 'U';
+    if (!user?.name) return "U"
     return user.name
-      .split(' ')
-      .map(part => part[0])
-      .join('')
+      .split(" ")
+      .map((part) => part[0])
+      .join("")
       .toUpperCase()
-      .slice(0, 2);
-  };
+      .slice(0, 2)
+  }
 
   // Format notification time
   const formatNotificationTime = (date: Date) => {
-    const now = new Date();
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
+    const now = new Date()
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000)
 
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    return date.toLocaleDateString();
-  };
+    if (diffInMinutes < 1) return "Just now"
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`
+    return date.toLocaleDateString()
+  }
 
   // Get notification icon color
-  const getNotificationIcon = (type: Notification['type']) => {
+  const getNotificationIcon = (type: Notification["type"]) => {
     switch (type) {
-      case 'appointment':
-        return 'text-blue-500';
-      case 'message':
-        return 'text-green-500';
-      case 'alert':
-        return 'text-red-500';
-      case 'reminder':
-        return 'text-yellow-500';
+      case "appointment":
+        return "text-blue-500"
+      case "message":
+        return "text-green-500"
+      case "alert":
+        return "text-red-500"
+      case "reminder":
+        return "text-yellow-500"
       default:
-        return 'text-gray-500';
+        return "text-gray-500"
     }
-  };
+  }
 
   return (
     <header
       className={cn(
-        'sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm',
+        "sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm",
         isScrolled
           ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b'
           : 'bg-background'
@@ -170,18 +181,18 @@ export default function Header({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'relative flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                  "relative flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                   pathname === item.href
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                 )}
               >
                 {item.icon}
                 <span>{item.title}</span>
                 {item.badge ? (
                   <Badge
-                    variant={pathname === item.href ? 'secondary' : 'default'}
-                    className="ml-auto h-5 w-5 rounded-full p-0 flex items-center justify-center"
+                    variant={pathname === item.href ? "secondary" : "default"}
+                    className="ml-auto flex h-5 w-5 items-center justify-center rounded-full p-0"
                   >
                     {item.badge}
                   </Badge>
@@ -199,8 +210,8 @@ export default function Header({
               <Button variant="ghost" size="icon" className="relative">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-destructive text-destructive-foreground text-xs flex items-center justify-center">
-                    {unreadCount > 9 ? '9+' : unreadCount}
+                  <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-xs text-destructive-foreground">
+                    {unreadCount > 9 ? "9+" : unreadCount}
                   </span>
                 )}
               </Button>
@@ -221,23 +232,28 @@ export default function Header({
                     <DropdownMenuItem
                       key={notification.id}
                       className={cn(
-                        'flex flex-col items-start gap-1 p-3 cursor-pointer',
-                        !notification.read && 'bg-accent/50'
+                        "flex cursor-pointer flex-col items-start gap-1 p-3",
+                        !notification.read && "bg-accent/50"
                       )}
                       onClick={() => onNotificationClick?.(notification)}
                     >
                       <div className="flex w-full items-start justify-between gap-2">
-                        <span className="font-medium text-sm">{notification.title}</span>
-                        <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        <span className="text-sm font-medium">
+                          {notification.title}
+                        </span>
+                        <span className="text-xs whitespace-nowrap text-muted-foreground">
                           {formatNotificationTime(notification.timestamp)}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
+                      <p className="line-clamp-2 text-xs text-muted-foreground">
                         {notification.message}
                       </p>
                       <Badge
                         variant="outline"
-                        className={cn('mt-1 text-xs', getNotificationIcon(notification.type))}
+                        className={cn(
+                          "mt-1 text-xs",
+                          getNotificationIcon(notification.type)
+                        )}
                       >
                         {notification.type}
                       </Badge>
@@ -271,9 +287,12 @@ export default function Header({
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm font-medium leading-none">{user?.name || 'Guest'}</p>
+                  <p className="text-sm leading-none font-medium">
+                  {/* {`${user?.first_name} ${user?.last_name}`} */}
+                  {name}
+                  </p>
                   <p className="text-xs leading-none text-muted-foreground">
-                    {user?.email || 'Not signed in'}
+                    {user?.email || "Not signed in"}
                   </p>
                   {user?.role && (
                     <Badge variant="outline" className="mt-1 w-fit capitalize">
@@ -319,12 +338,16 @@ export default function Header({
               <SheetContent side="right" className="w-75 sm:w-100">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                      <span className="text-primary-foreground font-bold text-lg">HP</span>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                      <span className="text-lg font-bold text-primary-foreground">
+                        HP
+                      </span>
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold">HealthCare Pro</h2>
-                      <p className="text-xs text-muted-foreground">Telehealth Platform</p>
+                      <p className="text-xs text-muted-foreground">
+                        Telehealth Platform
+                      </p>
                     </div>
                   </SheetTitle>
                 </SheetHeader>
@@ -336,10 +359,10 @@ export default function Header({
                       href={item.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       className={cn(
-                        'flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-colors',
+                        "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
                         pathname === item.href
-                          ? 'bg-primary text-primary-foreground'
-                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                       )}
                     >
                       {item.icon}
@@ -356,5 +379,5 @@ export default function Header({
         </div>
       </div>
     </header>
-  );
+  )
 }

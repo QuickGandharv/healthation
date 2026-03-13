@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
 export default function Dashboard() {
+
   const stats = [
     { label: "Total Appointments", value: "248", icon: Calendar, change: "+12%", color: "text-blue-600" },
     { label: "Today's Sessions", value: "8", icon: Clock, change: "+3", color: "text-emerald-600" },
@@ -51,13 +52,11 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div>
         <h1 className="mb-2">Welcome back, Dr. Sarah Johnson</h1>
         <p className="text-muted-foreground">Here's what's happening with your practice today.</p>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
@@ -71,7 +70,7 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stat.value}</div>
-                <p className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
+                <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                   <TrendingUp className="h-3 w-3 text-emerald-600" />
                   <span className="text-emerald-600">{stat.change}</span>
                   <span>from last month</span>
@@ -83,15 +82,14 @@ export default function Dashboard() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Upcoming Appointments */}
-        <Card className="lg:col-span-2 border-border">
+        <Card className="border-border lg:col-span-2">
           <CardHeader>
             <CardTitle>Today's Appointments</CardTitle>
             <CardDescription>You have {upcomingAppointments.length} appointments scheduled</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {upcomingAppointments.map((appointment) => (
-              <div 
+              <div
                 key={appointment.id}
                 className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4"
               >
@@ -99,7 +97,7 @@ export default function Dashboard() {
                   <Avatar className="h-12 w-12">
                     <AvatarImage src={appointment.avatar} alt={appointment.patient} />
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {appointment.patient.split(' ').map(n => n[0]).join('')}
+                      {appointment.patient.split(" ").map((n) => n[0]).join("")}
                     </AvatarFallback>
                   </Avatar>
                   <div>
@@ -113,33 +111,29 @@ export default function Dashboard() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Badge variant={appointment.status === "confirmed" ? "default" : "secondary"} className="bg-primary/10 text-primary hover:bg-primary/20">
+                  <Badge
+                    variant={appointment.status === "confirmed" ? "default" : "secondary"}
+                    className="bg-primary/10 text-primary hover:bg-primary/20"
+                  >
                     {appointment.status}
                   </Badge>
                   {appointment.type.includes("Video") ? (
                     <Button size="sm" className="bg-primary hover:bg-primary/90">
-                      <Video className="h-4 w-4 mr-1" />
+                      <Video className="mr-1 h-4 w-4" />
                       Join
                     </Button>
                   ) : (
                     <Button size="sm" variant="outline">
-                      <Phone className="h-4 w-4 mr-1" />
+                      <Phone className="mr-1 h-4 w-4" />
                       Call
                     </Button>
                   )}
                 </div>
               </div>
             ))}
-            {upcomingAppointments.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Calendar className="h-12 w-12 text-muted-foreground/40 mb-3" />
-                <p className="text-muted-foreground">No appointments scheduled for today</p>
-              </div>
-            )}
           </CardContent>
         </Card>
 
-        {/* Recent Activity */}
         <Card className="border-border">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
@@ -163,7 +157,6 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* Quick Actions */}
       <Card className="border-border">
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>

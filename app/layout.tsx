@@ -5,7 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 import { Metadata, Viewport } from "next";
 import PwaRegister from '@/components/PwaRegister'
-import Header from "@/components/common/header";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata: Metadata = {
   title: 'Telehealth App',
@@ -37,7 +37,9 @@ export default function RootLayout({
     >
       <body cz-shortcut-listen="true">
         <PwaRegister />
-        <ThemeProvider>{children}</ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>{children}</ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   )
