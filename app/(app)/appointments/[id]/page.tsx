@@ -28,7 +28,11 @@ import {
     MessageSquare,
     ClipboardList,
     Thermometer,
-    Wind
+    Wind,
+    Eye,
+    ChevronDown,
+    Droplet,
+    Brain
 } from "lucide-react";
 import { useEffect, useState } from "react";
 
@@ -427,39 +431,131 @@ export default function AppointmentDetailsPage() {
                     </div>
                 </TabsContent>
 
-                {/* Lab Results Tab */}
-                <TabsContent value="labs" className="space-y-6">
-                    <Card className="border-border">
-                        <CardHeader>
-                            <CardTitle className="text-lg flex items-center gap-2">
-                                <Activity className="h-5 w-5 text-primary" />
-                                Recent Lab Results
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            {appointment.labResults && appointment.labResults.length > 0 ? (
-                                <div className="space-y-3">
-                                    {appointment.labResults.map((lab: any, index: number) => (
-                                        <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
-                                            <div>
-                                                <p className="font-medium">{lab.name}</p>
-                                                <p className="text-sm text-muted-foreground">Date: {lab.date}</p>
-                                                {lab.notes && <p className="text-sm text-warning mt-1">{lab.notes}</p>}
-                                            </div>
-                                            {/* <Badge className={lab.status === "normal" ? "bg-green-100 text-green-800" : "bg-yellow-100 text-yellow-800"}>
-                                                {lab.status}
-                                            </Badge> */}
-                                            <Button>Veiw Report</Button>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <p className="text-muted-foreground">No lab results available</p>
-                            )}
-                        </CardContent>
-                    </Card>
-                </TabsContent>
+                {/* Lab Results Tab - Full Width Design with Icons */}
+                <TabsContent value="labs" className="space-y-6 w-full">
+                    <div className="flex items-center justify-between w-full">
+                        <h2 className="text-2xl font-semibold">Medical Reports</h2>
+                        <Button variant="outline" size="sm" className="gap-2">
+                            <Download className="h-4 w-4" />
+                            Download All
+                        </Button>
+                    </div>
 
+                    {appointment.labResults && appointment.labResults.length > 0 ? (
+                        <div className="space-y-4 w-full">
+                            {appointment.labResults.map((lab: any, index: number) => (
+                                <Card key={index} className="border-border w-full overflow-hidden">
+                                    {/* Report Header - Always Visible */}
+                                    <div
+                                        className="p-5 cursor-pointer hover:bg-accent/30 transition-colors w-full"
+                                        onClick={() => {
+                                            const content = document.getElementById(`report-${index}`);
+                                            if (content) {
+                                                content.classList.toggle('hidden');
+                                            }
+                                        }}
+                                    >
+                                        <div className="flex items-start justify-between w-full">
+                                            <div className="flex items-center gap-3 flex-1">
+                                                {/* Icon based on report type */}
+                                                <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${lab.name.includes('Blood') ? 'bg-red-100' :
+                                                        lab.name.includes('Chest') || lab.name.includes('X-Ray') ? 'bg-blue-100' :
+                                                            lab.name.includes('MRI') || lab.name.includes('Brain') ? 'bg-purple-100' :
+                                                                lab.name.includes('Lipid') ? 'bg-orange-100' :
+                                                                    lab.name.includes('Thyroid') ? 'bg-teal-100' :
+                                                                        lab.name.includes('HbA1c') ? 'bg-green-100' :
+                                                                            'bg-gray-100'
+                                                    }`}>
+                                                    {lab.name.includes('Blood') && <Droplet className="h-5 w-5 text-red-600" />}
+                                                    {lab.name.includes('Chest') && <Activity className="h-5 w-5 text-blue-600" />}
+                                                    {lab.name.includes('X-Ray') && <Activity className="h-5 w-5 text-blue-600" />}
+                                                    {lab.name.includes('MRI') && <Brain className="h-5 w-5 text-purple-600" />}
+                                                    {lab.name.includes('Lipid') && <Heart className="h-5 w-5 text-orange-600" />}
+                                                    {lab.name.includes('Thyroid') && <Thermometer className="h-5 w-5 text-teal-600" />}
+                                                    {lab.name.includes('HbA1c') && <FileText className="h-5 w-5 text-green-600" />}
+                                                    {!lab.name.includes('Blood') && !lab.name.includes('Chest') &&
+                                                        !lab.name.includes('X-Ray') && !lab.name.includes('MRI') &&
+                                                        !lab.name.includes('Lipid') && !lab.name.includes('Thyroid') &&
+                                                        !lab.name.includes('HbA1c') &&
+                                                        <FileText className="h-5 w-5 text-gray-600" />}
+                                                </div>
+                                                <div className="flex-1">
+                                                    <h3 className="text-lg font-semibold">{lab.name}</h3>
+                                                    <p className="text-sm text-muted-foreground">
+                                                        {lab.type || 'Lab Report'} • Uploaded {lab.date}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                                        </div>
+                                    </div>
+
+                                    {/* Dropdown Content - Hidden by Default */}
+                                    <div id={`report-${index}`} className="hidden border-t border-border w-full">
+                                        <CardContent className="p-5 space-y-4 w-full">
+                                            {/* Connected Appointment Info */}
+                                            <div className="space-y-2">
+                                                <div className="flex items-center justify-between text-sm border-b border-border pb-2">
+                                                    <span className="text-muted-foreground">Connected Appointment:</span>
+                                                    <span className="font-medium">APT-{appointment.id.toString().padStart(3, '0')}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm border-b border-border pb-2">
+                                                    <span className="text-muted-foreground">Appointment Date:</span>
+                                                    <span className="font-medium">{appointment.date}</span>
+                                                </div>
+                                                <div className="flex items-center justify-between text-sm">
+                                                    <span className="text-muted-foreground">Consultation Type:</span>
+                                                    <Badge variant="outline" className={
+                                                        appointment.type === 'in-person'
+                                                            ? 'bg-purple-50 text-purple-700 border-purple-200'
+                                                            : 'bg-blue-50 text-blue-700 border-blue-200'
+                                                    }>
+                                                        {appointment.type === 'in-person' ? 'In-Person' : 'Telehealth'}
+                                                    </Badge>
+                                                </div>
+                                            </div>
+
+                                            {/* Status Badge (if available) */}
+                                            {lab.status && (
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-sm text-muted-foreground">Status:</span>
+                                                    <Badge className={
+                                                        lab.status === 'normal'
+                                                            ? 'bg-green-100 text-green-800 border-green-200'
+                                                            : 'bg-yellow-100 text-yellow-800 border-yellow-200'
+                                                    }>
+                                                        {lab.status}
+                                                    </Badge>
+                                                </div>
+                                            )}
+
+                                            {/* Notes (if available) */}
+                                            {lab.notes && (
+                                                <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                                    <p className="text-sm text-yellow-800">{lab.notes}</p>
+                                                </div>
+                                            )}
+
+                                            {/* View Report Button */}
+                                            <Button className="w-full gap-2">
+                                                <Eye className="h-4 w-4" />
+                                                View Report
+                                            </Button>
+                                        </CardContent>
+                                    </div>
+                                </Card>
+                            ))}
+                        </div>
+                    ) : (
+                        <Card className="border-border w-full">
+                            <CardContent className="flex flex-col items-center justify-center py-12 w-full">
+                                <FileText className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                                <p className="font-medium mb-1">No medical reports available</p>
+                                <p className="text-sm text-muted-foreground">Reports will appear here when uploaded</p>
+                            </CardContent>
+                        </Card>
+                    )}
+                </TabsContent>
                 {/* Appointment History Tab */}
                 <TabsContent value="history" className="space-y-6">
                     <Card className="border-border">

@@ -1,0 +1,445 @@
+// app/patients/reports/page.tsx
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+    CardFooter
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+    ChevronLeft,
+    ChevronRight,
+    ChevronsLeft,
+    ChevronsRight,
+    Search,
+    Download,
+    ArrowLeft,
+    Calendar,
+    Clock,
+    Video,
+    MapPin,
+    FileText,
+    User,
+    Mail,
+    Phone,
+    MapPin as MapPinIcon,
+    Droplet,
+    Heart,
+    Activity,
+    Thermometer,
+    FileCheck,
+    Eye
+} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+interface PatientReport {
+    id: string;
+    patientId: string;
+    name: string;
+    age: number;
+    gender: string;
+    bloodGroup: string;
+    email: string;
+    phone: string;
+    address: string;
+    reports: Report[];
+}
+
+interface Report {
+    id: string;
+    name: string;
+    type: string;
+    date: string;
+    doctor: string;
+    fileUrl?: string;
+}
+
+export default function PatientReportsPage() {
+    const router = useRouter();
+    const [searchQuery, setSearchQuery] = useState("");
+    const [selectedPatient, setSelectedPatient] = useState<PatientReport | null>(null);
+
+    // Sample patient reports data
+    const patientReports: PatientReport[] = [
+        {
+            id: "1",
+            patientId: "PT-001",
+            name: "Sarah Johnson",
+            age: 34,
+            gender: "Female",
+            bloodGroup: "A+",
+            email: "sarah.johnson@email.com",
+            phone: "(555) 123-4567",
+            address: "123 Oak Street, Boston, MA 02108",
+            reports: [
+                {
+                    id: "r1",
+                    name: "Complete Blood Count (CBC)",
+                    type: "Blood Test",
+                    date: "Mar 10, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                },
+                {
+                    id: "r2",
+                    name: "Chest X-Ray",
+                    type: "X-Ray",
+                    date: "Mar 10, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                },
+                {
+                    id: "r3",
+                    name: "Lipid Panel",
+                    type: "Blood Test",
+                    date: "Feb 28, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                }
+            ]
+        },
+        {
+            id: "2",
+            patientId: "PT-002",
+            name: "Michael Chen",
+            age: 42,
+            gender: "Male",
+            bloodGroup: "O-",
+            email: "michael.chen@email.com",
+            phone: "(555) 234-5678",
+            address: "456 Maple Ave, Cambridge, MA 02139",
+            reports: [
+                {
+                    id: "r4",
+                    name: "Complete Blood Count (CBC)",
+                    type: "Blood Test",
+                    date: "Mar 12, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                },
+                {
+                    id: "r5",
+                    name: "ECG Report",
+                    type: "Cardiology",
+                    date: "Mar 12, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                }
+            ]
+        },
+        {
+            id: "3",
+            patientId: "PT-003",
+            name: "Emily Rodriguez",
+            age: 28,
+            gender: "Female",
+            bloodGroup: "B+",
+            email: "emily.rodriguez@email.com",
+            phone: "(555) 345-6789",
+            address: "789 Pine Road, Somerville, MA 02144",
+            reports: [
+                {
+                    id: "r6",
+                    name: "Thyroid Panel",
+                    type: "Blood Test",
+                    date: "Mar 11, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                },
+                {
+                    id: "r7",
+                    name: "Vitamin D Test",
+                    type: "Blood Test",
+                    date: "Mar 11, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                }
+            ]
+        },
+        {
+            id: "4",
+            patientId: "PT-004",
+            name: "James Wilson",
+            age: 52,
+            gender: "Male",
+            bloodGroup: "AB+",
+            email: "james.wilson@email.com",
+            phone: "(555) 456-7890",
+            address: "321 Elm Street, Newton, MA 02458",
+            reports: [
+                {
+                    id: "r8",
+                    name: "Cardiac Stress Test",
+                    type: "Cardiology",
+                    date: "Mar 09, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                }
+            ]
+        },
+        {
+            id: "5",
+            patientId: "PT-005",
+            name: "Maria Santos",
+            age: 45,
+            gender: "Female",
+            bloodGroup: "O+",
+            email: "maria.santos@email.com",
+            phone: "(555) 567-8901",
+            address: "555 Cedar Lane, Brookline, MA 02446",
+            reports: [
+                {
+                    id: "r9",
+                    name: "Mammogram",
+                    type: "X-Ray",
+                    date: "Mar 08, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                },
+                {
+                    id: "r10",
+                    name: "Complete Blood Count (CBC)",
+                    type: "Blood Test",
+                    date: "Mar 08, 2026",
+                    doctor: "Dr. Sarah Johnson"
+                }
+            ]
+        }
+    ];
+
+    // Filter patients based on search
+    const filteredPatients = patientReports.filter(patient => {
+        const searchLower = searchQuery.toLowerCase();
+        return (
+            patient.name.toLowerCase().includes(searchLower) ||
+            patient.patientId.toLowerCase().includes(searchLower) ||
+            patient.email.toLowerCase().includes(searchLower)
+        );
+    });
+
+    // Get initials
+    const getInitials = (name: string) => {
+        return name.split(' ').map(n => n[0]).join('').toUpperCase();
+    };
+
+    // Get blood group color
+    const getBloodGroupColor = (bloodGroup: string) => {
+        const colors: Record<string, string> = {
+            "A+": "bg-red-100 text-red-800",
+            "A-": "bg-red-50 text-red-700",
+            "B+": "bg-blue-100 text-blue-800",
+            "B-": "bg-blue-50 text-blue-700",
+            "AB+": "bg-purple-100 text-purple-800",
+            "AB-": "bg-purple-50 text-purple-700",
+            "O+": "bg-green-100 text-green-800",
+            "O-": "bg-green-50 text-green-700"
+        };
+        return colors[bloodGroup] || "bg-gray-100 text-gray-800";
+    };
+
+    // Get report type icon
+    const getReportTypeIcon = (type: string) => {
+        switch (type.toLowerCase()) {
+            case "blood test":
+                return <Droplet className="h-4 w-4 text-red-500" />;
+            case "x-ray":
+                return <Activity className="h-4 w-4 text-blue-500" />;
+            case "cardiology":
+                return <Heart className="h-4 w-4 text-pink-500" />;
+            default:
+                return <FileText className="h-4 w-4 text-gray-500" />;
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+
+            <Button onClick={() => router.back()} className="gap-2">
+                <ArrowLeft className="h-4 w-4" />
+                Back
+            </Button>
+            {/* Header */}
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                    <div>
+                        <h1 className="text-2xl font-bold text-primary tracking-tight">Patient Reports</h1>
+                        <p className="text-muted-foreground text-sm">View and manage patient medical reports</p>
+                    </div>
+                </div>
+                <Button variant="outline" className="gap-2">
+                    <Download className="h-4 w-4" />
+                    Export All
+                </Button>
+            </div>
+
+            {/* Search Bar */}
+            <div className="flex items-center gap-4">
+                <div className="relative flex-1">
+                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                    <Input
+                        placeholder="Search patients by name, ID, or email..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="pl-9"
+                    />
+                </div>
+            </div>
+
+            {/* Patient Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredPatients.map((patient) => (
+                    <Card key={patient.id} className="border-border hover:shadow-lg transition-all flex flex-col h-full">
+                        <CardHeader className="pb-2">
+                            <div className="flex justify-between items-start">
+                                <div className="flex items-center gap-3">
+                                    <Avatar className="h-12 w-12 border-2 border-primary/20">
+                                        <AvatarFallback className="bg-primary/10 text-primary">
+                                            {getInitials(patient.name)}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <CardTitle className="text-lg">{patient.name}</CardTitle>
+                                        <CardDescription className="text-sm">{patient.patientId}</CardDescription>
+                                    </div>
+                                </div>
+                                <Badge className={getBloodGroupColor(patient.bloodGroup)}>
+                                    {patient.bloodGroup}
+                                </Badge>
+                            </div>
+                        </CardHeader>
+
+                        <CardContent className="space-y-3 flex-1">
+                            {/* Patient Details */}
+                            <div className="space-y-2 text-sm">
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <User className="h-4 w-4" />
+                                    <span>{patient.age} years • {patient.gender}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Mail className="h-4 w-4" />
+                                    <span className="truncate">{patient.email}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <Phone className="h-4 w-4" />
+                                    <span>{patient.phone}</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-muted-foreground">
+                                    <MapPinIcon className="h-4 w-4" />
+                                    <span className="truncate">{patient.address}</span>
+                                </div>
+                            </div>
+
+                            {/* Recent Reports Preview */}
+                            <div className="pt-2">
+                                <p className="text-xs font-medium text-muted-foreground mb-2">Recent Reports</p>
+                                <div className="space-y-2">
+                                    {patient.reports.slice(0, 2).map((report) => (
+                                        <div key={report.id} className="flex items-center gap-2 text-xs bg-accent/30 p-2 rounded">
+                                            {getReportTypeIcon(report.type)}
+                                            <div className="flex-1">
+                                                <p className="font-medium">{report.name}</p>
+                                                <p className="text-muted-foreground">{report.date}</p>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {patient.reports.length > 2 && (
+                                        <p className="text-xs text-muted-foreground text-center">
+                                            +{patient.reports.length - 2} more reports
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+                        </CardContent>
+
+                        {/* Footer Button - Always at Bottom */}
+                        <div className="mt-auto px-5">
+                            <Button
+                                className="w-full gap-2"
+                                onClick={() => setSelectedPatient(patient)}
+                            >
+                                <FileCheck className="h-4 w-4" />
+                                Click to view reports
+                            </Button>
+                        </div>
+                    </Card>
+                ))}
+            </div>
+
+            {/* Reports Detail Modal/Drawer */}
+            {selectedPatient && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                    <Card className="w-full max-w-3xl max-h-[80vh] overflow-y-auto">
+                        <CardHeader>
+                            <div className="flex justify-between items-start">
+                                <div>
+                                    <CardTitle className="text-2xl">{selectedPatient.name}</CardTitle>
+                                    <CardDescription>{selectedPatient.patientId}</CardDescription>
+                                </div>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setSelectedPatient(null)}
+                                >
+                                    <ArrowLeft className="h-4 w-4" />
+                                </Button>
+                            </div>
+                        </CardHeader>
+                        <CardContent>
+                            {/* Reports List */}
+                            <h3 className="font-semibold mb-4">Medical Reports</h3>
+                            <div className="space-y-3">
+                                {selectedPatient.reports.map((report) => (
+                                    <Card key={report.id} className="border-border">
+                                        <CardContent className="p-4">
+                                            <div className="flex items-start justify-between">
+                                                <div className="flex gap-3">
+                                                    <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                                                        {getReportTypeIcon(report.type)}
+                                                    </div>
+                                                    <div>
+                                                        <p className="font-medium">{report.name}</p>
+                                                        <p className="text-sm text-muted-foreground">{report.type}</p>
+                                                        <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                                                            <Calendar className="h-3 w-3" />
+                                                            <span>Uploaded {report.date}</span>
+                                                            <span>•</span>
+                                                            <span>Dr. {report.doctor}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <Button variant="outline" size="sm" className="gap-2">
+                                                    <Eye className="h-4 w-4" />
+                                                    View
+                                                </Button>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                ))}
+                            </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-end gap-2">
+                            <Button variant="outline" onClick={() => setSelectedPatient(null)}>
+                                Close
+                            </Button>
+                            <Button className="gap-2">
+                                <Download className="h-4 w-4" />
+                                Download All
+                            </Button>
+                        </CardFooter>
+                    </Card>
+                </div>
+            )}
+
+            {/* Empty State */}
+            {filteredPatients.length === 0 && (
+                <Card className="border-border">
+                    <CardContent className="flex flex-col items-center justify-center py-12">
+                        <FileText className="h-12 w-12 text-muted-foreground/40 mb-3" />
+                        <p className="font-medium mb-1">No patients found</p>
+                        <p className="text-sm text-muted-foreground">Try adjusting your search</p>
+                    </CardContent>
+                </Card>
+            )}
+        </div>
+    );
+}

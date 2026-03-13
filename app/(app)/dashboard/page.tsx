@@ -1,10 +1,16 @@
+"use client"; 
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, Users, Star, TrendingUp, Video, Phone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useRouter } from "next/navigation";
+
 
 export default function Dashboard() {
+
+  const router = useRouter();
 
   const stats = [
     { label: "Total Appointments", value: "248", icon: Calendar, change: "+12%", color: "text-blue-600" },
@@ -163,26 +169,53 @@ export default function Dashboard() {
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 md:grid-cols-5">
-            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
-              <Calendar className="h-6 w-6 text-primary" />
-              <span>All Patients</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
+          
+              <Button
+                variant="outline"
+                className="h-auto flex-col gap-2 py-6"
+              onClick={() => router.push('/dashboard/patients')}
+              >
+                <Calendar className="h-6 w-6 text-primary" />
+                <span>All Patients</span>
+              </Button>
+              {/* Other buttons... */}
+         
+            <Button
+              variant="outline"
+              className="h-auto flex-col gap-2 py-6"
+              onClick={() => router.push('/dashboard/reports')}
+            >
               <Users className="h-6 w-6 text-primary" />
-              <span>Patient Records</span>
+              <span>Patient Reports</span>
             </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
+            
+            <Button
+              variant="outline"
+              className="h-auto flex-col gap-2 py-6"
+              onClick={() => router.push('/dashboard/inventory')}
+            >
               <MessageSquare className="h-6 w-6 text-primary" />
-              <span>Medicine Investory</span>
+              <span>Medicine Inventory</span>
             </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
+
+            <Button
+              variant="outline"
+              className="h-auto flex-col gap-2 py-6"
+              onClick={() => router.push('/dashboard/payments')}
+            >
               <Star className="h-6 w-6 text-primary" />
-              <span>payment history</span>
+              <span>Payment History</span>
             </Button>
-            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
+
+            <Button
+              variant="outline"
+              className="h-auto flex-col gap-2 py-6"
+              onClick={() => router.push('/dashboard/reviews')}
+            >
               <Star className="h-6 w-6 text-primary" />
               <span>All Reviews</span>
             </Button>
+
           </div>
         </CardContent>
       </Card>
