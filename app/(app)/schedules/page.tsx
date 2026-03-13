@@ -7,7 +7,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar"; // ✅ ShadCN Calendar
-import { ChevronLeft, ChevronRight, Plus, Video, Phone } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Video, Stethoscope, Users , Phone,  Clock,  CalendarIcon } from "lucide-react";
+import { ScheduleCard } from "@/components/custom/ScheduleCard";
+import { AppointmentCard } from "@/components/custom/AppointmentCard";
 
 export default function Schedules() {
   const [currentDate, setCurrentDate] = useState(new Date(2026, 2, 10)); // March 10, 2026
@@ -181,7 +183,7 @@ export default function Schedules() {
                     className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 hover:bg-accent/30 transition-colors"
                   >
                     {/* Time Column */}
-                    <div className="flex flex-col items-center min-w-[80px] text-center">
+                    <div className="flex flex-col items-center min-w-20 text-center">
                       <span className="font-medium">{appointment.time}</span>
                       <span className="text-xs text-muted-foreground">{appointment.duration}</span>
                     </div>
@@ -292,7 +294,7 @@ export default function Schedules() {
           </Card>
         </TabsContent>
 
-        {/* ==================== MONTH VIEW ==================== */}
+        {/* ==================== MONTH VIEW - 3 COLUMN LAYOUT ==================== */}
         <TabsContent value="month" className="space-y-4">
           <Card className="border-border">
             <CardHeader>
@@ -304,8 +306,8 @@ export default function Schedules() {
                   </CardDescription>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => {
                       const newDate = new Date(currentDate);
@@ -315,8 +317,8 @@ export default function Schedules() {
                   >
                     <ChevronLeft className="h-4 w-4" />
                   </Button>
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     size="icon"
                     onClick={() => {
                       const newDate = new Date(currentDate);
@@ -329,88 +331,262 @@ export default function Schedules() {
                 </div>
               </div>
             </CardHeader>
+
             <CardContent>
-              {/* ✅ ShadCN Calendar with Custom Day Rendering */}
-              <Calendar
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                month={currentDate}
-                onMonthChange={setCurrentDate}
-                className="rounded-lg border w-full max-w-3xl mx-auto"  // ✅ Smaller width
-                components={{
-                  DayButton: ({ day, ...props }) => {
-                    const date = day.date;
-                    const count = getAppointmentCount(date);
-                    const isSelected = selectedDate?.toDateString() === date.toDateString();
-                    const isToday = date.getDate() === 10 &&
-                      date.getMonth() === 2 &&
-                      date.getFullYear() === 2026;
+              {/* Three Column Grid Inside Month Tab */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    return (
-                      <button
-                        {...props}
-                        className={`
-            relative flex items-center justify-center  // ✅ Center content
-            aspect-square w-full h-full
-            text-sm font-normal rounded-md transition-all duration-200
-            h-23 w-23  
-            mx-auto  
-            ${isSelected
-                            ? 'bg-primary text-primary-foreground shadow-sm'
-                            : ''
+                {/* ========== LEFT COLUMN - CALENDAR ========== */}
+                <div className="lg:col-span-1">
+                  <Card className="border-border h-full">
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-lg flex items-center gap-2">
+                        <CalendarIcon className="h-5 w-5 text-primary" />
+                        Calendar
+                      </CardTitle>
+                      <CardDescription>Select a date to view OPD details</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Calendar
+                        mode="single"
+                        selected={selectedDate}
+                        onSelect={setSelectedDate}
+                        month={currentDate}
+                        onMonthChange={setCurrentDate}
+                        className="rounded-lg border w-full"
+                        components={{
+                          DayButton: ({ day, ...props }) => {
+                            const date = day.date;
+                            const count = getAppointmentCount(date);
+                            const isSelected = selectedDate?.toDateString() === date.toDateString();
+                            const isToday = date.getDate() === 10 &&
+                              date.getMonth() === 2 &&
+                              date.getFullYear() === 2026;
+
+                            return (
+                              <button
+                                {...props}
+                                className={`
+                          relative flex items-center justify-center
+                          aspect-square w-full
+                          text-sm font-normal rounded-md transition-all duration-200
+                          h-15 mx-auto z-10
+                          ${isSelected
+                                    ? 'bg-primary text-primary-foreground shadow-sm scale-105'
+                                    : ''
+                                  }
+                          ${isToday && !isSelected
+                                  ? 'bg-primary/5 text-primary hover:bg-primary/10'
+                                    : ''
+                                  }
+                          ${hasAppointments(date) && !isSelected && !isToday
+                                    ? 'bg-primary/5 text-primary hover:bg-primary/10'
+                                    : ''
+                                  }
+                        `}
+                              >
+                                <div className="flex flex-col items-center justify-center">
+                                  <span>{date.getDate()}</span>
+                                  {count > 0 && (
+                                    <span className="h-1 w-1 bg-primary rounded-full mt-1">
+                                      
+                                    </span>
+                                  )}
+                                </div>
+                              </button>
+                            );
                           }
-            ${isToday && !isSelected
-                            ? 'bg-accent text-accent-foreground font-semibold ring-1 ring-primary/30'
-                            : ''
-                          }
-            ${hasAppointments(date) && !isSelected && !isToday
-                            ? 'bg-primary/5 text-primary hover:bg-primary/10'
-                            : 'hover:bg-accent/30'
-                          }
-          `}
-                      >
-                        <div className="flex flex-col items-center justify-center leading-tight">
-                          <span className={count > 0 ? 'font-medium' : ''}>
-                            {date.getDate()}
-                          </span>
-                          {count > 0 && (
-                            <span className={`
-                text-[8px] font-bold -mt-0.5  // ✅ Smaller text, adjusted position
-                ${isSelected ? 'text-primary-foreground' : 'text-primary'}
-              `}>
-                              {count}
-                            </span>
-                          )}
+                        }}
+                      />
+
+                      {/* Month Summary */}
+                      <div className="mt-4 pt-3 border-t border-border">
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-muted-foreground">Total OPD</span>
+                          <Badge variant="outline" className="font-semibold">{monthTotal}</Badge>
                         </div>
-                      </button>
-                    );
-                  }
-                }}
-              />
+                        <div className="flex justify-between items-center mt-1 text-sm">
+                          <span className="text-muted-foreground">Active Days</span>
+                          <Badge variant="outline" className="font-semibold">{appointmentDays.length}</Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
 
-              {/* Month Summary Section */}
+                <div className="lg:col-span-1">
+                  <ScheduleCard
+                    title="Doctor OPD Schedule"
+                    date={selectedDate
+                      ? selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                      : 'Select a date'}
+                    count={selectedDate ? getAppointmentCount(selectedDate) : 0}
+                    countLabel="OPD"
+                    viewAllText="View All Doctors"
+                    viewAllCount={Math.min(3, Math.ceil((selectedDate ? getAppointmentCount(selectedDate) : 0) / 2))}
+                    onViewAll={() => console.log("View all doctors")}
+                    emptyIcon={<Stethoscope className="h-8 w-8 mx-auto mb-2 opacity-30" />}
+                    emptyMessage="No doctor OPD scheduled"
+                    emptySubMessage="Select a date with OPD sessions"
+                  >
+                    {/* Doctor Cards */}
+                    {selectedDate && getAppointmentCount(selectedDate) >= 4 && (
+                      <AppointmentCard
+                        type="doctor"
+                        title="Dr. Amit Sharma"
+                        subtitle="Video"
+                        avatar="AS"
+                        specialization="Cardiology, Neurology"
+                        timeSlot="9:00 AM - 1:00 PM"
+                        appointments={Math.floor(getAppointmentCount(selectedDate) / 2)}
+                        available={true}
+                        onClick={() => console.log("Dr. Amit Sharma clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 3 && (
+                      <AppointmentCard
+                        type="doctor"
+                        title="Dr. Priya Patel"
+                        subtitle="In-Person"
+                        avatar="PP"
+                        specialization="Dermatology"
+                        timeSlot="2:00 PM - 5:00 PM"
+                        appointments={Math.ceil(getAppointmentCount(selectedDate) / 2)}
+                        available={true}
+                        onClick={() => console.log("Dr. Priya Patel clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 6 && (
+                      <AppointmentCard
+                        type="doctor"
+                        title="Dr. Rajesh Kumar"
+                        subtitle="Video"
+                        avatar="RK"
+                        specialization="Orthopedics"
+                        timeSlot="10:00 AM - 3:00 PM"
+                        appointments={Math.floor(getAppointmentCount(selectedDate) / 3)}
+                        available={true}
+                        onClick={() => console.log("Dr. Rajesh Kumar clicked")}
+                      />
+                    )}
+                  </ScheduleCard>
+                </div>
+
+                {/* ========== RIGHT COLUMN - PATIENT OPD SCHEDULE ========== */}
+                <div className="lg:col-span-1">
+                  <ScheduleCard
+                    title="Patient Appointments"
+                    date={selectedDate
+                      ? selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                      : 'Select a date'}
+                    count={selectedDate ? getAppointmentCount(selectedDate) : 0}
+                    countLabel="Patients"
+                    viewAllText="View All Patients"
+                    viewAllCount={selectedDate ? getAppointmentCount(selectedDate) : 0}
+                    onViewAll={() => console.log("View all patients")}
+                    emptyIcon={<Users className="h-8 w-8 mx-auto mb-2 opacity-30" />}
+                    emptyMessage="No patient appointments"
+                    emptySubMessage="Select a date with OPD sessions"
+                  >
+                    {/* Patient Cards */}
+                    {selectedDate && getAppointmentCount(selectedDate) >= 1 && (
+                      <AppointmentCard
+                        type="patient"
+                        title="Alice Johnson"
+                        avatar="AJ"
+                        doctor="Dr. Amit Sharma"
+                        time="9:00 AM"
+                        appointmentType="Video"
+                        status="Confirmed"
+                        onClick={() => console.log("Alice Johnson clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 3 && (
+                      <AppointmentCard
+                        type="patient"
+                        title="Michael Chen"
+                        avatar="MC"
+                        doctor="Dr. Priya Patel"
+                        time="10:00 AM"
+                        appointmentType="In-Person"
+                        status="Confirmed"
+                        onClick={() => console.log("Michael Chen clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 5 && (
+                      <AppointmentCard
+                        type="patient"
+                        title="Emma Wilson"
+                        avatar="EW"
+                        doctor="Dr. Rajesh Kumar"
+                        time="11:30 AM"
+                        appointmentType="Phone"
+                        status="Pending"
+                        onClick={() => console.log("Emma Wilson clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 7 && (
+                      <AppointmentCard
+                        type="patient"
+                        title="James Rodriguez"
+                        avatar="JR"
+                        doctor="Dr. Amit Sharma"
+                        time="2:00 PM"
+                        appointmentType="Video"
+                        status="Pending"
+                        onClick={() => console.log("James Rodriguez clicked")}
+                      />
+                    )}
+
+                    {selectedDate && getAppointmentCount(selectedDate) >= 8 && (
+                      <AppointmentCard
+                        type="patient"
+                        title="Sophia Lee"
+                        avatar="SL"
+                        doctor="Dr. Priya Patel"
+                        time="3:00 PM"
+                        appointmentType="Video"
+                        status="Confirmed"
+                        onClick={() => console.log("Sophia Lee clicked")}
+                      />
+                    )}
+                  </ScheduleCard>
+                </div>
+              </div>
+
+              {/* Month Summary Section (Below the 3 columns) */}
               <div className="mt-6 border-t border-border pt-4">
                 {/* Key Stats */}
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-primary">{monthTotal}</p>
+                <div className="grid grid-cols-4 gap-3 mb-4">
+                  <div className="text-center p-2 bg-accent/20 rounded-lg">
+                    <p className="text-2xl font-bold text-primary">{monthTotal}</p>
                     <p className="text-xs text-muted-foreground">Total OPD</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-primary">{appointmentDays.length}</p>
+                  <div className="text-center p-2 bg-accent/20 rounded-lg">
+                    <p className="text-2xl font-bold text-primary">{appointmentDays.length}</p>
                     <p className="text-xs text-muted-foreground">Active Days</p>
                   </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-primary">
+                  <div className="text-center p-2 bg-accent/20 rounded-lg">
+                    <p className="text-2xl font-bold text-primary">
                       {(monthTotal / appointmentDays.length).toFixed(1)}
                     </p>
                     <p className="text-xs text-muted-foreground">Avg/Day</p>
                   </div>
+                  <div className="text-center p-2 bg-accent/20 rounded-lg">
+                    <p className="text-2xl font-bold text-primary">
+                      {Math.max(...monthSchedule.map(d => d.count))}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Peak Day</p>
+                  </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="mt-4">
+                <div className="mt-2">
                   <div className="flex justify-between text-xs text-muted-foreground mb-1">
                     <span>0</span>
                     <span>50</span>
@@ -423,28 +599,6 @@ export default function Schedules() {
                       style={{ width: `${(monthTotal / 150) * 100}%` }}
                     />
                   </div>
-                  <p className="mt-2 text-xs text-muted-foreground text-right">
-                    {((monthTotal / 150) * 100).toFixed(0)}% of monthly capacity
-                  </p>
-                </div>
-
-                {/* Weekly Breakdown */}
-                <div className="mt-4 grid grid-cols-5 gap-2">
-                  {['W1', 'W2', 'W3', 'W4', 'W5'].map((week, index) => {
-                    const weekDays = monthSchedule.filter(d => 
-                      d.date >= index * 7 + 1 && d.date <= (index + 1) * 7
-                    );
-                    const weekTotal = weekDays.reduce((sum, d) => sum + d.count, 0);
-                    
-                    return (
-                      <div key={week} className="text-center">
-                        <div className="text-xs font-medium text-muted-foreground">{week}</div>
-                        <Badge variant="outline" className="mt-1">
-                          {weekTotal}
-                        </Badge>
-                      </div>
-                    );
-                  })}
                 </div>
               </div>
             </CardContent>

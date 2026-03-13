@@ -144,7 +144,7 @@ function AuthForm<T extends Record<string, any>>({
                             <button
                                 type="button"
                                 onClick={() => togglePasswordVisibility(field.name)}
-                                className="absolute right-3 top-[38px] text-muted-foreground hover:text-foreground transition-colors"
+                                className="absolute right-3 top-9.5 text-muted-foreground hover:text-foreground transition-colors"
                                 tabIndex={-1}
                             >
                                 {showPasswords[field.name] ? (

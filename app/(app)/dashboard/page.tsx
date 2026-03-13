@@ -1,12 +1,3 @@
-// export default function Dashboard() {
-//   return (
-//     <div>
-//       <h1>Dashboard</h1>
-//       <p>Welcome to the dashboard!</p>
-//     </div>
-//   );
-// }
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, Users, Star, TrendingUp, Video, Phone, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -178,22 +169,26 @@ export default function Dashboard() {
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-4">
+          <div className="grid gap-3 md:grid-cols-5">
             <Button variant="outline" className="h-auto flex-col gap-2 py-6">
               <Calendar className="h-6 w-6 text-primary" />
-              <span>Schedule</span>
+              <span>All Patients</span>
             </Button>
             <Button variant="outline" className="h-auto flex-col gap-2 py-6">
               <Users className="h-6 w-6 text-primary" />
-              <span>Patients</span>
+              <span>Patient Records</span>
             </Button>
             <Button variant="outline" className="h-auto flex-col gap-2 py-6">
               <MessageSquare className="h-6 w-6 text-primary" />
-              <span>Messages</span>
+              <span>Medicine Investory</span>
             </Button>
             <Button variant="outline" className="h-auto flex-col gap-2 py-6">
               <Star className="h-6 w-6 text-primary" />
-              <span>Reviews</span>
+              <span>payment history</span>
+            </Button>
+            <Button variant="outline" className="h-auto flex-col gap-2 py-6">
+              <Star className="h-6 w-6 text-primary" />
+              <span>All Reviews</span>
             </Button>
           </div>
         </CardContent>

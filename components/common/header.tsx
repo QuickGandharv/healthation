@@ -143,7 +143,7 @@ export default function Header({
       className={cn(
         'sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm',
         isScrolled
-          ? 'bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b'
+          ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b'
           : 'bg-background'
       )}
     >
@@ -215,7 +215,7 @@ export default function Header({
                 )}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <ScrollArea className="h-[300px]">
+              <ScrollArea className="h-75">
                 {notifications.length > 0 ? (
                   notifications.map((notification) => (
                     <DropdownMenuItem
@@ -316,7 +316,7 @@ export default function Header({
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+              <SheetContent side="right" className="w-75 sm:w-100">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
