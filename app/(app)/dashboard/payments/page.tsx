@@ -361,7 +361,7 @@ export default function PaymentsPage() {
 
     // Summary stats
     const summaryStats = (
-        <div className="flex items-center gap-4 text-sm">
+        <div className="absolute top-35 right-5 flex items-center gap-4 text-sm">
             <Badge variant="outline" className="bg-primary/10 text-primary">
                 Total: {payments.length} payments
             </Badge>

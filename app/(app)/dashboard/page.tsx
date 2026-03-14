@@ -140,18 +140,21 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className="border-border">
+        <Card className="border-border flex flex-col">
           <CardHeader>
             <CardTitle>Recent Activity</CardTitle>
             <CardDescription>Your latest actions</CardDescription>
           </CardHeader>
-          <CardContent>
+
+          <CardContent className="flex flex-col flex-1 justify-between">
+
             <div className="space-y-4">
               {recentActivity.map((activity) => (
                 <div key={activity.id} className="flex gap-3">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
                     <MessageSquare className="h-4 w-4 text-primary" />
                   </div>
+
                   <div className="flex-1">
                     <p className="text-sm">{activity.action}</p>
                     <p className="text-xs text-muted-foreground">{activity.time}</p>
@@ -159,6 +162,12 @@ export default function Dashboard() {
                 </div>
               ))}
             </div>
+
+            {/* Bottom clickable text */}
+            <button className="mt-4 text-sm text-primary hover:underline text-center">
+              View All Notification
+            </button>
+
           </CardContent>
         </Card>
       </div>

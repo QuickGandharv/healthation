@@ -430,7 +430,7 @@ export default function AllPatientsPage() {
 
     // Summary stats
     const summaryStats = (
-        <div className="flex items-center gap-4 text-sm">
+        <div className="absolute top-35 right-5 flex items-center gap-4 text-sm">
             <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-200">
                 {patients.reduce((sum, p) => sum + p.inPersonCount, 0)} In-Person
             </Badge>

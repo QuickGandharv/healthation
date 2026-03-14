@@ -414,7 +414,7 @@ export default function ReviewsPage() {
 
     // Summary stats
     const summaryStats = (
-        <div className="flex items-center gap-4 text-sm flex-wrap">
+        <div className="absolute top-35 right-5 flex items-center gap-4 text-sm flex-wrap">
             <Badge variant="outline" className="bg-primary/10 text-primary">
                 Total: {reviews.length} reviews
             </Badge>
@@ -445,10 +445,6 @@ export default function ReviewsPage() {
                         Back
                     </Button>
                 </div>
-                <Button className="gap-2">
-                    <Plus className="h-4 w-4" />
-                    New Doctor Review
-                </Button>
             </div>
 
             {/* Data Table */}

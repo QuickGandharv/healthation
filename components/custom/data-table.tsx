@@ -163,7 +163,7 @@ export function DataTable<T>({
                     Showing <span className="font-medium">{(currentPage - 1) * itemsPerPage + 1}</span> to{" "}
                     <span className="font-medium">
                         {Math.min(currentPage * itemsPerPage, data.length)}
-                    </span>{" "}
+                    </span>
                     of <span className="font-medium">{data.length}</span> items
                 </p>
                 <div className="flex items-center gap-2">
@@ -249,13 +249,19 @@ export function DataTable<T>({
                                         value={activeFilters[filter.key] || "all"}
                                         onValueChange={(value) => handleFilterChange(filter.key, value)}
                                     >
-                                        <SelectTrigger className="w-37.5">
+                                        <SelectTrigger className="w-37.5 border border-border rounded-md shadow-sm hover:bg-accent/50 transition-colors">
                                             <SelectValue placeholder={filter.label} />
                                         </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">All {filter.label}</SelectItem>
-                                            {filter.options.map((option) => (
-                                                <SelectItem key={option.value} value={option.value}>
+                                        <SelectContent className="border border-border">
+                                            <SelectItem value="all" className="border-b border-border last:border-0">
+                                                All {filter.label}
+                                            </SelectItem>
+                                            {filter.options.map((option, index) => (
+                                                <SelectItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                    className={index < filter.options.length - 1 ? "border-b border-border" : ""}
+                                                >
                                                     <div className="flex items-center gap-2">
                                                         {option.icon}
                                                         <span>{option.label}</span>

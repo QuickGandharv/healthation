@@ -165,6 +165,9 @@ function AppointmentsContent() {
   const [activeTab, setActiveTab] = useState("today")
   const [currentPage, setCurrentPage] = useState(1)
   const [pastPage, setPastPage] = useState(1)
+  const [todayPage, setTodayPage] = useState(1)
+  const [upcomingPage, setUpcomingPage] = useState(1) 
+
   const itemsPerPage = 9
 
   useEffect(() => {
@@ -1264,6 +1267,8 @@ function AppointmentsContent() {
   const filteredByType = getFilteredAppointments()
   const totalAllPages = Math.ceil(filteredByType.length / itemsPerPage)
   const totalPastPages = Math.ceil(pastAppointments.length / itemsPerPage)
+  const totalTodayPages = Math.ceil(todayAppointments.length / itemsPerPage)
+  const totalUpcomingPages = Math.ceil(upcomingAppointments.length / itemsPerPage)  
 
   const paginatedAll = filteredByType.slice(
     (currentPage - 1) * itemsPerPage,
@@ -1273,6 +1278,16 @@ function AppointmentsContent() {
   const paginatedPast = pastAppointments.slice(
     (pastPage - 1) * itemsPerPage,
     pastPage * itemsPerPage
+  )
+
+  const paginatedToday = todayAppointments.slice(  // ✅ Add this
+    (todayPage - 1) * itemsPerPage,
+    todayPage * itemsPerPage
+  )
+
+  const paginatedUpcoming = upcomingAppointments.slice(  // ✅ Add this
+    (upcomingPage - 1) * itemsPerPage,
+    upcomingPage * itemsPerPage
   )
 
   const PaginationControls = ({
@@ -1672,8 +1687,8 @@ function AppointmentsContent() {
           )}
         </TabsContent>
 
-        {/* Today */}
-        <TabsContent value="today" className="mt-6 space-y-4">
+        {/* Today Tab */}
+        <TabsContent value="today" className="mt-6 space-y-6">
           {todayAppointments.length === 0 ? (
             <Card className="border-border">
               <CardContent className="flex flex-col items-center justify-center py-12 text-center">
@@ -1685,76 +1700,119 @@ function AppointmentsContent() {
               </CardContent>
             </Card>
           ) : (
-            todayAppointments.map((appointment) => (
-              <Card
-                key={appointment.id}
-                className="border-border transition-colors hover:border-primary/20"
-              >
-                <CardContent className="pt-6">
-                  <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                    <div className="flex flex-1 items-center gap-4">
-                      <Avatar className="h-12 w-12">
-                        <AvatarImage
-                          src={appointment.avatar}
-                          alt={appointment.patient}
-                        />
-                        <AvatarFallback className="bg-primary/10 text-primary">
-                          {appointment.patient
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1">
-                        <h4 className="mb-1 font-semibold">
-                          {appointment.patient}
-                        </h4>
-                        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                          <span>
-                            {appointment.age}y, {appointment.gender}
-                          </span>
-                          <span>•</span>
-                          <span>{appointment.reason}</span>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-6">
-                      <div className="text-center min-w-30">
-                        <div className="flex items-center gap-2 text-sm font-medium">
-                          <Clock className="h-3 w-3" />
-                          <span>{appointment.time}</span>
-                          <span className="text-muted-foreground">
-                            ({appointment.duration})
-                          </span>
-                        </div>
-                      </div>
-                      <div className="flex flex-col gap-2 min-w-30">
-                        <div className="flex items-center gap-2">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-                            {getTypeIcon(appointment.type)}
+            <>
+              {/* Cards Grid - 3 columns */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {paginatedToday.map((appointment) => (
+                  <Card
+                    key={appointment.id}
+                    className="rounded-xl border border-gray-200"
+                  >
+                    <CardContent className="p-5">
+                      {/* Header */}
+                      <div className="mb-4 flex items-start justify-between">
+                        {/* Avatar + Info */}
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={appointment.avatar || "/placeholder-avatar.png"}
+                            className="h-10 w-10 rounded-full object-cover"
+                            alt={appointment.patient}
+                          />
+                          <div>
+                            <h3 className="font-semibold text-primary">
+                              {appointment.patient}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.age} years, {appointment.gender}
+                            </p>
                           </div>
-                          <span className="text-sm capitalize">
-                            {appointment.type}
-                          </span>
                         </div>
-                        <Badge className={getStatusColor(appointment.status)}>
-                          {appointment.status}
-                        </Badge>
+
+                        {/* Badge */}
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full font-medium ${appointment.type === "video" || appointment.type === "phone"
+                              ? "bg-primary text-white"
+                              : "bg-gray-100 text-gray-700"
+                            }`}
+                        >
+                          {appointment.type === "video" || appointment.type === "phone"
+                            ? "Telehealth"
+                            : "In-Person"}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {appointment.status === "confirmed" &&
-                          appointment.type === "video" && (
-                            <Button
-                              size="sm"
-                              className="bg-primary hover:bg-primary/90"
-                            >
-                              <Video className="mr-1 h-4 w-4" />
-                              Join
-                            </Button>
-                          )}
+
+                      {/* Date + Time */}
+                      <div className="mb-4 space-y-1 text-sm text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          {appointment.date}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          {appointment.time} ({appointment.duration})
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge className={getStatusColor(appointment.status)}>
+                            {appointment.status}
+                          </Badge>
+                        </div>
+                      </div>
+
+                      <div className="my-3 border-t border-gray-200"></div>
+
+                      {/* Complaint */}
+                      <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-gray-700">
+                        <span className="font-medium text-gray-900">
+                          Chief Complaint:
+                        </span>{" "}
+                        {appointment.reason}
+                      </p>
+
+                      {/* Buttons */}
+                      <div className="flex gap-3">
+                        {appointment.status === "confirmed" && appointment.type === "video" && (
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-primary text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Join call:", appointment.patient)
+                            }}
+                          >
+                            <Video className="mr-1 h-4 w-4" />
+                            Join
+                          </Button>
+                        )}
+                        {appointment.status === "confirmed" && appointment.type !== "video" && (
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-primary text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Call now:", appointment.patient)
+                            }}
+                          >
+                            <Phone className="mr-1 h-4 w-4" />
+                            Call Now
+                          </Button>
+                        )}
+                        {appointment.status === "pending" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 text-success border-success hover:bg-success/10"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Confirm:", appointment.patient)
+                            }}
+                          >
+                            <CheckCircle className="mr-1 h-4 w-4" />
+                            Confirm
+                          </Button>
+                        )}
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
+                            <Button variant="ghost" size="icon" className="h-9 w-9">
                               <MoreVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
@@ -1779,252 +1837,375 @@ function AppointmentsContent() {
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
-                    </div>
-                  </div >
-                  {
-                    appointment.notes && (
-                      <div className="mt-4 rounded-lg bg-accent/30 p-3">
-                        <p className="text-sm text-muted-foreground">
-                          <span className="font-medium text-foreground">
-                            Notes:
-                          </span>{" "}
-                          {appointment.notes}
-                        </p>
-                      </div>
-                    )
-                  }
-                </CardContent >
-              </Card >
-            ))
-          )
-          }
-        </TabsContent >
 
-        {/* Upcoming */}
-        < TabsContent value="upcoming" className="mt-6 space-y-4" >
-          {
-            upcomingAppointments.length === 0 ? (
-              <Card className="border-border">
-                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                  <Calendar className="mb-3 h-12 w-12 text-muted-foreground/40" />
-                  <p className="mb-1 font-medium">No upcoming appointments</p>
-                  <p className="text-sm text-muted-foreground">
-                    Schedule new appointments to get started
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              upcomingAppointments.map((appointment) => (
-                <Card
-                  key={appointment.id}
-                  className="border-border transition-colors hover:border-primary/20"
-                >
-                  <CardContent className="pt-6">
-                    <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                      <div className="flex flex-1 items-center gap-4">
-                        <Avatar className="h-12 w-12">
-                          <AvatarImage
-                            src={appointment.avatar}
+                      {/* Notes */}
+                      {appointment.notes && (
+                        <div className="mt-4 rounded-lg bg-accent/30 p-3">
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">
+                              Notes:
+                            </span>{" "}
+                            {appointment.notes}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Pagination for Today */}
+              {todayAppointments.length > itemsPerPage && (
+                <PaginationControls
+                  currentPage={todayPage}
+                  totalPages={totalTodayPages}
+                  onPageChange={setTodayPage}
+                  totalItems={todayAppointments.length}
+                />
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        {/* Upcoming Tab */}
+        <TabsContent value="upcoming" className="mt-6 space-y-6">
+          {upcomingAppointments.length === 0 ? (
+            <Card className="border-border">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <Calendar className="mb-3 h-12 w-12 text-muted-foreground/40" />
+                <p className="mb-1 font-medium">No upcoming appointments</p>
+                <p className="text-sm text-muted-foreground">
+                  Schedule new appointments to get started
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Cards Grid - 3 columns */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                  {paginatedUpcoming.map((appointment) => (
+                  <Card
+                    key={appointment.id}
+                    className="rounded-xl border border-gray-200"
+                  >
+                    <CardContent className="p-5">
+                      {/* Header */}
+                      <div className="mb-4 flex items-start justify-between">
+                        {/* Avatar + Info */}
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={appointment.avatar || "/placeholder-avatar.png"}
+                            className="h-10 w-10 rounded-full object-cover"
                             alt={appointment.patient}
                           />
-                          <AvatarFallback className="bg-primary/10 text-primary">
-                            {appointment.patient
-                              .split(" ")
-                              .map((n) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <h4 className="mb-1 font-semibold">
-                            {appointment.patient}
-                          </h4>
-                          <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                            <span>
-                              {appointment.age}y, {appointment.gender}
-                            </span>
-                            <span>•</span>
-                            <span>{appointment.reason}</span>
+                          <div>
+                            <h3 className="font-semibold text-primary">
+                              {appointment.patient}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.age} years, {appointment.gender}
+                            </p>
                           </div>
                         </div>
+
+                        {/* Badge */}
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full font-medium ${appointment.type === "video" || appointment.type === "phone"
+                              ? "bg-primary text-white"
+                              : "bg-gray-100 text-gray-700"
+                            }`}
+                        >
+                          {appointment.type === "video" || appointment.type === "phone"
+                            ? "Telehealth"
+                            : "In-Person"}
+                        </span>
                       </div>
-                      <div className="flex items-center gap-6">
-                        <div className="text-center min-w-30">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                            <Calendar className="h-3 w-3" />
-                            <span>{appointment.date}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm font-medium">
-                            <Clock className="h-3 w-3" />
-                            <span>{appointment.time}</span>
-                            <span className="text-muted-foreground">
-                              ({appointment.duration})
-                            </span>
-                          </div>
+
+                      {/* Date + Time */}
+                      <div className="mb-4 space-y-1 text-sm text-gray-600">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="h-4 w-4" />
+                          {appointment.date}
                         </div>
-                        <div className="flex flex-col gap-2 min-w-30">
-                          <div className="flex items-center gap-2">
-                            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-                              {getTypeIcon(appointment.type)}
-                            </div>
-                            <span className="text-sm capitalize">
-                              {appointment.type}
-                            </span>
-                          </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          {appointment.time} ({appointment.duration})
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
                           <Badge className={getStatusColor(appointment.status)}>
                             {appointment.status}
                           </Badge>
                         </div>
+                      </div>
+
+                      <div className="my-3 border-t border-gray-200"></div>
+
+                      {/* Complaint */}
+                      <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-gray-700">
+                        <span className="font-medium text-gray-900">
+                          Chief Complaint:
+                        </span>{" "}
+                        {appointment.reason}
+                      </p>
+
+                      {/* Buttons */}
+                      <div className="flex gap-3">
+                        {appointment.status === "pending" && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 text-success border-success hover:bg-success/10"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Confirm:", appointment.patient)
+                            }}
+                          >
+                            <CheckCircle className="mr-1 h-4 w-4" />
+                            Confirm
+                          </Button>
+                        )}
+                        {appointment.status === "confirmed" && appointment.type === "video" && (
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-primary text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Join call:", appointment.patient)
+                            }}
+                          >
+                            <Video className="mr-1 h-4 w-4" />
+                            Join
+                          </Button>
+                        )}
+                        {appointment.status === "confirmed" && appointment.type !== "video" && (
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-primary text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              console.log("Call now:", appointment.patient)
+                            }}
+                          >
+                            <Phone className="mr-1 h-4 w-4" />
+                            Call Now
+                          </Button>
+                        )}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-9 w-9">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                              <User className="mr-2 h-4 w-4" />
+                              View Patient
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <FileText className="mr-2 h-4 w-4" />
+                              View Notes
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit Appointment
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem className="text-danger">
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Cancel Appointment
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+
+                      {/* Notes */}
+                      {appointment.notes && (
+                        <div className="mt-4 rounded-lg bg-accent/30 p-3">
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">
+                              Notes:
+                            </span>{" "}
+                            {appointment.notes}
+                          </p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+
+              {/* Pagination for Upcoming */}
+              {upcomingAppointments.length > itemsPerPage && (
+                <PaginationControls
+                  currentPage={upcomingPage}
+                  totalPages={totalUpcomingPages}
+                  onPageChange={setUpcomingPage}
+                  totalItems={upcomingAppointments.length}
+                />
+              )}
+            </>
+          )}
+        </TabsContent>
+
+        {/* Past Tab */}
+        <TabsContent value="past" className="mt-6 space-y-6">
+          {pastAppointments.length === 0 ? (
+            <Card className="border-border">
+              <CardContent className="flex flex-col items-center justify-center py-12 text-center">
+                <Calendar className="mb-3 h-12 w-12 text-muted-foreground/40" />
+                <p className="mb-1 font-medium">No past appointments</p>
+                <p className="text-sm text-muted-foreground">
+                  Past appointments will appear here
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            <>
+              {/* Cards Grid - 3 columns */}
+              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+                {paginatedPast.map((appointment) => (
+                  <Card
+                    key={appointment.id}
+                    className="cursor-pointer rounded-xl border border-gray-200 transition hover:border-primary/50 hover:shadow-md opacity-75 bg-gray-50/50"
+                    // onClick={() => {
+                    //   try {
+                    //     const dataString = encodeURIComponent(
+                    //       JSON.stringify(appointment)
+                    //     )
+                    //     router.push(
+                    //       `/appointments/${appointment.id}?data=${dataString}`
+                    //     )
+                    //   } catch (error) {
+                    //     console.error("Error encoding data:", error)
+                    //     router.push(`/appointments/${appointment.id}`)
+                    //   }
+                    // }}
+                  >
+                    <CardContent className="p-5">
+                      {/* Header */}
+                      <div className="mb-4 flex items-start justify-between">
+                        {/* Avatar + Info */}
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={appointment.avatar || "/placeholder-avatar.png"}
+                            className="h-10 w-10 rounded-full object-cover"
+                            alt={appointment.patient}
+                          />
+                          <div>
+                            <h3 className="font-semibold text-primary">
+                              {appointment.patient}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {appointment.age} years, {appointment.gender}
+                            </p>
+                          </div>
+                        </div>
+
+                        {/* Badge */}
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full font-medium ${appointment.type === "video" || appointment.type === "phone"
+                              ? "bg-primary text-white"
+                              : "bg-gray-100 text-gray-700"
+                            }`}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {appointment.type === "video" || appointment.type === "phone"
+                            ? "Telehealth"
+                            : "In-Person"}
+                        </span>
+                      </div>
+
+                      {/* Date + Time */}
+                      <div className="mb-4 space-y-1 text-sm text-gray-600">
                         <div className="flex items-center gap-2">
-                          {appointment.status === "pending" && (
-                            <div className="flex gap-2">
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="text-success border-success hover:bg-success/10"
-                              >
-                                <CheckCircle className="mr-1 h-4 w-4" />
-                                Confirm
-                              </Button>
-                            </div>
-                          )}
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <User className="mr-2 h-4 w-4" />
-                                View Patient
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <FileText className="mr-2 h-4 w-4" />
-                                View Notes
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <Edit className="mr-2 h-4 w-4" />
-                                Edit Appointment
-                              </DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-danger">
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Cancel Appointment
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                          <Calendar className="h-4 w-4" />
+                          {appointment.date}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          {appointment.time} ({appointment.duration})
+                        </div>
+                        <div className="flex items-center gap-2 mt-1">
+                          <Badge className={getStatusColor(appointment.status)}>
+                            {appointment.status}
+                          </Badge>
                         </div>
                       </div>
-                    </div >
-                  </CardContent >
-                </Card >
-              ))
-            )
-          }
-        </TabsContent >
 
-        {/* Past - WITH PAGINATION */}
-        < TabsContent value="past" className="mt-6 space-y-4" >
-          {
-            pastAppointments.length === 0 ? (
-              <Card className="border-border">
-                <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-                  <Calendar className="mb-3 h-12 w-12 text-muted-foreground/40" />
-                  <p className="mb-1 font-medium">No past appointments</p>
-                  <p className="text-sm text-muted-foreground">
-                    Past appointments will appear here
-                  </p>
-                </CardContent>
-              </Card>
-            ) : (
-              <>
-                {paginatedPast.map((appointment) => (
-                  <Card key={appointment.id} className="border-border opacity-75">
-                    <CardContent className="pt-6">
-                      <div className="flex flex-col gap-4 md:flex-row md:items-center">
-                        <div className="flex flex-1 items-center gap-4">
-                          <Avatar className="h-12 w-12">
-                            <AvatarImage
-                              src={appointment.avatar}
-                              alt={appointment.patient}
-                            />
-                            <AvatarFallback className="bg-primary/10 text-primary">
-                              {appointment.patient
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex-1">
-                            <h4 className="mb-1 font-semibold">
-                              {appointment.patient}
-                            </h4>
-                            <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                              <span>
-                                {appointment.age}y, {appointment.gender}
-                              </span>
-                              <span>•</span>
-                              <span>{appointment.reason}</span>
-                            </div>
-                          </div>
+                      <div className="my-3 border-t border-gray-200"></div>
+
+                      {/* Complaint */}
+                      <p className="mb-5 line-clamp-3 text-sm leading-relaxed text-gray-700">
+                        <span className="font-medium text-gray-900">
+                          Chief Complaint:
+                        </span>{" "}
+                        {appointment.reason}
+                      </p>
+
+                      {/* Buttons */}
+                      <div
+                        className="flex gap-3"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="flex-1"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            console.log("View details:", appointment.patient)
+                          }}
+                        >
+                          <FileText className="mr-1 h-4 w-4" />
+                          View Details
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-9 w-9">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>
+                              <User className="mr-2 h-4 w-4" />
+                              View Patient
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <FileText className="mr-2 h-4 w-4" />
+                              View Notes
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+
+                      {/* Notes */}
+                      {appointment.notes && (
+                        <div className="mt-4 rounded-lg bg-accent/30 p-3">
+                          <p className="text-sm text-muted-foreground">
+                            <span className="font-medium text-foreground">
+                              Notes:
+                            </span>{" "}
+                            {appointment.notes}
+                          </p>
                         </div>
-                        <div className="flex items-center gap-6">
-                          <div className="text-center min-w-30">
-                            <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
-                              <Calendar className="h-3 w-3" />
-                              <span>{appointment.date}</span>
-                            </div>
-                            <div className="flex items-center gap-2 text-sm font-medium">
-                              <Clock className="h-3 w-3" />
-                              <span>{appointment.time}</span>
-                            </div>
-                          </div>
-                          <div className="flex flex-col gap-2 min-w-30">
-                            <div className="flex items-center gap-2">
-                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary">
-                                {getTypeIcon(appointment.type)}
-                              </div>
-                              <span className="text-sm capitalize">
-                                {appointment.type}
-                              </span>
-                            </div>
-                            <Badge className={getStatusColor(appointment.status)}>
-                              {appointment.status}
-                            </Badge>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreVertical className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>
-                                <User className="mr-2 h-4 w-4" />
-                                View Patient
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>
-                                <FileText className="mr-2 h-4 w-4" />
-                                View Notes
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div >
-                    </CardContent >
-                  </Card >
+                      )}
+                    </CardContent>
+                  </Card>
                 ))}
+              </div>
 
-                {/* Pagination for Past Appointments */}
+              {/* Pagination for Past Appointments */}
+              {pastAppointments.length > itemsPerPage && (
                 <PaginationControls
                   currentPage={pastPage}
                   totalPages={totalPastPages}
                   onPageChange={setPastPage}
                   totalItems={pastAppointments.length}
                 />
-              </>
-            )}
-        </TabsContent >
+              )}
+            </>
+          )}
+        </TabsContent>
       </Tabs >
     </div >
   )
