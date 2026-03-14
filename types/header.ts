@@ -4,7 +4,7 @@ export interface User {
   name: string;
   email: string;
   avatar?: string;
-  role: 'patient' | 'doctor' | 'admin';
+  role?: "patient" | "doctor" | "admin";
 }
 
 export interface Notification {

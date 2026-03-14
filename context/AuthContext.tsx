@@ -15,6 +15,7 @@ interface User {
 interface AuthContextType {
   user: User | null
   token: string | null
+  loading?: boolean
   login: (token: string, user: User) => void
   logout: () => void
 }
@@ -26,6 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true) // Add loading state
 
   // useEffect(() => {
   //     const storedToken = localStorage.getItem("token")
@@ -39,18 +41,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem("token")
     const storedUser = localStorage.getItem("user")
 
+    console.log("Stored token:", storedToken)
+    console.log("Stored user:", storedUser)
+
     if (storedToken) {
       setToken(storedToken)
     }
 
     if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
-      try {
-        setUser(JSON.parse(storedUser))
-      } catch (error) {
-        console.error("Invalid user data in localStorage:", storedUser)
-        localStorage.removeItem("user")
-        setUser(null)
+      const loadUser = () => {
+        try {
+          const parsedUser = JSON.parse(storedUser)
+          console.log("Parsed user:", parsedUser)
+          setUser(parsedUser)
+        } catch (error) {
+          console.error("Invalid user data:", storedUser)
+          localStorage.removeItem("user")
+        } finally {
+                setLoading(false); // Set loading to false after checking
+            }
       }
+      loadUser();
     }
   }, [])
 

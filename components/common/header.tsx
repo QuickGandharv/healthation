@@ -55,7 +55,7 @@ export default function Header({
   onNotificationClick,
   onLogout,
 }: HeaderProps) {
-  const { user } = useAuth()
+  const { user, logout } = useAuth()
   const pathname = usePathname()
   const isDesktop = useMediaQuery("(min-width: 768px)")
   const [isScrolled, setIsScrolled] = useState(false)
@@ -63,6 +63,7 @@ export default function Header({
   const [unreadCount, setUnreadCount] = useState(0)
   const [mounted, setMounted] = useState(false)
 
+  console.log("Header user:", user)
   // Navigation items
   const navItems: NavItem[] = [
     {
@@ -113,14 +114,13 @@ export default function Header({
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-    if (!user?.name) return "U"
-    return user.name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2)
-  }
+  if (!user) return "U"
+
+  const first = user.first_name?.[0] || ""
+  const last = user.last_name?.[0] || ""
+
+  return (first + last).toUpperCase() || "U"
+}
 
   // Format notification time
   const formatNotificationTime = (date: Date) => {
@@ -279,7 +279,7 @@ export default function Header({
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user?.avatar} alt={user?.name} />
+                  <AvatarImage src={user?.avatar} alt={`${user?.first_name} ${user?.last_name}`} />
                   <AvatarFallback>{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
@@ -319,7 +319,7 @@ export default function Header({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer text-destructive focus:text-destructive"
-                onClick={onLogout}
+                onClick={logout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Log out</span>
