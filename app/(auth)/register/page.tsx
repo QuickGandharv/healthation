@@ -258,13 +258,11 @@ const RegisterPage = () => {
             }
         );
 
-        console.log("Registration Response:", response.data);
-
         if (response.data.success) {
+
             // Store user data and token
             localStorage.setItem("token", response.data.data.token);
-            localStorage.setItem("user", JSON.stringify(response.data.data.user));
-            localStorage.setItem("patient", JSON.stringify(response.data.data.patient));
+            localStorage.setItem("user", JSON.stringify(response.data.data));
             
             // Set cookie for middleware
             document.cookie = `token=${response.data.data.token}; path=/; max-age=604800; samesite=lax`;
@@ -274,8 +272,12 @@ const RegisterPage = () => {
             localStorage.removeItem("verificationToken");
             localStorage.removeItem("registrationTimestamp");
             
-            // Redirect to dashboard
-            router.push("/dashboard");
+            // Redirect to dashboard based on role
+            if(response.data.data.role === "doctor"){
+                router.push("/doctor/dashboard")
+            }else{
+                router.push("/patient/dashboard")
+            }
         } else {
             setErrorMessage(response.data.message || "Registration failed");
         }

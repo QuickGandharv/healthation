@@ -74,7 +74,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(token)
     setUser(user)
 
-    router.push("/dashboard")
+    if(user.role === "doctor"){
+      router.push("/doctor/dashboard")
+    }else{
+      router.push("/patient/dashboard")
+    }
   }
 
   const logout = () => {

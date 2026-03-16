@@ -72,8 +72,6 @@ const LoginPage = () => {
             }
         )
 
-        console.log("API Response:", response.data)
-
         if (response.data.success && response.data.token) {
             // Store token (consider using httpOnly cookies for better security)
             localStorage.setItem("token", response.data.token)
@@ -82,8 +80,12 @@ const LoginPage = () => {
             // Store token in cookie for middleware access
             document.cookie = `token=${response.data.token}; path=/; max-age=604800; samesite=lax`
 
-            // Redirect to dashboard
-            router.push("/dashboard")
+            // Redirect to dashboard based on role
+            if(response.data.data.role === "doctor"){
+                router.push("/doctor/dashboard")
+            }else{
+                router.push("/patient/dashboard")
+            }
         } else {
             setErrorMessage(response.data.message || "Login failed")
         }
