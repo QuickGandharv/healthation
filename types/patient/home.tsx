@@ -32,6 +32,7 @@ export interface AdvertisementProps {
 export interface TestimonialProps {
   patient_id: string;
   doctor_id?: string;
+  doctor_avatar?: string;
   patient_name: string;
   title: string;
   content: string;

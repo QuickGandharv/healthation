@@ -3,8 +3,8 @@
 import { BookingOptions } from '../../../components/patient/BookingOptions';
 import { DoctorSearch } from '../../../components/patient/DoctorSearch';
 import { AdvertisementSection } from '../../../components/patient/AdvertisementSection';
-import { PatientReviews } from '../../../components/patient/PatientReviews';
-import { AppointmentsList } from '../../../components/patient/AppointmentsList';
+import PatientReviews from '../../../components/patient/PatientReviews';
+import AvaliableDoctor from '@/components/patient/AvaliableDoctor';
 import { usePatientHome } from '@/queries/patient/usePatientHome';
 import { useAuth } from '@/context/AuthContext';
 
@@ -13,8 +13,10 @@ const Home = () => {
     const { token, initializing } = useAuth();
     const { data, isLoading, isError, error, refetch } = usePatientHome(!!initializing && !!token);
     const homeData = data?.data;
+    const avaliableDoctor = homeData?.available_doctors
+    const patientReviews = homeData?.patient_reviews;
 
-    console.log('data', homeData?.advertisements)
+    console.log('homeData', homeData)
 
     return(
         <div className="min-h-screen bg-gray-50">
@@ -37,13 +39,13 @@ const Home = () => {
                 <DoctorSearch />
         
                 {/* Appointments Section */}
-                <AppointmentsList />
+                <AvaliableDoctor data={avaliableDoctor} />
         
                 {/* Advertisement Section */}
                 <AdvertisementSection />
         
                 {/* Patient Reviews */}
-                <PatientReviews />
+                <PatientReviews data={patientReviews} />
                 
             </main>
     

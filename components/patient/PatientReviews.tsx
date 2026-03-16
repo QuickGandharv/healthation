@@ -1,62 +1,86 @@
 import { Star, User } from 'lucide-react';
+import Image from 'next/image';
+import type { TestimonialProps } from '@/types/patient/home';
 
-export function PatientReviews() {
+type PatientReviewsProps = {
+  data?: TestimonialProps[];
+};
 
-    const reviews = [
-    {
-        id: 1,
-        name: 'Sarah Johnson',
-        rating: 5,
-        comment: 'Excellent service! The video consultation was very smooth and the doctor was very professional.',
-        date: '2 days ago'
-    },
-    {
-        id: 2,
-        name: 'Michael Chen',
-        rating: 4,
-        comment: 'Great experience with the telehealth service. Easy to book and very convenient.',
-        date: '1 week ago'
-    },
-    {
-        id: 3,
-        name: 'Emily Williams',
-        rating: 5,
-        comment: 'The in-clinic appointment was well organized. Staff was friendly and caring.',
-        date: '2 weeks ago'
-    }
-    ];
+const PatientReviews = ({ data = [] }: PatientReviewsProps) => {
+    return (
+        <div className="mb-8">
+            <h2 className="text-2xl mb-4">Patient Reviews</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {data.map((review) => (
+                    <div
+                        key={review.slug ?? `${review.patient_id}-${review.doctor_id ?? ''}`}
+                        className="bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden hover:shadow-lg transition-shadow"
+                    >
+                        {/* Review Content */}
+                        <div className="p-6">
 
-  return (
-    <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-      <h2 className="text-2xl mb-4">Patient Reviews</h2>
-      <div className="space-y-4">
-        {reviews.map((review) => (
-          <div key={review.id} className="border-b border-gray-200 pb-4 last:border-0">
-            <div className="flex items-start gap-3">
-              <div className="p-2 bg-gray-100 rounded-full">
-                <User className="w-6 h-6 text-gray-600" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center justify-between mb-1">
-                  <h4 className="font-medium">{review.name}</h4>
-                  <span className="text-sm text-gray-500">{review.date}</span>
-                </div>
-                <div className="flex gap-1 mb-2">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-4 h-4 ${
-                        i < review.rating ? 'fill-yellow-400 text-yellow-400' : 'text-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-                <p className="text-gray-700 text-sm">{review.comment}</p>
-              </div>
+                            {/* Patient Info */}
+                            <div className="flex items-start justify-between mb-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-16 h-16 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                        <User className="w-8 h-8 text-white" />
+                                        <Image
+                                            src={review.patient_image}
+                                            alt="Avatar"
+                                            width={80}
+                                            height={80}
+                                            priority
+                                            className="rounded-full"
+                                            unoptimized
+                                        />
+                                    </div>
+                                <div>
+                                <h3 className="text-xl mb-1">{review.patient_name}</h3>
+                                <p className="text-gray-600">{review.patient_age} Years</p>
+                            </div>
+
+                        </div>
+
+                            <div className="flex items-center gap-1 bg-gray-100 px-3 py-2 rounded-xl">
+                                <Star className="w-5 h-5 fill-gray-800 text-gray-800" />
+                                <span className="font-medium">{review.rating}</span>
+                            </div>
+
+                        </div>
+
+                            {/* Consultation title */}
+                            <h4 className="text-lg mb-3">{review.title}</h4>
+
+                            {/* Review content */}
+                            <p className="text-gray-700">{review.content}</p>
+                        </div>
+
+                        {/* Doctor Info Footer */}
+                        <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                            <p className="font-medium">
+                                {review.total_reviews} Reviews for {review.doctor_name}
+                            </p>
+                            <div className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center flex-shrink-0">
+                                {review.doctor_avatar ? (
+                                    <Image
+                                        src={review.doctor_avatar}
+                                        alt="Avatar"
+                                        width={40}
+                                        height={40}
+                                        priority
+                                        className="rounded-full"
+                                        unoptimized
+                                    />
+                                ) : (
+                                    <User className="w-5 h-5 text-white" />
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                ))}
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+        </div>
+    );
 }
+
+export default PatientReviews
