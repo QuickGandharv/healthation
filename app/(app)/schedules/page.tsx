@@ -1568,7 +1568,7 @@ export default function Schedules() {
 
             <CardContent>
               {/* Three Column Grid Inside Month Tab */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
 
                 {/* ========== LEFT COLUMN - CALENDAR ========== */}
                 <div className="lg:col-span-1">
@@ -1587,7 +1587,7 @@ export default function Schedules() {
                         onSelect={handleDateClick}
                         month={currentDate}
                         onMonthChange={setCurrentDate}
-                        className="rounded-lg border w-full"
+                        className="rounded-lg border gap-1 w-full"
                         components={{
                           DayButton: ({ day, ...props }) => {
                             const date = day.date;
@@ -1604,7 +1604,7 @@ export default function Schedules() {
                                   relative flex items-center justify-center
                                   aspect-square w-full
                                   text-sm font-normal rounded-md transition-all duration-200
-                                  h-15 mx-auto z-10
+                                  h-auto mx-auto z-10
                                   ${isSelected
                                     ? 'bg-primary text-primary-foreground shadow-sm scale-105'
                                     : ''

@@ -1,5 +1,6 @@
 'use client';
 
+import Footer from '@/components/common/footer';
 import Header from '@/components/common/header';
 import { useAuth } from '@/context/AuthContext';
 import { mockUser, mockNotifications } from '@/lib/mock-data';
@@ -11,7 +12,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   const router = useRouter();
   const handleNotificationClick = (notification: any) => {
     // Handle notification click
@@ -30,6 +31,7 @@ export default function DashboardLayout({
       <main className="container mx-auto px-4 py-6">
         {children}
       </main>
+      <Footer />
     </div>
   );
 }
