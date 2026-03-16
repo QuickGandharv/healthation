@@ -46,7 +46,7 @@ dist/
 .swc/
 
 # project files
-/pacakage-lock.json
+/package-lock.json
 
 # OS files
 .DS_Store
