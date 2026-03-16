@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { setAuthToken } from "@/lib/authToken"
 
 interface User {
   name: string
@@ -16,6 +17,7 @@ interface AuthContextType {
   user: User | null
   token: string | null
   loading?: boolean
+  initializing: boolean;
   login: (token: string, user: User) => void
   logout: () => void
 }
@@ -27,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
+  const [initializing, setInitializing] = useState(true);
   const [loading, setLoading] = useState(true) // Add loading state
 
   // useEffect(() => {
@@ -41,24 +44,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const storedToken = localStorage.getItem("token")
     const storedUser = localStorage.getItem("user")
 
-    console.log("Stored token:", storedToken)
-    console.log("Stored user:", storedUser)
+    // console.log("Stored token:", storedToken)
+    // console.log("Stored user:", storedUser)
 
     if (storedToken) {
       setToken(storedToken)
+      setAuthToken(storedToken);
     }
 
     if (storedUser && storedUser !== "undefined" && storedUser !== "null") {
       const loadUser = () => {
         try {
           const parsedUser = JSON.parse(storedUser)
-          console.log("Parsed user:", parsedUser)
+          // console.log("Parsed user:", parsedUser)
           setUser(parsedUser)
         } catch (error) {
           console.error("Invalid user data:", storedUser)
           localStorage.removeItem("user")
         } finally {
-                setLoading(false); // Set loading to false after checking
+                setLoading(false);
+                setInitializing(false); // Set loading to false after checking
             }
       }
       loadUser();
@@ -94,7 +99,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, initializing, login, logout }}>
       {children}
     </AuthContext.Provider>
   )

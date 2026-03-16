@@ -1,29 +1,30 @@
 import { Star, User } from 'lucide-react';
 
 export function PatientReviews() {
-  const reviews = [
+
+    const reviews = [
     {
-      id: 1,
-      name: 'Sarah Johnson',
-      rating: 5,
-      comment: 'Excellent service! The video consultation was very smooth and the doctor was very professional.',
-      date: '2 days ago'
+        id: 1,
+        name: 'Sarah Johnson',
+        rating: 5,
+        comment: 'Excellent service! The video consultation was very smooth and the doctor was very professional.',
+        date: '2 days ago'
     },
     {
-      id: 2,
-      name: 'Michael Chen',
-      rating: 4,
-      comment: 'Great experience with the telehealth service. Easy to book and very convenient.',
-      date: '1 week ago'
+        id: 2,
+        name: 'Michael Chen',
+        rating: 4,
+        comment: 'Great experience with the telehealth service. Easy to book and very convenient.',
+        date: '1 week ago'
     },
     {
-      id: 3,
-      name: 'Emily Williams',
-      rating: 5,
-      comment: 'The in-clinic appointment was well organized. Staff was friendly and caring.',
-      date: '2 weeks ago'
+        id: 3,
+        name: 'Emily Williams',
+        rating: 5,
+        comment: 'The in-clinic appointment was well organized. Staff was friendly and caring.',
+        date: '2 weeks ago'
     }
-  ];
+    ];
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 mb-8">

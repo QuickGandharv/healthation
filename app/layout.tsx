@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Metadata, Viewport } from "next";
 import PwaRegister from '@/components/PwaRegister'
 import { AuthProvider } from "@/context/AuthContext";
+import ReactQueryProvider from "@/providers/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: 'Telehealth App',
@@ -36,10 +37,14 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
     >
       <body cz-shortcut-listen="true">
+      <ReactQueryProvider>
         <PwaRegister />
         <AuthProvider>
-          <ThemeProvider>{children}</ThemeProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
         </AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   )
