@@ -256,20 +256,31 @@ export const useScheduleData = () => {
 
   const resolveSlotAppointments = useCallback(
     (slot: OPDSlot): PatientAppointment[] => {
-      const existing = (slot.appointments || []) as unknown as PatientAppointment[]
-      if (existing.length > 0) return existing
+      // If we already have transformed appointments in the slot, return them
+      if (Array.isArray(slot.appointments) && slot.appointments.length > 0 && typeof slot.appointments[0] === 'object') {
+        return slot.appointments;
+      }
 
+      // Try to find full data in daySchedule (which has nested appointments usually)
       const daySlots = daySchedule?.slots || []
       const match = daySlots.find((s: any) => {
         if (slot.id && s.id && slot.id === s.id) return true
-        if ((slot as any).time_range && s.time_range && (slot as any).time_range === s.time_range) return true
-        if (slot.timeSlot && (s.timeSlot || s.time_range) && slot.timeSlot === (s.timeSlot || s.time_range)) return true
+        const slotTime = slot.time_range || slot.timeSlot
+        const sTime = s.time_range || s.timeSlot || `${s.start_time} - ${s.end_time}`
+        if (slotTime && sTime && slotTime === sTime) return true
         return false
       })
 
-      return ((match as any)?.appointments || []).map((appt: any) =>
-        scheduleService.transformToPatientAppointment(appt)
-      )
+      const rawAppts = (match as any)?.appointments || (slot as any).appointments
+      if (Array.isArray(rawAppts)) {
+        return rawAppts.map((appt: any) =>
+          typeof appt === 'object' && appt.id 
+            ? scheduleService.transformToPatientAppointment(appt)
+            : appt
+        ).filter(a => typeof a === 'object' && a !== null)
+      }
+
+      return []
     },
     [daySchedule?.slots]
   )

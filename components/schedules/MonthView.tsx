@@ -17,6 +17,7 @@ interface MonthViewProps {
   appointmentDays: number[];
   peakDayValue: number;
   isLoading?: boolean;
+  isLoadingDay?: boolean;
   onMonthChange: (date: Date) => void;
   onDateClick: (date: Date | undefined) => void;
   onSlotClick: (slot: OPDSlot) => void;
@@ -37,6 +38,7 @@ export const MonthView = ({
   appointmentDays,
   peakDayValue,
   isLoading = false,
+  isLoadingDay = false,
   onMonthChange,
   onDateClick,
   onSlotClick,
@@ -213,7 +215,7 @@ export const MonthView = ({
               emptyMessage="No doctor OPD scheduled"
               emptySubMessage="Select a date with OPD sessions"
             >
-              {isLoading ? (
+              {isLoading || isLoadingDay ? (
                 <div className="flex justify-center items-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 </div>
@@ -253,7 +255,7 @@ export const MonthView = ({
               emptyMessage="No patient appointments"
               emptySubMessage="Select a doctor OPD slot"
             >
-              {isLoading ? (
+              {isLoading || isLoadingDay ? (
                 <div className="flex justify-center items-center py-8">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 </div>
@@ -262,13 +264,17 @@ export const MonthView = ({
                   <AppointmentCard
                     key={patient.id}
                     type="patient"
-                    title={patient.name}
+                    title={patient.name || patient.patient_name}
                     avatar={patient.patient_avatar || patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
                     doctor={selectedMonthSlot.doctorName || ""}
                     time={patient.start_time || patient.appointmentTime}
                     appointmentType={patient.consultation_type === "video" ? "Video" : "In-Person"}
                     status={patient.status_label || "Scheduled"}
-                    onClick={() => onViewAllPatients(selectedMonthSlot)}
+                    onClick={() => {
+                      if (patient.id) {
+                        window.location.href = `/doctor/appointments/${patient.id}`;
+                      }
+                    }}
                   />
                 ))
               )}

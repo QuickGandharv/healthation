@@ -109,6 +109,7 @@ export default function Schedules() {
             appointmentDays={appointmentDays}
             peakDayValue={peakDayValue}
             isLoading={isLoadingMonth}
+            isLoadingDay={isLoadingDay}
             onMonthChange={(date) => setCurrentDate(date)}
             onDateClick={(date) => handleDateClick(date)}
             onSlotClick={(slot) => setSelectedMonthSlot(slot)}

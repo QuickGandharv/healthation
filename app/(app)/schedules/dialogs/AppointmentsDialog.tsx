@@ -105,6 +105,11 @@ export const AppointmentsDialog = ({
                     <PatientAppointmentCard
                       key={patient.id}
                       patient={patient}
+                      onClick={() => {
+                        if (patient.id) {
+                          window.location.href = `/doctor/appointments/${patient.id}`;
+                        }
+                      }}
                     />
                   ))
                 : schedule &&
@@ -112,6 +117,11 @@ export const AppointmentsDialog = ({
                     <PatientAppointmentCard
                       key={patient.id}
                       patient={patient}
+                      onClick={() => {
+                        if (patient.id) {
+                          window.location.href = `/doctor/appointments/${patient.id}`;
+                        }
+                      }}
                     />
                   ))}
             </div>
