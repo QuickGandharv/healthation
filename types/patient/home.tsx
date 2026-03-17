@@ -1,11 +1,18 @@
 
 // SpecialityData
+export interface SymptomProps {
+  id: string;
+  name: string;
+  icon: string;
+}
+
 export interface SpecialityProps {
   id: string;
   department: {
     name: string;
     icon: string;
   };
+  symptoms: SymptomProps[];
 }
 
 // available doctors
@@ -30,6 +37,7 @@ export interface AdvertisementProps {
 
 // Testimonials
 export interface TestimonialProps {
+  id?: string;
   patient_id: string;
   doctor_id?: string;
   doctor_avatar?: string;

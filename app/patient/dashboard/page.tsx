@@ -1,8 +1,8 @@
 "use client";
 
 import { BookingOptions } from '../../../components/patient/BookingOptions';
-import { DoctorSearch } from '../../../components/patient/DoctorSearch';
-import { AdvertisementSection } from '../../../components/patient/AdvertisementSection';
+import DoctorSearch from '../../../components/patient/DoctorSearch';
+import AdvertisementSection from '../../../components/patient/AdvertisementSection';
 import PatientReviews from '../../../components/patient/PatientReviews';
 import AvaliableDoctor from '@/components/patient/AvaliableDoctor';
 import { usePatientHome } from '@/queries/patient/usePatientHome';
@@ -15,8 +15,8 @@ const Home = () => {
     const homeData = data?.data;
     const avaliableDoctor = homeData?.available_doctors
     const patientReviews = homeData?.patient_reviews;
-
-    console.log('homeData', homeData)
+    const Advertisement = homeData?.advertisements
+    const specialitySymptoms = homeData?.speciality_symptoms;
 
     return(
         <div className="min-h-screen bg-gray-50">
@@ -36,13 +36,13 @@ const Home = () => {
                 <BookingOptions />
         
                 {/* Doctor Search */}
-                <DoctorSearch />
+                <DoctorSearch data={specialitySymptoms} />
         
                 {/* Appointments Section */}
                 <AvaliableDoctor data={avaliableDoctor} />
         
                 {/* Advertisement Section */}
-                <AdvertisementSection />
+                <AdvertisementSection data={Advertisement} />
         
                 {/* Patient Reviews */}
                 <PatientReviews data={patientReviews} />

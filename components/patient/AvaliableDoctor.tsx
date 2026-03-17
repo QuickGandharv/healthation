@@ -1,12 +1,17 @@
-import { Calendar, Clock, MapPin, Video, Star, ChevronRight } from 'lucide-react';
+"use client";
+
+import { MapPin, Video, Star, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+
 
 const AvaliableDoctor = ({data}: any) => {
+    const router = useRouter();
     return (
         <div className="mb-8">
-            <h2 className="text-2xl mb-4">My Appointments</h2>
+            <h2 className="text-2xl mb-4">Avaliable Doctor</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {data && data.map((apt: any) => (
+                {data && data.slice(0, 3).map((apt: any) => (
                     <div
                         key={apt.id}
                         className="bg-white rounded-2xl shadow-md p-6 border border-gray-200 hover:shadow-lg transition-shadow"
@@ -61,7 +66,9 @@ const AvaliableDoctor = ({data}: any) => {
                         </div>
 
                         {/* Action Button */}
-                        <button className="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
+                        <button 
+                        onClick={() => router.push(`/patient/doctor-detail/${apt.id}`)}
+                        className="w-full bg-gray-900 text-white py-3 rounded-xl hover:bg-gray-800 transition-colors flex items-center justify-center gap-2">
                             <span className="font-medium">
                                 Book Appointment
                             </span>
