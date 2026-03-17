@@ -63,28 +63,28 @@ export default function Header({
   const [unreadCount, setUnreadCount] = useState(0)
   const [mounted, setMounted] = useState(false)
 
-  console.log("Header user:", user)
+  // console.log("Header user:", user)
   // Navigation items
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
-      href: "/dashboard",
+      href: "/doctor/dashboard",
       icon: <LayoutDashboard className="h-4 w-4" />,
     },
     {
       title: "My Schedules",
-      href: "/schedules",
+      href: "/doctor/schedules",
       icon: <Calendar className="h-4 w-4" />,
       badge: 3, // Example badge count
     },
     {
       title: "Appointments",
-      href: "/appointments",
+      href: "/doctor/appointments",
       icon: <UserIcon className="h-4 w-4" />,
     },
     {
       title: "Notifications",
-      href: "/notifications",
+      href: "/doctor/notifications",
       icon: <Bell className="h-4 w-4" />,
       badge: unreadCount,
     },
@@ -114,13 +114,13 @@ export default function Header({
 
   // Get user initials for avatar fallback
   const getUserInitials = () => {
-  if (!user) return "U"
+    if (!user) return "U"
 
-  const first = user.first_name?.[0] || ""
-  const last = user.last_name?.[0] || ""
+    const first = user.first_name?.[0] || ""
+    const last = user.last_name?.[0] || ""
 
-  return (first + last).toUpperCase() || "U"
-}
+    return (first + last).toUpperCase() || "U"
+  }
 
   // Format notification time
   const formatNotificationTime = (date: Date) => {
@@ -288,8 +288,8 @@ export default function Header({
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
                   <p className="text-sm leading-none font-medium">
-                  {/* {`${user?.first_name} ${user?.last_name}`} */}
-                  {name}
+                    {/* {`${user?.first_name} ${user?.last_name}`} */}
+                    {name}
                   </p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email || "Not signed in"}

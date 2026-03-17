@@ -3,7 +3,7 @@
 import Footer from '@/components/common/footer';
 import Header from '@/components/common/header';
 import { useAuth } from '@/context/AuthContext';
-import { mockUser, mockNotifications } from '@/lib/mock-data';
+// import { mockUser, mockNotifications } from '@/lib/mock-data';
 import { useRouter } from 'next/navigation';
 
 
@@ -23,8 +23,8 @@ export default function DashboardLayout({
   return (
     <div className="min-h-screen bg-background">
       <Header
-        user={mockUser}
-        notifications={mockNotifications}
+        // user={mockUser}
+        // notifications={mockNotifications}
         onNotificationClick={handleNotificationClick}
         onLogout={logout}
       />
