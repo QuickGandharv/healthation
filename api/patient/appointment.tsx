@@ -1,0 +1,89 @@
+import api from "@/lib/axios";
+
+export interface AppointmentResponse {
+    data: {
+        id: string;
+        appointment_id?: string;
+        doctor_id?: string;
+        status: string;
+        can_reschedule: boolean;
+        appointment_date: string;
+        start_time: string;
+        end_time: string;
+        consultation_type: string;
+        razorpay_key_id?: string;
+        razorpay_order_id?: string;
+        patient?: {
+            name: string;
+            avatar?: string;
+            age?: number;
+            age_formatted: string;
+            gender_formatted: string;
+            allergies?: string | null;
+            problem?: string;
+        };
+        schedule?: {
+            date: string;
+            time: string;
+            date_formatted: string;
+            time_formatted: string;
+            consultation_type: string;
+            consultation_type_label: string;
+            opd_type?: string;
+            booking_type?: string;
+        };
+        doctor: {
+            id: string;
+            user_id?: string;
+            name: string;
+            department: string;
+            avatar?: string;
+            specialization?: string;
+            profile_image?: string;
+            years_experience?: string;
+            review?: {
+                rating_stars?: string;
+                rating?: number;
+                title?: string;
+                content?: string;
+            };
+            reviews?: Array<{
+                id: string;
+                slug: string;
+                title: string;
+                content: string;
+                rating: number;
+                doctor_id: string;
+                patient_id: string;
+                patient_name: string;
+                patient_image: string;
+                created_at: string;
+            }>;
+        };
+        can_add_review?: boolean;
+        notes?: {
+            problem?: string;
+            reason?: string;
+        };
+        payment?: {
+            consultation_fee_formatted?: string;
+        };
+        prescriptions?: {
+            notes?: string;
+            doctor_name?: string;
+            date?: string;
+        } | null;
+        medical_reports?: Array<{
+            id: string;
+            name: string;
+            report_date: string;
+            type: string;
+            file_url: string;
+        }>;
+    };
+}
+
+export const fetchAppointmentById = async ( id: string ): Promise<AppointmentResponse> => {
+    const { data } = await api.get(`/appointments/${id}`);
+    return data;
+};

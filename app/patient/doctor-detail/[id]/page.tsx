@@ -1,9 +1,12 @@
 "use client";
 import { Briefcase, Star, Video, MapPin, ChevronRight, User, Stethoscope } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useQueryClient } from "@tanstack/react-query";
 import Image from 'next/image';
 import { useParams, useRouter } from "next/navigation";
 import { useBrowseDoctorById } from '@/queries/patient/useBrowseDoctorById';
+import { useBooking } from '@/context/BookingContext';
+import { useBookAppointment } from '@/queries/patient/useBookAppointment';
 
 const doctorPlaceholder = 'https://telehealthwebapplive.cmcludhiana.in/storage/user_avatar/bbe7ad3e-fd77-4048-9bd9-3272433d79f0.jpeg';
 
@@ -50,9 +53,12 @@ const Page = () => {
         ? [doctor.languages]
         : [];
 
+    const { setBookingData } = useBooking();
+    const queryClient = useQueryClient();
     const [selectedAppointmentType, setSelectedAppointmentType] = useState<'video' | 'in_person'>('video');
     const [selectedDate, setSelectedDate] = useState<string>('');
     const [selectedSlot, setSelectedSlot] = useState<DoctorSlot | null>(null);
+    const { mutate, isPending } = useBookAppointment();
 
     const getDateDisplay = (dateStr: string) => {
         const date = new Date(dateStr);
@@ -78,20 +84,60 @@ const Page = () => {
 
         if (!doctor?.id) return;
 
-        const bookingData = {
-            doctorId: doctor.id,
-            slotId: selectedSlot.id,
-            appointmentType: selectedAppointmentType,
-            date: selectedDate,
-            startTime: selectedSlot.start_time,
-            endTime: selectedSlot.end_time,
-            consultationFee: selectedSlot.consultation_fee
+        const bookingData: any = {
+            doctor_id: doctor.id,
+            availability_id: selectedSlot.id,
+            appointment_date: selectedDate,
+            appointment_time: selectedSlot.start_time,
+            consultation_type: selectedAppointmentType,
+            consultation_fee: selectedSlot.consultation_fee ?? 0
         };
 
-        router.push('/patient/appointment-summary');
+        setBookingData(bookingData);
+        
+        mutate(bookingData, {
+            onSuccess: (response) => {
+                console.log("Booking Success:", response);
 
-        console.log('Booking appointment:', bookingData);
+                // Invalidate appointment queries to refresh data
+                queryClient.invalidateQueries({
+                    queryKey: ["appointment"],
+                });
+
+                router.push(`/patient/appointment-summary?bookingId=${response?.data?.appointment?.id}`);
+            },
+            onError: (error: any) => {
+                console.log("Booking Error (Raw):", error);
+                console.log("Booking Error Data:", JSON.stringify(error?.response?.data, null, 2));
+
+                const errorData = error?.response?.data;
+                let errorMsg = "Failed to book appointment. Please try again.";
+
+                if (errorData) {
+                    if (errorData.errors) {
+                        // Extracts the first validation error from any field (e.g., appointment_date)
+                        const firstKey = Object.keys(errorData.errors)[0];
+                        const firstError = errorData.errors[firstKey];
+                        if (Array.isArray(firstError)) {
+                            errorMsg = firstError[0];
+                        } else if (typeof firstError === "string") {
+                            errorMsg = firstError;
+                        }
+                    } else if (errorData.message) {
+                        errorMsg = errorData.message;
+                    }
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+
+                // setResultModalMessage(errorMsg);
+                // setResultModalSuccess(false);
+                // setResultModalVisible(true);
+            },
+          });
     };
+
+    
 
     return (
         <div className="min-h-screen bg-gray-50">

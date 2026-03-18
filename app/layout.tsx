@@ -7,6 +7,7 @@ import { Metadata, Viewport } from "next";
 import PwaRegister from '@/components/PwaRegister'
 import { AuthProvider } from "@/context/AuthContext";
 import ReactQueryProvider from "@/providers/ReactQueryProvider";
+import { BookingProvider } from "@/context/BookingContext";
 
 export const metadata: Metadata = {
   title: 'Telehealth App',
@@ -40,9 +41,11 @@ export default function RootLayout({
       <ReactQueryProvider>
         <PwaRegister />
         <AuthProvider>
+          <BookingProvider>
           <ThemeProvider>
             {children}
           </ThemeProvider>
+          </BookingProvider>
         </AuthProvider>
         </ReactQueryProvider>
       </body>

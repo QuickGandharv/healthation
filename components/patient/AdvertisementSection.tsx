@@ -12,7 +12,7 @@ const AdvertisementSection = ({ data }: any) => {
                         key={ad.id}
                         href={ad.link}
                         target="_blank"
-                        className={`${ad.color} overflow-hidden`}
+                        className={`${ad.color} overflow-hidden p-4 bg-white rounded-2xl shadow-md border border-gray-200 hover:shadow-lg transition-shadow`}
                     >
                         <div className="relative w-full h-60">
                             <Image
