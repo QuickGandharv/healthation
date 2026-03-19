@@ -10,11 +10,26 @@ import { WeekView } from "@/components/schedules/WeekView"
 import { MonthView } from "@/components/schedules/MonthView"
 import { DayScheduleDialog } from "@/app/(app)/schedules/dialogs/DayScheduleDialog"
 import { AppointmentsDialog } from "@/app/(app)/schedules/dialogs/AppointmentsDialog"
+import { getMyAllAppointments } from "@/queries/doctor/getAllAppointments"
+
+export const filterAppointmentsByDate = (
+  appointments: any[],
+  selectedDate?: Date
+) => {
+  if (!selectedDate) return [];
+
+  const formattedDate = selectedDate.toLocaleDateString("en-CA"); 
+  // ✅ gives YYYY-MM-DD in LOCAL timezone
+
+  return appointments.filter(
+    (apt) => apt.appointment_date === formattedDate
+  );
+};
 
 export default function Schedules() {
+
   const [isDayDialogOpen, setIsDayDialogOpen] = useState(false)
   const [isAppointmentsDialogOpen, setIsAppointmentsDialogOpen] = useState(false)
-
   const {
     currentDate,
     selectedDate,
@@ -51,6 +66,17 @@ export default function Schedules() {
     isToday,
     getPatientsForSelectedSlot,
   } = useScheduleData()
+
+  const { data: appointmentData } = getMyAllAppointments();
+
+  console.log('data', appointmentData);
+
+  const filteredAppointments = useMemo(() => {
+    return filterAppointmentsByDate(
+      appointmentData?.data || [],
+      selectedDate
+    );
+  }, [appointmentData, selectedDate]);
 
   const isTodayWeek = useMemo(() => {
     const today = new Date()
@@ -148,7 +174,7 @@ export default function Schedules() {
         selectedDate={selectedDate}
         slot={selectedSlotForAppointments}
         schedule={selectedSchedule}
-        patientAppointments={{}}
+        patientAppointments={filteredAppointments}
       />
 
       {(monthError || weekError || dayError) && (
@@ -159,4 +185,3 @@ export default function Schedules() {
     </div>
   )
 }
-

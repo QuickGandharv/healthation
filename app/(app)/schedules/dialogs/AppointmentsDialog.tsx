@@ -21,7 +21,8 @@ interface AppointmentsDialogProps {
   selectedDate?: Date
   slot?: OPDSlot | null
   schedule?: DoctorSchedule | null
-  patientAppointments: Record<string, PatientAppointment[]>
+  // patientAppointments: Record<string, PatientAppointment[]>
+  patientAppointments: PatientAppointment[];
 }
 
 export const AppointmentsDialog = ({
@@ -32,9 +33,11 @@ export const AppointmentsDialog = ({
   schedule,
   patientAppointments,
 }: AppointmentsDialogProps) => {
+  console.log('patientAppointments', patientAppointments)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="mx-4 max-h-[80vh] w-full max-w-4xl! overflow-y-auto">
+        
         <DialogHeader>
           <DialogTitle>Booked Appointments</DialogTitle>
           <DialogDescription>
@@ -57,6 +60,7 @@ export const AppointmentsDialog = ({
             )}
           </DialogDescription>
         </DialogHeader>
+
 
         {(slot || schedule) && (
           <div className="space-y-4">
@@ -99,7 +103,6 @@ export const AppointmentsDialog = ({
             {/* Patient Appointments List */}
             <div className="space-y-3">
               <h3 className="font-semibold">Patient Appointments</h3>
-
               {slot
                 ? slot.appointments?.map((patient) => (
                     <PatientAppointmentCard
@@ -113,17 +116,16 @@ export const AppointmentsDialog = ({
                     />
                   ))
                 : schedule &&
-                  patientAppointments[schedule.id]?.map((patient) => (
+                    patientAppointments?.map((patient) => (
                     <PatientAppointmentCard
-                      key={patient.id}
+                      key={patient.appointment_id}
                       patient={patient}
                       onClick={() => {
-                        if (patient.id) {
-                          window.location.href = `/doctor/appointments/${patient.id}`;
-                        }
+                        window.location.href = `/doctor/appointments/${patient.appointment_id}`;
                       }}
                     />
-                  ))}
+                  ))
+                  }
             </div>
           </div>
         )}
