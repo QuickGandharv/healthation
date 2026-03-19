@@ -75,7 +75,6 @@ export default function Header({
       title: "My Schedules",
       href: "/doctor/schedules",
       icon: <Calendar className="h-4 w-4" />,
-      badge: 3, // Example badge count
     },
     {
       title: "Appointments",

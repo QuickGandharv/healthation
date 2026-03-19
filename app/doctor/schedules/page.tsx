@@ -69,8 +69,6 @@ export default function Schedules() {
 
   const { data: appointmentData } = getMyAllAppointments();
 
-  console.log('data', appointmentData);
-
   const filteredAppointments = useMemo(() => {
     return filterAppointmentsByDate(
       appointmentData?.data || [],
@@ -152,6 +150,7 @@ export default function Schedules() {
             hasAppointments={hasAppointments}
             isToday={isToday}
             getPatientsForSelectedSlot={getPatientsForSelectedSlot}
+            patientAppointments={filteredAppointments}
           />
         </TabsContent>
       </ScheduleTabs>

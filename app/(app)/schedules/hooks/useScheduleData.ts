@@ -263,13 +263,25 @@ export const useScheduleData = () => {
 
       // Try to find full data in daySchedule (which has nested appointments usually)
       const daySlots = daySchedule?.slots || []
+      
+      const normalizeTime = (time: string) => {
+        const date = new Date(`1970-01-01 ${time}`);
+        return date.toTimeString().slice(0, 5); // HH:mm
+      };
+
       const match = daySlots.find((s: any) => {
-        if (slot.id && s.id && slot.id === s.id) return true
-        const slotTime = slot.time_range || slot.timeSlot
-        const sTime = s.time_range || s.timeSlot || `${s.start_time} - ${s.end_time}`
-        if (slotTime && sTime && slotTime === sTime) return true
-        return false
-      })
+        if (slot.id && s.id && slot.id === s.id) return true;
+      
+        const slotDate = slot.date;
+        const sDate = s.date;
+      
+        const slotStart = normalizeTime(slot.start_time || slot.startTime || "");
+        const sStart = normalizeTime(s.start_time || "");
+      
+        if (slotDate === sDate && slotStart === sStart) return true;
+      
+        return false;
+      });
 
       const rawAppts = (match as any)?.appointments || (slot as any).appointments
       if (Array.isArray(rawAppts)) {

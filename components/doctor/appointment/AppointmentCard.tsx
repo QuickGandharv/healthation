@@ -126,18 +126,21 @@ export default function AppointmentCard({
               </Button>
             )}
 
-            {appointment.status === "confirmed" && appointment.type !== "video" && (
-              <Button
-                size="sm"
-                className="flex-1 bg-primary text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Call now:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-                }}
-              >
-                <Phone className="mr-1 h-4 w-4" />
-                Call Now
-              </Button>
+            {appointment.status === "confirmed" &&
+              appointment.consultation_type === "video" && (
+                <Button
+                  size="sm"
+                  className="flex-1 bg-primary text-white"
+                  onClick={() => {
+                    const url = appointment?.video_consultation?.join_url;
+                    if (url) {
+                      window.open(url, "_blank", "noopener,noreferrer");
+                    }
+                  }}
+                >
+                  <Phone className="mr-1 h-4 w-4" />
+                  Call Now
+                </Button>
             )}
 
             {/* <DropdownMenu>

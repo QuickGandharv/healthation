@@ -261,15 +261,15 @@ class ScheduleService {
         params.date = this.formatDate(date)
       }
 
-      console.log(
-        "Making API request to:",
-        `${api.defaults.baseURL}${this.baseUrl}`
-      )
-      console.log("With params:", params)
+      // console.log(
+      //   "Making API request to:",
+      //   `${api.defaults.baseURL}${this.baseUrl}`
+      // )
+      // console.log("With params:", params)
 
       const response = await api.get<ApiResponse<any>>(this.baseUrl, { params })
 
-      console.log("API Response:", response.data)
+      // console.log("API Response:", response.data)
 
       const responseData = response.data
 

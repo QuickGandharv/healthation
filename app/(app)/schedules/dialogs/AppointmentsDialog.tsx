@@ -33,7 +33,6 @@ export const AppointmentsDialog = ({
   schedule,
   patientAppointments,
 }: AppointmentsDialogProps) => {
-  console.log('patientAppointments', patientAppointments)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="mx-4 max-h-[80vh] w-full max-w-4xl! overflow-y-auto">

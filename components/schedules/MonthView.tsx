@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight, CalendarIcon, Stethoscope, Users, Loader2 } from "lucide-react";
-import { OPDSlot } from "@/app/(app)/schedules/types";
+import { OPDSlot, PatientAppointment } from "@/app/(app)/schedules/types";
 import { ScheduleCard } from "@/components/custom/ScheduleCard";
 import { OPDSlotCard } from "@/components/schedules/OPDSlotCard";
 import { AppointmentCard } from "@/components/custom/AppointmentCard";
@@ -28,6 +28,7 @@ interface MonthViewProps {
   hasAppointments: (date: Date) => boolean;
   isToday: (date: Date) => boolean;
   getPatientsForSelectedSlot: () => any[];
+  patientAppointments: PatientAppointment[];
 }
 
 export const MonthView = ({
@@ -48,8 +49,13 @@ export const MonthView = ({
   getOPDCount,
   hasAppointments,
   isToday,
-  getPatientsForSelectedSlot
+  getPatientsForSelectedSlot,
+  patientAppointments,
 }: MonthViewProps) => {
+
+  // console.log('selectedMonthSlot', selectedMonthSlot)
+  // console.log('patientAppointments', patientAppointments)
+
   return (
     <Card className="border-border">
       <CardHeader>
@@ -260,23 +266,42 @@ export const MonthView = ({
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 </div>
               ) : (
-                selectedMonthSlot && getPatientsForSelectedSlot().map((patient) => (
-                  <AppointmentCard
-                    key={patient.id}
-                    type="patient"
-                    title={patient.name || patient.patient_name}
-                    avatar={patient.patient_avatar || patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
-                    doctor={selectedMonthSlot.doctorName || ""}
-                    time={patient.start_time || patient.appointmentTime}
-                    appointmentType={patient.consultation_type === "video" ? "Video" : "In-Person"}
-                    status={patient.status_label || "Scheduled"}
-                    onClick={() => {
-                      if (patient.id) {
-                        window.location.href = `/doctor/appointments/${patient.id}`;
-                      }
-                    }}
-                  />
-                ))
+                // selectedMonthSlot && getPatientsForSelectedSlot().map((patient) => (
+                //   <AppointmentCard
+                //     key={patient.id}
+                //     type="patient"
+                //     title={patient.name || patient.patient_name}
+                //     avatar={patient.patient_avatar || patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
+                //     doctor={selectedMonthSlot.doctorName || ""}
+                //     time={patient.start_time || patient.appointmentTime}
+                //     appointmentType={patient.consultation_type === "video" ? "Video" : "In-Person"}
+                //     status={patient.status_label || "Scheduled"}
+                //     onClick={() => {
+                //       if (patient.id) {
+                //         window.location.href = `/doctor/appointments/${patient.id}`;
+                //       }
+                //     }}
+                //   />
+                // ))
+                selectedMonthSlot && patientAppointments.map((appointment) => {
+                  return(
+                    <AppointmentCard
+                      key={appointment.patient.id}
+                      type="patient"
+                      title={appointment.patient.name || appointment.patient.patient_name}
+                      avatar={appointment.patient.patient_avatar || appointment.patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
+                      doctor={selectedMonthSlot.doctorName || ""}
+                      time={appointment.appointment_time_formatted || appointment.appointmentTime}
+                      appointmentType={appointment.consultation_type === "video" ? "Video" : "In-Person"}
+                      status={appointment?.status_label || "Scheduled"}
+                      onClick={() => {
+                        if (appointment.appointment_id) {
+                          window.location.href = `/doctor/appointments/${appointment.appointment_id}`;
+                        }
+                      }}
+                    />
+                  )
+                })
               )}
             </ScheduleCard>
           </div>
