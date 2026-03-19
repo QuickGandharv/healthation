@@ -13,7 +13,8 @@ export interface ApiResponse<T> {
 
 // Doctor Schedule Types
 export interface DoctorSchedule {
-  id: string
+  id: string,
+  appointment_id?: string,
   day: string
   date: string
   timeSlot: string
@@ -33,7 +34,8 @@ export interface DoctorSchedule {
 }
 
 export interface PatientAppointment {
-  id: string
+  id: string,
+  appointment_id?: string
   name: string
   age?: number
   phone?: string

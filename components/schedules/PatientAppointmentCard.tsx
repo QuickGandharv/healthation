@@ -15,7 +15,7 @@ export const PatientAppointmentCard = ({ patient, onClick }: PatientAppointmentC
       <CardContent className="p-4">
         <div className="flex items-start justify-between mb-3">
           <div>
-            <h4 className="font-semibold text-lg">{patient.name}</h4>
+            <h4 className="font-semibold text-lg">{patient.name} dfdsf</h4>
             <p className="text-sm text-muted-foreground">{patient.age} years old</p>
           </div>
           <Badge className="bg-green-100 text-green-800">confirmed</Badge>
