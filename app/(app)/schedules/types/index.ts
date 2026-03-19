@@ -56,6 +56,7 @@ export interface PatientAppointment {
 
 export interface OPDSlot {
   id: string | null
+  startTime: string
   appointment_id?: string | null
   date: string
   day_name: string
