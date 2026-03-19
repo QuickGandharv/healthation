@@ -18,7 +18,7 @@ export const filterAppointmentsByDate = (
 ) => {
   if (!selectedDate) return [];
 
-  const formattedDate = selectedDate.toLocaleDateString("en-CA"); 
+  const formattedDate = selectedDate.toLocaleDateString("en-CA");
   // ✅ gives YYYY-MM-DD in LOCAL timezone
 
   return appointments.filter(
@@ -88,7 +88,7 @@ export default function Schedules() {
       <ScheduleHeader
         title="Doctor's Schedule"
         description="Manage your OPD appointments and availability"
-        onNewAppointment={() => {}}
+        onNewAppointment={() => { }}
       />
 
       <ScheduleTabs defaultValue="month">

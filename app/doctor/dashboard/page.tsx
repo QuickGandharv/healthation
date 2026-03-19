@@ -1,353 +1,3 @@
-// "use client"
-
-// import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card"
-// import {
-//   Calendar,
-//   Clock,
-//   Users,
-//   Star,
-//   TrendingUp,
-//   Video,
-//   Phone,
-//   MessageSquare,
-// } from "lucide-react"
-// import { Button } from "@/components/ui/button"
-// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-// import { Badge } from "@/components/ui/badge"
-// import { useRouter } from "next/navigation"
-// import { useAuth } from "@/context/AuthContext"
-// import { useEffect, useState } from "react"
-// import axios from "axios"
-// import EmptyState from "@/components/ui/empty-state"
-
-// export default function Dashboard() {
-//   const router = useRouter()
-//   const { user, loading, token } = useAuth()
-
-//   const [dashboardData, setDashboardData] = useState<any>(null)
-//   const [apiLoading, setApiLoading] = useState(false)
-//   const [apiError, setApiError] = useState("")
-
-//   axios.get(`${process.env.NEXT_PUBLIC_API_URL}/notifications`, {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//       Accept: "application/json",
-//     },
-//   })
-//   .then((response) => {
-//     console.log("Notifications API response:", response.data);
-//     const notifications = response.data.data;
-//     console.log("Notifications data:", notifications);
-
-//   })
-//   .catch((error) => {
-//     console.error("Notifications API error:", error);
-//   });
-
-//   useEffect(() => {
-//     const fetchDashboard = async () => {
-//       if (loading) return
-//       if (!token) {
-//         setApiError("Token not found")
-//         return
-//       }
-
-//       try {
-//         setApiLoading(true)
-//         setApiError("")
-
-//         const response = await axios.get(
-//           `${process.env.NEXT_PUBLIC_API_URL}/doctor/home`,
-//           {
-//             headers: {
-//               Authorization: `Bearer ${token}`,
-//               Accept: "application/json",
-//             },
-//           }
-//         )
-
-//         console.log("Dashboard API response:", response.data)
-//         setDashboardData(response.data.data)
-//       } catch (error: any) {
-//         console.error("Dashboard API error:", error)
-//         setApiError(error?.response?.data?.message || "Something went wrong")
-//       } finally {
-//         setApiLoading(false)
-//       }
-//     }
-
-//     fetchDashboard()
-//   }, [token, loading])
-
-//   const summary = dashboardData?.summary
-
-//   const stats = [
-//     {
-//       label: "Today's Appointments",
-//       value: summary?.todays_appointments ?? 0,
-//       icon: Calendar,
-//       change: "+0",
-//       color: "text-blue-600",
-//     },
-//     {
-//       label: "Upcoming Appointments",
-//       value: summary?.upcoming_appointments ?? 0,
-//       icon: Clock,
-//       change: "+0",
-//       color: "text-emerald-600",
-//     },
-//     {
-//       label: "Cancelled Appointments",
-//       value: summary?.cancelled_appointments ?? 0,
-//       icon: Users,
-//       change: "+0",
-//       color: "text-purple-600",
-//     },
-//     {
-//       label: "Average Rating",
-//       value: dashboardData?.doctor_reviews?.length ?? 0,
-//       icon: Star,
-//       change: "+0",
-//       color: "text-amber-500",
-//     },
-//   ]
-
-//   const upcomingAppointments = dashboardData?.upcoming_appointments || []
-//   const todaysAppointments = dashboardData?.todays_appointments || []
-
-//   const recentActivity = [
-//     {
-//       id: 1,
-//       action: "Completed consultation with Sarah Miller",
-//       time: "30 min ago",
-//     },
-//     {
-//       id: 2,
-//       action: "Updated prescription for John Davis",
-//       time: "1 hour ago",
-//     },
-//     { id: 3, action: "Received new appointment request", time: "2 hours ago" },
-//     {
-//       id: 4,
-//       action: "Lab results uploaded for patient #2847",
-//       time: "3 hours ago",
-//     },
-//   ]
-
-//   if (loading || apiLoading) {
-//     return (
-//       <div className="flex min-h-screen items-center justify-center">
-//         <div className="text-center">
-//           <div className="mx-auto h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
-//           <p className="mt-4 text-muted-foreground">
-//             Loading your dashboard...
-//           </p>
-//         </div>
-//       </div>
-//     )
-//   }
-
-//   if (apiError) {
-//     return (
-//       <div className="p-6">
-//         <p className="font-medium text-red-500">Error: {apiError}</p>
-//       </div>
-//     )
-//   }
-
-//   return (
-//     <div className="space-y-6">
-//       <div>
-//         <h1 className="mb-2">
-//           Welcome back, Dr.{" "}
-//           {user &&
-//             `${user.first_name?.charAt(0).toUpperCase() + user.first_name?.slice(1).toLowerCase() || ""} ${
-//               user.last_name?.charAt(0).toUpperCase() +
-//                 user.last_name?.slice(1).toLowerCase() || ""
-//             }`}
-//         </h1>
-//         <p className="text-muted-foreground">
-//           Here's what's happening with your practice today.
-//         </p>
-//       </div>
-
-//       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-//         {stats.map((stat) => {
-//           const Icon = stat.icon
-//           return (
-//             <Card key={stat.label} className="border-border">
-//               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-//                 <CardTitle className="text-sm font-medium text-muted-foreground">
-//                   {stat.label}
-//                 </CardTitle>
-//                 <Icon className={`h-4 w-4 ${stat.color}`} />
-//               </CardHeader>
-//               <CardContent>
-//                 <div className="text-2xl font-bold">{stat.value}</div>
-//                 <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-//                   <TrendingUp className="h-3 w-3 text-emerald-600" />
-//                   <span>Updated from API</span>
-//                 </p>
-//               </CardContent>
-//             </Card>
-//           )
-//         })}
-//       </div>
-
-//       <div className="grid gap-6 lg:grid-cols-3">
-//         <Card className="border-border lg:col-span-2">
-//           <CardHeader>
-//             <CardTitle>Today's Appointments</CardTitle>
-//             <CardDescription>
-//               You have {todaysAppointments.length} appointments scheduled
-//             </CardDescription>
-//           </CardHeader>
-//           {todaysAppointments.length === 0 ? (
-//             <EmptyState
-//               title="No Appointments Yet"
-//               message="You don't have any appointments scheduled."
-//               icon={<Calendar size={40} className="text-gray-400" />}
-//               actionLabel="Book Appointment"
-//               onAction={() => console.log("clicked")}
-//             />
-//           ) : (
-//             <CardContent className="space-y-4">
-//               {todaysAppointments.map((appointment: any, index: number) => (
-//                 <div
-//                   key={appointment.id || index}
-//                   className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4"
-//                 >
-//                   <div className="flex items-center gap-4">
-//                     <Avatar className="h-12 w-12">
-//                       <AvatarImage
-//                         src={appointment.avatar || ""}
-//                         alt={appointment.patient_name || "Patient"}
-//                       />
-//                       <AvatarFallback className="bg-primary/10 text-primary">
-//                         {(appointment.patient_name || "P")
-//                           .split(" ")
-//                           .map((n: string) => n[0])
-//                           .join("")}
-//                       </AvatarFallback>
-//                     </Avatar>
-//                     <div>
-//                       <p className="font-medium">
-//                         {appointment.patient_name || "Unknown Patient"}
-//                       </p>
-//                       <div className="flex items-center gap-2 text-sm text-muted-foreground">
-//                         <Clock className="h-3 w-3" />
-//                         <span>{appointment.time || "N/A"}</span>
-//                       </div>
-//                     </div>
-//                   </div>
-//                   <div className="flex items-center gap-2">
-//                     <Badge className="bg-primary/10 text-primary hover:bg-primary/20">
-//                       {appointment.status || "pending"}
-//                     </Badge>
-//                   </div>
-//                 </div>
-//               ))}
-//             </CardContent>
-//           )}
-//         </Card>
-
-//         <Card className="border-border flex flex-col">
-//           <CardHeader>
-//             <CardTitle>Recent Activity</CardTitle>
-//             <CardDescription>Your latest actions</CardDescription>
-//           </CardHeader>
-
-//           <CardContent className="flex flex-col flex-1 justify-between">
-
-//             <div className="space-y-4">
-//               {recentActivity.map((activity) => (
-//                 <div key={activity.id} className="flex gap-3">
-//                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10">
-//                     <MessageSquare className="h-4 w-4 text-primary" />
-//                   </div>
-
-//                   <div className="flex-1">
-//                     <p className="text-sm">{activity.action}</p>
-//                     <p className="text-xs text-muted-foreground">
-//                       {activity.time}
-//                     </p>
-//                   </div>
-//                 </div>
-//               ))}
-//             </div>
-
-//             {/* Bottom clickable text */}
-//             <button className="mt-4 text-sm text-primary hover:underline text-center">
-//               View All Notification
-//             </button>
-
-//           </CardContent>
-//         </Card>
-//       </div>
-//       <Card className="border-border">
-//         <CardHeader>
-//           <CardTitle>Quick Actions</CardTitle>
-//         </CardHeader>
-//         <CardContent>
-//           <div className="grid gap-3 md:grid-cols-5">
-//             <Button
-//               variant="outline"
-//               className="h-auto flex-col gap-2 py-6"
-//               onClick={() => router.push("/dashboard/patients")}
-//             >
-//               <Calendar className="h-6 w-6 text-primary" />
-//               <span>All Patients</span>
-//             </Button>
-//             {/* Other buttons... */}
-
-//             <Button
-//               variant="outline"
-//               className="h-auto flex-col gap-2 py-6"
-//               onClick={() => router.push("/dashboard/reports")}
-//             >
-//               <Users className="h-6 w-6 text-primary" />
-//               <span>Patient Reports</span>
-//             </Button>
-
-//             <Button
-//               variant="outline"
-//               className="h-auto flex-col gap-2 py-6"
-//               onClick={() => router.push("/dashboard/inventory")}
-//             >
-//               <MessageSquare className="h-6 w-6 text-primary" />
-//               <span>Medicine Inventory</span>
-//             </Button>
-
-//             <Button
-//               variant="outline"
-//               className="h-auto flex-col gap-2 py-6"
-//               onClick={() => router.push("/dashboard/payments")}
-//             >
-//               <Star className="h-6 w-6 text-primary" />
-//               <span>Payment History</span>
-//             </Button>
-
-//             <Button
-//               variant="outline"
-//               className="h-auto flex-col gap-2 py-6"
-//               onClick={() => router.push("/dashboard/reviews")}
-//             >
-//               <Star className="h-6 w-6 text-primary" />
-//               <span>All Reviews</span>
-//             </Button>
-//           </div>
-//         </CardContent>
-//       </Card>
-//     </div>
-//   )
-// }
-
 "use client"
 
 import {
@@ -413,7 +63,7 @@ export default function Dashboard() {
   const [dashboardData, setDashboardData] = useState<any>(null)
   const [apiLoading, setApiLoading] = useState(false)
   const [apiError, setApiError] = useState("")
-  
+
   // Notification states
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [notificationsLoading, setNotificationsLoading] = useState(false)
@@ -478,9 +128,9 @@ export default function Dashboard() {
         console.log("Notifications API response:", response.data)
         const notificationsData = response.data.data
         console.log("Notifications data:", notificationsData)
-        
+
         setNotifications(notificationsData)
-        
+
         // Calculate unread count
         const unread = notificationsData.filter(n => !n.is_read).length
         setUnreadCount(unread)
@@ -598,9 +248,8 @@ export default function Dashboard() {
         <h1 className="mb-2">
           Welcome back, Dr.{" "}
           {user &&
-            `${user.first_name?.charAt(0).toUpperCase() + user.first_name?.slice(1).toLowerCase() || ""} ${
-              user.last_name?.charAt(0).toUpperCase() +
-                user.last_name?.slice(1).toLowerCase() || ""
+            `${user.first_name?.charAt(0).toUpperCase() + user.first_name?.slice(1).toLowerCase() || ""} ${user.last_name?.charAt(0).toUpperCase() +
+            user.last_name?.slice(1).toLowerCase() || ""
             }`}
         </h1>
         <p className="text-muted-foreground">
@@ -694,7 +343,7 @@ export default function Dashboard() {
             <div>
               <CardTitle>Notifications</CardTitle>
               <CardDescription>
-                {unreadCount > 0 
+                {unreadCount > 0
                   ? `You have ${unreadCount} unread notification${unreadCount > 1 ? 's' : ''}`
                   : 'No unread notifications'
                 }
@@ -722,7 +371,7 @@ export default function Dashboard() {
                 message="You don't have any notifications at the moment."
                 icon={<Bell size={40} className="text-gray-400" />}
                 actionLabel=""
-                onAction={() => {}}
+                onAction={() => { }}
               />
             ) : (
               <div className="space-y-4">
@@ -730,9 +379,8 @@ export default function Dashboard() {
                 {notifications.slice(0, 3).map((notification) => (
                   <div
                     key={notification.id}
-                    className={`flex gap-3 p-2 rounded-lg cursor-pointer hover:bg-accent/50 transition-colors ${
-                      !notification.is_read ? 'bg-accent/30' : ''
-                    }`}
+                    className={`flex gap-3 p-2 rounded-lg cursor-pointer hover:bg-accent/50 transition-colors ${!notification.is_read ? 'bg-accent/30' : ''
+                      }`}
                     onClick={() => markAsRead(notification.id)}
                   >
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 shrink-0">
@@ -768,7 +416,7 @@ export default function Dashboard() {
             )}
 
             {/* Bottom clickable text */}
-            <button 
+            <button
               className="mt-4 text-sm text-primary hover:underline text-center"
               onClick={() => router.push('/dashboard/notifications')}
             >

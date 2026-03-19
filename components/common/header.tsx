@@ -1,20 +1,24 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { useState, useEffect, useMemo } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Menu,
-  X,
   Bell,
   Calendar,
   LayoutDashboard,
   LogOut,
   Settings,
   User as UserIcon,
-} from "lucide-react"
+  Loader2,
+  Clock,
+  Star,
+  FileText,
+} from "lucide-react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,48 +27,59 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Badge } from "@/components/ui/badge"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Separator } from "@/components/ui/separator"
-import { cn } from "@/lib/utils"
-import useMediaQuery from "@/hooks/use-media-query"
-import icon from "@/public/assets/icon/logo-light.png"
+} from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+import { cn } from "@/lib/utils";
+import useMediaQuery from "@/hooks/use-media-query";
+import icon from "@/public/assets/icon/logo-light.png";
+import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
 
-import type { User, Notification, NavItem } from "@/types/header"
-import Image from "next/image"
-import { useAuth } from "@/context/AuthContext"
+import type { User, NavItem } from "@/types/header";
+import { useNotifications } from "@/queries/doctor/useNotifications";
+import {
+  getSingleNotification,
+} from "@/api/doctor/notifications";
+import { NotificationItem } from "@/types/doctor/notification";
+import { useUnreadCount } from "@/queries/doctor/useUnreadCount";
 
 interface HeaderProps {
-  user?: User
-  notifications?: Notification[]
-  onNotificationClick?: (notification: Notification) => void
-  onLogout?: () => void
+  user?: User;
+  onLogout?: () => void;
 }
 
-export default function Header({
-  notifications = [],
-  onNotificationClick,
-  onLogout,
-}: HeaderProps) {
-  const { user, logout } = useAuth()
-  const pathname = usePathname()
-  const isDesktop = useMediaQuery("(min-width: 768px)")
-  const [isScrolled, setIsScrolled] = useState(false)
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(0)
-  const [mounted, setMounted] = useState(false)
+export default function Header({ onLogout }: HeaderProps) {
+  const { user, logout } = useAuth();
+  const pathname = usePathname();
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const queryClient = useQueryClient();
 
-  // console.log("Header user:", user)
-  // Navigation items
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [readingId, setReadingId] = useState<string | null>(null);
+
+  const { data, isLoading } = useNotifications();
+
+  const notifications = data?.data ?? [];
+
+  // only show 5 in header dropdown
+  const topFiveNotifications = useMemo(() => {
+    return notifications.slice(0, 5);
+  }, [notifications]);
+
+  const { data: unreadCount = 0, isLoading: unreadLoading } = useUnreadCount();
+
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
@@ -87,92 +102,120 @@ export default function Header({
       icon: <Bell className="h-4 w-4" />,
       badge: unreadCount,
     },
-  ]
+  ];
 
-  // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
-    }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+      setIsScrolled(window.scrollY > 10);
+    };
 
-  // Update unread count when notifications change
-  useEffect(() => {
-    setUnreadCount(notifications.filter((n) => !n.read).length)
-  }, [notifications])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    setMounted(true);
+  }, []);
 
-  if (!mounted) return null
+  const readNotificationMutation = useMutation({
+    mutationFn: async (notificationId: string) => {
+      setReadingId(notificationId);
+      return await getSingleNotification(notificationId);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    onSettled: () => {
+      setReadingId(null);
+    },
+    onError: (error) => {
+      console.error("Failed to read notification:", error);
+    },
+  });
 
-  const name = user ? `${user.first_name} ${user.last_name}` : "User"
+  const markAllReadMutation = useMutation({
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+    },
+    onError: (error) => {
+      console.error("Failed to mark all as read:", error);
+    },
+  });
 
-  // Get user initials for avatar fallback
+  if (!mounted) return null;
+
+  const name = user ? `${user.first_name} ${user.last_name}` : "User";
+
   const getUserInitials = () => {
-    if (!user) return "U"
+    if (!user) return "U";
 
-    const first = user.first_name?.[0] || ""
-    const last = user.last_name?.[0] || ""
+    const first = user.first_name?.[0] || "";
+    const last = user.last_name?.[0] || "";
 
-    return (first + last).toUpperCase() || "U"
-  }
+    return (first + last).toUpperCase() || "U";
+  };
 
-  // Format notification time
-  const formatNotificationTime = (date: Date) => {
-    const now = new Date()
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000)
+  const formatNotificationTime = (dateString: string) => {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / 60000);
 
-    if (diffInMinutes < 1) return "Just now"
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`
-    return date.toLocaleDateString()
-  }
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return date.toLocaleDateString();
+  };
 
-  // Get notification icon color
-  const getNotificationIcon = (type: Notification["type"]) => {
-    switch (type) {
+  const getNotificationTypeColor = (group: NotificationItem["group"]) => {
+    switch (group) {
       case "appointment":
-        return "text-blue-500"
-      case "message":
-        return "text-green-500"
-      case "alert":
-        return "text-red-500"
-      case "reminder":
-        return "text-yellow-500"
+        return "text-blue-500";
+      case "availability":
+        return "text-green-500";
+      case "review":
+        return "text-yellow-500";
+      case "document":
+        return "text-rose-500";
       default:
-        return "text-gray-500"
+        return "text-gray-500";
     }
-  }
+  };
+
+  const getNotificationTypeIcon = (group: NotificationItem["group"]) => {
+    switch (group) {
+      case "appointment":
+        return <Calendar className="h-4 w-4" />;
+      case "availability":
+        return <Clock className="h-4 w-4" />;
+      case "review":
+        return <Star className="h-4 w-4" />;
+      case "document":
+        return <FileText className="h-4 w-4" />;
+      default:
+        return <Bell className="h-4 w-4" />;
+    }
+  };
+
+  const handleNotificationClick = (notificationId: string) => {
+    readNotificationMutation.mutate(notificationId);
+  };
 
   return (
     <header
       className={cn(
         "sticky top-0 z-50 w-full border-b border-border bg-card shadow-sm",
         isScrolled
-          ? 'bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b'
-          : 'bg-background'
+          ? "bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 border-b"
+          : "bg-background"
       )}
     >
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo and Brand */}
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            {/* <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-primary-foreground font-bold text-lg">HP</span>
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="text-lg font-semibold leading-tight">HealthCare Pro</h1>
-              <p className="text-xs text-muted-foreground">Telehealth Platform</p>
-            </div> */}
             <Image src={icon} alt="Logo" width={180} height={32} />
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
         {isDesktop && (
           <nav className="flex items-center gap-1">
             {navItems.map((item) => (
@@ -201,9 +244,7 @@ export default function Header({
           </nav>
         )}
 
-        {/* Right side actions */}
         <div className="flex items-center gap-2">
-          {/* Notifications Dropdown */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
@@ -215,47 +256,74 @@ export default function Header({
                 )}
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent align="end" className="w-80">
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>Notifications</span>
-                {notifications.length > 0 && (
-                  <Button variant="ghost" size="sm" className="h-auto text-xs">
-                    Mark all as read
+
+                {/* {notifications.length > 0 && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto text-xs"
+                    onClick={() => markAllReadMutation.mutate()}
+                    disabled={markAllReadMutation.isPending}
+                  >
+                    {markAllReadMutation.isPending ? "Loading..." : "Mark all as read"}
                   </Button>
-                )}
+                )} */}
               </DropdownMenuLabel>
+
               <DropdownMenuSeparator />
+
               <ScrollArea className="h-75">
-                {notifications.length > 0 ? (
-                  notifications.map((notification) => (
+                {isLoading ? (
+                  <div className="flex items-center justify-center p-4">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  </div>
+                ) : topFiveNotifications.length > 0 ? (
+                  topFiveNotifications.map((notification) => (
                     <DropdownMenuItem
                       key={notification.id}
                       className={cn(
-                        "flex cursor-pointer flex-col items-start gap-1 p-3",
-                        !notification.read && "bg-accent/50"
+                        "flex cursor-pointer flex-col items-start gap-2 p-3",
+                        !notification.is_read && "bg-accent/50"
                       )}
-                      onClick={() => onNotificationClick?.(notification)}
+                      onClick={() => handleNotificationClick(notification.id)}
                     >
                       <div className="flex w-full items-start justify-between gap-2">
-                        <span className="text-sm font-medium">
-                          {notification.title}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className={getNotificationTypeColor(notification.group)}>
+                            {getNotificationTypeIcon(notification.group)}
+                          </span>
+                          <span className="text-sm font-medium">{notification.title}</span>
+                        </div>
+
                         <span className="text-xs whitespace-nowrap text-muted-foreground">
-                          {formatNotificationTime(notification.timestamp)}
+                          {formatNotificationTime(notification.created_at)}
                         </span>
                       </div>
+
                       <p className="line-clamp-2 text-xs text-muted-foreground">
-                        {notification.message}
+                        {notification.desc}
                       </p>
-                      <Badge
-                        variant="outline"
-                        className={cn(
-                          "mt-1 text-xs",
-                          getNotificationIcon(notification.type)
+
+                      <div className="flex w-full items-center justify-between">
+                        <Badge
+                          variant="outline"
+                          className={cn("mt-1 text-xs", getNotificationTypeColor(notification.group))}
+                        >
+                          {notification.group}
+                        </Badge>
+
+                        {readingId === notification.id ? (
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                        ) : notification.is_read && (
+                          <Badge variant="secondary" className="text-[10px]">
+                            Read
+                          </Badge>
                         )}
-                      >
-                        {notification.type}
-                      </Badge>
+                      </div>
                     </DropdownMenuItem>
                   ))
                 ) : (
@@ -264,32 +332,33 @@ export default function Header({
                   </div>
                 )}
               </ScrollArea>
+
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/notifications" className="w-full justify-center">
+                <Link href="/doctor/notifications" className="w-full justify-center">
                   View all notifications
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* User Menu */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user?.avatar} alt={`${user?.first_name} ${user?.last_name}`} />
+                  <AvatarImage
+                    src={user?.avatar}
+                    alt={`${user?.first_name} ${user?.last_name}`}
+                  />
                   <AvatarFallback>{getUserInitials()}</AvatarFallback>
                 </Avatar>
               </Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
                 <div className="flex flex-col space-y-1">
-                  <p className="text-sm leading-none font-medium">
-                    {/* {`${user?.first_name} ${user?.last_name}`} */}
-                    {name}
-                  </p>
+                  <p className="text-sm leading-none font-medium">{name}</p>
                   <p className="text-xs leading-none text-muted-foreground">
                     {user?.email || "Not signed in"}
                   </p>
@@ -300,22 +369,27 @@ export default function Header({
                   )}
                 </div>
               </DropdownMenuLabel>
+
               <DropdownMenuSeparator />
+
               <DropdownMenuGroup>
                 <DropdownMenuItem asChild>
-                  <Link href="/profile" className="cursor-pointer">
+                  <Link href="/doctor/profile" className="cursor-pointer">
                     <UserIcon className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>
+
                 <DropdownMenuItem asChild>
-                  <Link href="/settings" className="cursor-pointer">
+                  <Link href="/doctor/settings" className="cursor-pointer">
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </Link>
                 </DropdownMenuItem>
               </DropdownMenuGroup>
+
               <DropdownMenuSeparator />
+
               <DropdownMenuItem
                 className="cursor-pointer text-destructive focus:text-destructive"
                 onClick={logout}
@@ -326,7 +400,6 @@ export default function Header({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {/* Mobile Menu Button */}
           {!isDesktop && (
             <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
               <SheetTrigger asChild>
@@ -334,23 +407,22 @@ export default function Header({
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
+
               <SheetContent side="right" className="w-75 sm:w-100">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                      <span className="text-lg font-bold text-primary-foreground">
-                        HP
-                      </span>
+                      <span className="text-lg font-bold text-primary-foreground">HP</span>
                     </div>
                     <div>
                       <h2 className="text-lg font-semibold">HealthCare Pro</h2>
-                      <p className="text-xs text-muted-foreground">
-                        Telehealth Platform
-                      </p>
+                      <p className="text-xs text-muted-foreground">Telehealth Platform</p>
                     </div>
                   </SheetTitle>
                 </SheetHeader>
+
                 <Separator className="my-4" />
+
                 <nav className="flex flex-col gap-2">
                   {navItems.map((item) => (
                     <Link
@@ -366,9 +438,7 @@ export default function Header({
                     >
                       {item.icon}
                       <span>{item.title}</span>
-                      {item.badge ? (
-                        <Badge className="ml-auto">{item.badge}</Badge>
-                      ) : null}
+                      {item.badge ? <Badge className="ml-auto">{item.badge}</Badge> : null}
                     </Link>
                   ))}
                 </nav>
@@ -378,5 +448,5 @@ export default function Header({
         </div>
       </div>
     </header>
-  )
+  );
 }
