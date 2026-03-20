@@ -14,18 +14,17 @@ interface OPDSlotCardProps {
   onEdit?: () => void;
 }
 
-export const OPDSlotCard = ({ 
-  slot, 
-  isSelected, 
-  onClick, 
+export const OPDSlotCard = ({
+  slot,
+  isSelected,
+  onClick,
   onBookedClick,
-  onEdit 
+  onEdit
 }: OPDSlotCardProps) => {
   return (
     <div
-      className={`border rounded-lg p-3 hover:shadow-md transition-all mb-2 cursor-pointer ${
-        isSelected ? 'border-primary bg-primary/5' : 'border-border'
-      }`}
+      className={`border rounded-lg p-3 hover:shadow-md transition-all mb-2 cursor-pointer ${isSelected ? 'border-primary bg-primary/5' : 'border-border'
+        }`}
       onClick={onClick}
     >
       {/* Doctor Info */}

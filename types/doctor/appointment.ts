@@ -41,8 +41,10 @@ export interface Appointment {
   duration: string;
   type: string;
   consultation_type?: string;
+  consultation_type_label?: string;
   reason: string;
   status: string;
+  status_label: string;
   notes?: string;
   email?: string;
   phone?: string;
