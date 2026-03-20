@@ -38,10 +38,10 @@ import { useAppointmentDetail } from "@/queries/doctor/useAppointmentDetail";
 import { useAuth } from "@/context/AuthContext"; // adjust path if your auth context path is different
 
 export default function AppointmentDetailsPage() {
+
     const params = useParams();
     const router = useRouter();
     const { token } = useAuth();
-
     const appointmentId = Array.isArray(params.id) ? params.id[0] : params.id;
 
     const {
@@ -251,43 +251,23 @@ export default function AppointmentDetailsPage() {
 
                         <div className="flex gap-3">
                             {/* Call Now / Join Consultation button */}
-                            {appointment.call_now || appointment.can_start_consultation ? (
+                            {appointment.call_now || appointment.join_url ? (
                                 <Button
                                     size="lg"
                                     className="bg-primary hover:bg-primary/90 gap-2"
                                     onClick={() => {
-                                        const joinUrl = appointment.video_consultation?.join_url;
-                                        if (joinUrl) {
-                                            window.open(joinUrl, "_blank");
-                                        } else if (appointment.patient?.phone) {
-                                            window.location.href = `tel:${appointment.patient.phone}`;
-                                        }
+                                        window.open(appointment.join_url, "_blank");
                                     }}
                                 >
-                                    {schedule.consultation_type === "video" ? (
-                                        <><Video className="h-4 w-4" /> Join Consultation</>
-                                    ) : (
-                                        <><Phone className="h-4 w-4" /> Call Now</>
-                                    )}
+                                    <Video className="h-4 w-4" /> Join Consultation
                                 </Button>
                             ) : (
                                 <Button
                                     size="lg"
                                     className="bg-primary/50 gap-2 cursor-not-allowed"
                                     disabled
-                                    title={
-                                        appointment.status === "completed"
-                                            ? "Appointment already completed"
-                                            : appointment.status === "cancelled"
-                                                ? "Appointment was cancelled"
-                                                : "Consultation not yet available"
-                                    }
                                 >
-                                    {schedule.consultation_type === "video" ? (
-                                        <><Video className="h-4 w-4" /> Join Consultation</>
-                                    ) : (
-                                        <><Phone className="h-4 w-4" /> Call Now</>
-                                    )}
+                                    {appointment.status_label}
                                 </Button>
                             )}
                             <Button size="lg" variant="outline" className="gap-2">
@@ -303,7 +283,6 @@ export default function AppointmentDetailsPage() {
                 <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden">
                     {/* <TabsList className="grid w-full max-w-5xl grid-cols-6 mb-6"> */}
                     <TabsTrigger value="overview">Overview</TabsTrigger>
-                    <TabsTrigger value="medical">Medical History</TabsTrigger>
                     <TabsTrigger value="labs">Medical Reports</TabsTrigger>
                     <TabsTrigger value="history">Previous Appointments</TabsTrigger>
                     <TabsTrigger value="prescription">Prescription</TabsTrigger>
@@ -424,7 +403,8 @@ export default function AppointmentDetailsPage() {
                         </div>
 
                         <div className="space-y-6">
-                            <Card className="border-border">
+
+                            {/* <Card className="border-border">
                                 <CardHeader>
                                     <CardTitle className="text-lg flex items-center gap-2">
                                         <Activity className="h-5 w-5 text-primary" />
@@ -451,7 +431,7 @@ export default function AppointmentDetailsPage() {
                                         </div>
                                     </div>
                                 </CardContent>
-                            </Card>
+                            </Card> */}
 
                             <Card className="border-border">
                                 <CardHeader>
@@ -517,34 +497,6 @@ export default function AppointmentDetailsPage() {
                                 </CardContent>
                             </Card>
                         </div>
-                    </div>
-                </TabsContent>
-
-                <TabsContent value="medical" className="space-y-6">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <Card className="border-border">
-                            <CardHeader>
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    <FileText className="h-5 w-5 text-primary" />
-                                    Medical History
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-foreground">No medical history recorded</p>
-                            </CardContent>
-                        </Card>
-
-                        <Card className="border-border">
-                            <CardHeader>
-                                <CardTitle className="text-lg flex items-center gap-2">
-                                    <Heart className="h-5 w-5 text-primary" />
-                                    Current Medications
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-muted-foreground">No medications recorded</p>
-                            </CardContent>
-                        </Card>
                     </div>
                 </TabsContent>
 
