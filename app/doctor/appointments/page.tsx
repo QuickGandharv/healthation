@@ -17,19 +17,19 @@ export default function Appointments() {
     todayQuery.isError || upcomingQuery.isError || pastQuery.isError
 
 
-    if (isLoading) return <p>Loading appointments...</p>;
+  if (isLoading) return <p>Loading appointments...</p>;
 
-    if (isError) {
-        return (
-            <div className="flex-1 items-center justify-center">
-                <p className="text-red-500">Failed to load appointments</p>
-            </div>
-        );
-    }
+  if (isError) {
+    return (
+      <div className="flex-1 items-center justify-center">
+        <p className="text-red-500">Failed to load appointments</p>
+      </div>
+    );
+  }
 
-    console.log("Today Appointments:", todayQuery.data);
-    console.log("Upcoming Appointments:", upcomingQuery.data);
-    console.log("Past Appointments:", pastQuery.data);
+  // console.log("Today Appointments:", todayQuery.data);
+  // console.log("Upcoming Appointments:", upcomingQuery.data);
+  // console.log("Past Appointments:", pastQuery.data);
 
   return (
     <Suspense fallback={<AppointmentsLoading />}>

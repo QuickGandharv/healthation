@@ -81,7 +81,7 @@ export default function AppointmentCard({
               Call Now
             </Button>
 
-            <Button
+            {/* <Button
               size="sm"
               variant="outline"
               className="flex-1 border-gray-300"
@@ -91,7 +91,7 @@ export default function AppointmentCard({
               }}
             >
               Reschedule
-            </Button>
+            </Button> */}
           </div>
         )}
 
@@ -137,11 +137,12 @@ export default function AppointmentCard({
                       window.open(url, "_blank", "noopener,noreferrer");
                     }
                   }}
+
                 >
                   <Phone className="mr-1 h-4 w-4" />
                   Call Now
                 </Button>
-            )}
+              )}
 
             {/* <DropdownMenu>
               <DropdownMenuTrigger asChild>

@@ -29,6 +29,7 @@ import { useEffect, useState } from "react"
 import axios from "axios"
 import EmptyState from "@/components/ui/empty-state"
 import { formatDistanceToNow } from "date-fns"
+import Link from "next/link"
 
 // Notification type based on API response
 interface Notification {
@@ -299,39 +300,42 @@ export default function Dashboard() {
           ) : (
             <CardContent className="space-y-4">
               {todaysAppointments.map((appointment: any, index: number) => (
-                <div
-                  key={appointment.id || index}
-                  className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4"
-                >
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage
-                        src={appointment.avatar || ""}
-                        alt={appointment.patient_name || "Patient"}
-                      />
-                      <AvatarFallback className="bg-primary/10 text-primary">
-                        {(appointment.patient_name || "P")
-                          .split(" ")
-                          .map((n: string) => n[0])
-                          .join("")}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">
-                        {appointment.patient_name || "Unknown Patient"}
-                      </p>
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <Clock className="h-3 w-3" />
-                        <span>{appointment.time || "N/A"}</span>
+                <Link href={`/doctor/appointments/${appointment.id}`}>
+                  <div
+                    key={appointment.id || index}
+                    className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage
+                          src={appointment.avatar || ""}
+                          alt={appointment.patient_name || "Patient"}
+                        />
+                        <AvatarFallback className="bg-primary/10 text-primary">
+                          {(appointment.patient_name || "P")
+                            .split(" ")
+                            .map((n: string) => n[0])
+                            .join("")}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="font-medium">
+                          {appointment.patient_name || "Unknown Patient"}
+                        </p>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <Clock className="h-3 w-3" />
+                          <span>{appointment.time || "N/A"}</span>
+                        </div>
                       </div>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-primary/10 text-primary hover:bg-primary/20 capitalize">
+                        {appointment.status || "pending"}
+                      </Badge>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge className="bg-primary/10 text-primary hover:bg-primary/20">
-                      {appointment.status || "pending"}
-                    </Badge>
-                  </div>
-                </div>
+                </Link>
+
               ))}
             </CardContent>
           )}

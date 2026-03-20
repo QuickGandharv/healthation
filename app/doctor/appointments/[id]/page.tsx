@@ -280,8 +280,8 @@ export default function AppointmentDetailsPage() {
             </Card>
 
             <Tabs defaultValue="overview" className="w-full">
+
                 <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden">
-                    {/* <TabsList className="grid w-full max-w-5xl grid-cols-6 mb-6"> */}
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="labs">Medical Reports</TabsTrigger>
                     <TabsTrigger value="history">Previous Appointments</TabsTrigger>
@@ -403,35 +403,6 @@ export default function AppointmentDetailsPage() {
                         </div>
 
                         <div className="space-y-6">
-
-                            {/* <Card className="border-border">
-                                <CardHeader>
-                                    <CardTitle className="text-lg flex items-center gap-2">
-                                        <Activity className="h-5 w-5 text-primary" />
-                                        Recent Vitals
-                                    </CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                    <div className="grid grid-cols-2 gap-4">
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Blood Pressure</p>
-                                            <p className="font-medium text-lg">N/A</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Heart Rate</p>
-                                            <p className="font-medium text-lg">N/A</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">Temperature</p>
-                                            <p className="font-medium text-lg">N/A</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">O2 Saturation</p>
-                                            <p className="font-medium text-lg">N/A</p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card> */}
 
                             <Card className="border-border">
                                 <CardHeader>
