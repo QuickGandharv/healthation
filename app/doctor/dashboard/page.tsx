@@ -435,7 +435,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/dashboard/patients")}
+              onClick={() => router.push("/doctor/dashboard/patients")}
             >
               <Calendar className="h-6 w-6 text-primary" />
               <span>All Patients</span>
@@ -444,7 +444,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/dashboard/reports")}
+              onClick={() => router.push("/doctor/dashboard/reports")}
             >
               <Users className="h-6 w-6 text-primary" />
               <span>Patient Reports</span>
@@ -453,7 +453,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/dashboard/inventory")}
+              onClick={() => router.push("/doctor/dashboard/inventory")}
             >
               <MessageSquare className="h-6 w-6 text-primary" />
               <span>Medicine Inventory</span>
@@ -462,7 +462,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/dashboard/payments")}
+              onClick={() => router.push("/doctor/dashboard/payments")}
             >
               <Star className="h-6 w-6 text-primary" />
               <span>Payment History</span>
@@ -471,7 +471,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/dashboard/reviews")}
+              onClick={() => router.push("/doctor/dashboard/reviews")}
             >
               <Star className="h-6 w-6 text-primary" />
               <span>All Reviews</span>
