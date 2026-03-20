@@ -65,9 +65,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("Invalid user data:", storedUser)
           localStorage.removeItem("user")
         } finally {
-                setLoading(false);
-                setInitializing(false); // Set loading to false after checking
-            }
+          setLoading(false);
+          setInitializing(false); // Set loading to false after checking
+        }
       }
       loadUser();
     }
@@ -82,9 +82,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setToken(token)
     setUser(user)
 
-    if(user.role === "doctor"){
+    if (user.role === "doctor") {
       router.push("/doctor/dashboard")
-    }else{
+    } else {
       router.push("/patient/dashboard")
     }
   }

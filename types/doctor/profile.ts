@@ -3,7 +3,7 @@ export type DoctorProfileGroup =
   | "working_experience"
   | "education_info"
   | "certifications_info"
-  | "award_info"
+  | "awards_info"
   | "social_media"
   | "address";
 

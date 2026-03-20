@@ -3,24 +3,50 @@ import { SectionHeader } from "./sectionHeader";
 import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
-interface SocialItem {
-  id?: string | number;
-  platform?: string;
-  url?: string;
+// interface SocialItem {
+//   id?: string | number;
+//   platform?: string;
+//   url?: string;
+// }
+
+// interface SocialLinksSectionProps {
+//   // API shape may be wrapped (e.g. `{ social_media: [...] }`) or undefined.
+//   socialMedia?: any;
+// }
+
+// export default function SocialLinksSection({ socialMedia }: SocialLinksSectionProps) {
+//   const safeSocialMedia: SocialItem[] = Array.isArray(
+//     socialMedia?.social_media
+//   )
+//     ? socialMedia.social_media
+
+interface SocialLinks {
+  facebook?: string;
+  twitter?: string;
+  linkedin?: string;
+  instagram?: string;
+  website?: string;
+  [key: string]: string | undefined;
 }
 
 interface SocialLinksSectionProps {
-  // API shape may be wrapped (e.g. `{ social_media: [...] }`) or undefined.
-  socialMedia?: any;
+  socialMedia?: SocialLinks;
 }
 
-export default function SocialLinksSection({ socialMedia }: SocialLinksSectionProps) {
-  const safeSocialMedia: SocialItem[] = Array.isArray(
-    socialMedia?.social_media
-  )
-    ? socialMedia.social_media
+export default function SocialLinksSection({
+  socialMedia,
+}: SocialLinksSectionProps) {
+  console.log("social : ", socialMedia);
+
+  const safeSocialMedia = socialMedia
+    ? Object.entries(socialMedia)
+      .filter(([, url]) => !!url)
+      .map(([platform, url], index) => ({
+        id: index + 1,
+        platform,
+        url: url as string,
+      }))
     : [];
-  console.log("Doctor Social Media : ", safeSocialMedia);
 
   return (
     <div className="space-y-4">
@@ -32,7 +58,7 @@ export default function SocialLinksSection({ socialMedia }: SocialLinksSectionPr
       />
 
       <div className="grid gap-4 md:grid-cols-2">
-        {safeSocialMedia.length === 0 ? (
+        {/* {safeSocialMedia.length === 0 ? (
           <p className="text-center text-muted-foreground col-span-2">No social media found</p>
         ) : (
           safeSocialMedia.map((social, index) => (
@@ -44,7 +70,24 @@ export default function SocialLinksSection({ socialMedia }: SocialLinksSectionPr
             actions={<ActionButtons />}
           />
         ))
-      )}
+      )} */}
+        {safeSocialMedia.length > 0 ? (
+          safeSocialMedia.map((social) => (
+            <ProfileItemCard
+              key={social.id}
+              icon={<Globe className="h-6 w-6" />}
+              title={
+                social.platform.charAt(0).toUpperCase() +
+                social.platform.slice(1)
+              }
+              subtitle={social.url}
+            />
+          ))
+        ) : (
+          <p className="text-sm text-muted-foreground">
+            No social media links available.
+          </p>
+        )}
       </div>
     </div>
   );

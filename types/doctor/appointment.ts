@@ -31,6 +31,7 @@ export interface AppointmentHistory {
 
 export interface Appointment {
   id: number;
+  appointment_id: string;
   patient: string;
   avatar: string;
   age: number;
@@ -39,17 +40,10 @@ export interface Appointment {
   time: string;
   duration: string;
   type: string;
+  consultation_type?: string;
   reason: string;
   status: string;
   notes?: string;
-  /**
-   * Telehealth/in-person metadata (API may provide these fields).
-   * Used by doctor appointment actions in `AppointmentCard`.
-   */
-  consultation_type?: string;
-  video_consultation?: {
-    join_url?: string;
-  };
   email?: string;
   phone?: string;
   emergencyContact?: string;
@@ -60,6 +54,9 @@ export interface Appointment {
   vitals?: Vitals;
   labResults?: LabResult[];
   appointments?: AppointmentHistory[];
+  video_consultation?: {
+    join_url?: string;
+  };
 
   prescription?: {
     prescribedBy: string;

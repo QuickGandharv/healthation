@@ -6,10 +6,6 @@ interface ActionButtonsProps {
   onDelete?: () => void;
   showDelete?: boolean;
   fullWidthEdit?: boolean;
-  /**
-   * When true, render only the delete button (hide edit).
-   * Used by sections like address where edit is not applicable.
-   */
   deleteOnlyIcon?: boolean;
 }
 

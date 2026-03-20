@@ -51,117 +51,114 @@ export default function ReviewsPage() {
     const [selectedActive, setSelectedActive] = useState<string>("all");
     const [selectedFeatured, setSelectedFeatured] = useState<string>("all");
 
-    // Reviews data (replace with API data when available)
-    const [reviews] = useState<Review[]>([]);
-
     // Sample reviews data
-    // const reviews: Review[] = [
-    //     {
-    //         id: "1",
-    //         type: "Original",
-    //         title: "Video Consultation",
-    //         patient: "Sakshi Bisht",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 3,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Original"
-    //     },
-    //     {
-    //         id: "2",
-    //         type: "Fake",
-    //         title: "Highly Professional",
-    //         patient: "Karan Singh",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 5,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Highly Professional"
-    //     },
-    //     {
-    //         id: "3",
-    //         type: "Fake",
-    //         title: "Friendly and Helpful",
-    //         patient: "Vikram Patel",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 5,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Friendly and Helpful"
-    //     },
-    //     {
-    //         id: "4",
-    //         type: "Fake",
-    //         title: "Detailed Explanation",
-    //         patient: "Meena Dubey",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 4,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Detailed Explanation"
-    //     },
-    //     {
-    //         id: "5",
-    //         type: "Original",
-    //         title: "Outstanding Service",
-    //         patient: "Suresh Kumar",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 5,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Outstanding Service"
-    //     },
-    //     {
-    //         id: "6",
-    //         type: "Fake",
-    //         title: "Quick Diagnosis",
-    //         patient: "Preeti Sharma",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 4,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Quick Diagnosis"
-    //     },
-    //     {
-    //         id: "7",
-    //         type: "Fake",
-    //         title: "Very Compassionate and Skilled",
-    //         patient: "Amit Kumar",
-    //         doctor: "Amit Sharma",
-    //         appointment: "Mar 12,2026",
-    //         consultationType: "Video",
-    //         rating: 5,
-    //         time: "11:50:00",
-    //         date: "Mar 12,2026",
-    //         active: true,
-    //         featured: false,
-    //         comment: "Very Compassionate and Skilled"
-    //     }
-    // ];
+    const reviews: Review[] = [
+        {
+            id: "1",
+            type: "Original",
+            title: "Video Consultation",
+            patient: "Sakshi Bisht",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 3,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Original"
+        },
+        {
+            id: "2",
+            type: "Fake",
+            title: "Highly Professional",
+            patient: "Karan Singh",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 5,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Highly Professional"
+        },
+        {
+            id: "3",
+            type: "Fake",
+            title: "Friendly and Helpful",
+            patient: "Vikram Patel",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 5,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Friendly and Helpful"
+        },
+        {
+            id: "4",
+            type: "Fake",
+            title: "Detailed Explanation",
+            patient: "Meena Dubey",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 4,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Detailed Explanation"
+        },
+        {
+            id: "5",
+            type: "Original",
+            title: "Outstanding Service",
+            patient: "Suresh Kumar",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 5,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Outstanding Service"
+        },
+        {
+            id: "6",
+            type: "Fake",
+            title: "Quick Diagnosis",
+            patient: "Preeti Sharma",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 4,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Quick Diagnosis"
+        },
+        {
+            id: "7",
+            type: "Fake",
+            title: "Very Compassionate and Skilled",
+            patient: "Amit Kumar",
+            doctor: "Amit Sharma",
+            appointment: "Mar 12,2026",
+            consultationType: "Video",
+            rating: 5,
+            time: "11:50:00",
+            date: "Mar 12,2026",
+            active: true,
+            featured: false,
+            comment: "Very Compassionate and Skilled"
+        }
+    ];
 
     // Filter reviews based on search and filters
     const filteredReviews = reviews.filter(review => {

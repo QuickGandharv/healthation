@@ -5,19 +5,20 @@ import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
 interface ExperienceSectionProps {
-  // API shape is not guaranteed to be an array; sometimes it's wrapped.
-  // We normalize it internally to an array before rendering.
-  experience?: any;
+
+  experience?: any; // Marked as any to handle both array of ExperienceItem or object with professional_experience_info
 }
 
 export default function ExperienceSection({
   experience,
 }: ExperienceSectionProps) {
-  const safeExperience: any[] = Array.isArray(
-    (experience as any)?.professional_experience_info
-  )
-    ? (experience as any).professional_experience_info
-    : [];
+
+  // Handle both flat arrays and nested object structures
+  const safeExperience = Array.isArray(experience)
+    ? experience
+    : Array.isArray(experience?.professional_experience_info)
+      ? experience.professional_experience_info
+      : [];
 
   return (
     <div className="space-y-4">
@@ -29,14 +30,15 @@ export default function ExperienceSection({
       />
 
       <div className="space-y-4">
-        {safeExperience.map((exp: any, index: number) => (
+
+        {safeExperience?.map((exp: any, index: number) => (
           <ProfileItemCard
             key={index}
             icon={<Briefcase className="h-6 w-6" />}
-            title={exp.past_associations}
-            meta={`${exp.career_start}`}
+            title={exp.designation || exp.title || exp.past_associations || exp.hospital_name || "Unknown"}
+            meta={`${exp.start_date || exp.career_start || ''}${exp.end_date ? ` - ${exp.end_date}` : ''}`}
             badge={
-              exp.current ? (
+              (exp.current || exp.is_current) ? (
                 <Badge className="bg-primary/10 text-primary">Current</Badge>
               ) : undefined
             }

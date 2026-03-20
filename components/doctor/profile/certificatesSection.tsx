@@ -58,14 +58,14 @@ import { FileText, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeader } from "./sectionHeader";
 import { ProfileItemCard } from "./profileItemCard";
-import { ActionButtons } from "./actionButtons";
 
 interface CertificateItem {
   id?: number | string;
   name?: string | null;
   issuer?: string | null;
-  issueDate?: string | null;
-  expiryDate?: string | null;
+  issue_date?: string | null;
+  expiry_date?: string | null;
+  organization?: string | null;
 }
 
 interface CertificatesSectionProps {
@@ -76,8 +76,6 @@ export default function CertificatesSection({
   certificates = [],
 }: CertificatesSectionProps) {
   const safeCertificates = Array.isArray(certificates) ? certificates : [];
-
-  console.log("Doctor Certificates:", safeCertificates);
 
   return (
     <div className="space-y-4">
@@ -96,15 +94,14 @@ export default function CertificatesSection({
         ) : (
           safeCertificates.map((cert, index) => (
             <ProfileItemCard
-              key={cert.id ?? index}
+              key={index}
               icon={<FileText className="h-6 w-6" />}
               title={cert.name || "Untitled Certificate"}
-              subtitle={cert.issuer || "Issuer not provided"}
-              meta={`Issued: ${cert.issueDate || "N/A"} • Expires: ${
-                cert.expiryDate || "N/A"
-              }`}
-              badge={<Badge variant="secondary">Valid</Badge>}
-              actions={<ActionButtons />}
+              subtitle={cert.organization || "Issuer not provided"}
+              meta={`${cert.issue_date || "N/A"} - ${cert.expiry_date || "N/A"
+                }`}
+            // badge={<Badge variant="secondary">Valid</Badge>}
+            // actions={<ActionButtons />}
             />
           ))
         )}

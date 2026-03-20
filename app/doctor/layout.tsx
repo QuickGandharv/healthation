@@ -14,18 +14,12 @@ export default function DashboardLayout({
 }) {
   const { logout } = useAuth();
   const router = useRouter();
-  const handleNotificationClick = (notification: any) => {
-    // Handle notification click
-    console.log('Notification clicked:', notification);
-    // You might want to mark as read, navigate, etc.
-  };
 
   return (
     <div className="min-h-screen bg-background">
       <Header
         // user={mockUser}
         // notifications={mockNotifications}
-        onNotificationClick={handleNotificationClick}
         onLogout={logout}
       />
       <main className="container mx-auto px-4 py-6">

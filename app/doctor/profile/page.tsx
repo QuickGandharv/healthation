@@ -56,22 +56,18 @@ export default function Profile() {
 
   const awardsQuery = useDoctorProfile<AwardItem>(
     doctorID,
-    "award_info"
+    "awards_info"
   );
 
-  const certificatesQuery = useDoctorProfile<CertificateItem[]>(
+  const certificatesQuery = useDoctorProfile<{ certifications_info: CertificateItem[] }>(
     doctorID,
     "certifications_info"
   );
 
-  console.log("certificates query : ", certificatesQuery);
-
-  const socialQuery = useDoctorProfile<SocialMediaItem>(
+  const socialQuery = useDoctorProfile<{ social_links: Record<string, string> }>(
     doctorID,
     "social_media"
   );
-
-  console.log("social query : ", socialQuery);
 
   const profileData = personalQuery.data?.data;
 
@@ -168,8 +164,8 @@ export default function Profile() {
   const experience = experienceQuery.data?.data;
   const education = educationQuery.data?.data;
   const awards = awardsQuery.data?.data;
-  const certificates = certificatesQuery.data?.data || [];
-  const socialMedia = socialQuery.data?.data;
+  const certificates = certificatesQuery.data?.data?.certifications_info;
+  const socialMedia = socialQuery.data?.data?.social_links;
 
   // Keep static only until you have a reviews API
   const reviews = [

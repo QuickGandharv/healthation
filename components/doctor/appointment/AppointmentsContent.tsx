@@ -166,11 +166,10 @@ export default function AppointmentsContent({
             <div className="inline-flex items-center rounded-full bg-muted p-1">
               <Button
                 size="sm"
-                className={`rounded-full px-4 ${
-                  selectedType === "all"
-                    ? "bg-white text-foreground shadow"
-                    : "bg-transparent text-muted-foreground hover:bg-white/50"
-                }`}
+                className={`rounded-full px-4 ${selectedType === "all"
+                  ? "bg-white text-foreground shadow"
+                  : "bg-transparent text-muted-foreground hover:bg-white/50"
+                  }`}
                 onClick={() => {
                   setSelectedType("all")
                   setCurrentPage(1)
@@ -182,11 +181,10 @@ export default function AppointmentsContent({
               <Button
                 size="sm"
                 variant="ghost"
-                className={`rounded-full px-4 ${
-                  selectedType === "in-person"
-                    ? "bg-white text-foreground shadow"
-                    : "text-muted-foreground hover:bg-white/50"
-                }`}
+                className={`rounded-full px-4 ${selectedType === "in-person"
+                  ? "bg-white text-foreground shadow"
+                  : "text-muted-foreground hover:bg-white/50"
+                  }`}
                 onClick={() => {
                   setSelectedType("in-person")
                   setCurrentPage(1)
@@ -198,11 +196,10 @@ export default function AppointmentsContent({
               <Button
                 size="sm"
                 variant="ghost"
-                className={`rounded-full px-4 ${
-                  selectedType === "telehealth"
-                    ? "bg-white text-foreground shadow"
-                    : "text-muted-foreground hover:bg-white/50"
-                }`}
+                className={`rounded-full px-4 ${selectedType === "telehealth"
+                  ? "bg-white text-foreground shadow"
+                  : "text-muted-foreground hover:bg-white/50"
+                  }`}
                 onClick={() => {
                   setSelectedType("telehealth")
                   setCurrentPage(1)
