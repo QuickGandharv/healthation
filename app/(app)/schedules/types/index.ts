@@ -43,7 +43,7 @@ export interface PatientAppointment {
   appointmentTime: string
   reason?: string
   bookedOn?: string
-  status: "confirmed" | "pending" | "cancelled" | "completed"
+  status: "confirmed" | "pending" | "cancelled" | "completed" | "Scheduled"
   status_label?: string
   doctorName?: string
   doctorAvatar?: string
@@ -52,6 +52,15 @@ export interface PatientAppointment {
   consultation_type?: string
   start_time?: string
   end_time?: string
+  appointment_time_formatted?: string
+  patient: {
+    id?: string;
+    name?: string;
+    patient_name?: string;
+    avatar?: string | null;
+    slug?: string;
+    user_id?: string;
+  };
 }
 
 export interface OPDSlot {

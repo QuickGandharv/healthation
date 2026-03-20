@@ -23,7 +23,7 @@ interface AppointmentCardProps {
     doctor?: string;
     time?: string;
     appointmentType?: "Video" | "Phone" | "In-Person";
-    status?: "Confirmed" | "Pending" | "Completed" | "Cancelled";
+    status?: "Confirmed" | "Pending" | "Completed" | "Cancelled" | "Scheduled";
 
     // Actions
     onClick?: () => void;
@@ -108,11 +108,12 @@ export function AppointmentCard({
         "In-Person": <MapPin className="h-3 w-3" />
     };
 
-    const statusColors = {
+    const statusColors: Record<string, string> = {
         Confirmed: "bg-green-100 text-green-800",
         Pending: "bg-yellow-100 text-yellow-800",
         Completed: "bg-blue-100 text-blue-800",
-        Cancelled: "bg-red-100 text-red-800"
+        Cancelled: "bg-red-100 text-red-800",
+        Scheduled: "bg-indigo-100 text-indigo-800"
     };
 
     const typeColors = {

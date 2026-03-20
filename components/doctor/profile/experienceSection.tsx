@@ -5,14 +5,18 @@ import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
 interface ExperienceSectionProps {
-  experience?: ExperienceItem[];
+  // API shape is not guaranteed to be an array; sometimes it's wrapped.
+  // We normalize it internally to an array before rendering.
+  experience?: any;
 }
 
 export default function ExperienceSection({
-  experience = [],
+  experience,
 }: ExperienceSectionProps) {
-  const safeExperience = Array.isArray(experience.professional_experience_info)
-    ? experience.professional_experience_info
+  const safeExperience: any[] = Array.isArray(
+    (experience as any)?.professional_experience_info
+  )
+    ? (experience as any).professional_experience_info
     : [];
 
   return (
@@ -25,7 +29,7 @@ export default function ExperienceSection({
       />
 
       <div className="space-y-4">
-        {safeExperience?.map((exp, index) => (
+        {safeExperience.map((exp: any, index: number) => (
           <ProfileItemCard
             key={index}
             icon={<Briefcase className="h-6 w-6" />}

@@ -51,6 +51,9 @@ export default function ReviewsPage() {
     const [selectedActive, setSelectedActive] = useState<string>("all");
     const [selectedFeatured, setSelectedFeatured] = useState<string>("all");
 
+    // Reviews data (replace with API data when available)
+    const [reviews] = useState<Review[]>([]);
+
     // Sample reviews data
     // const reviews: Review[] = [
     //     {

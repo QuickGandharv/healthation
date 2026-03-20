@@ -4,21 +4,16 @@ import { SectionHeader } from "./sectionHeader";
 import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
-interface EducationItem {
-  id: number;
-  degree: string;
-  institution: string;
-  location: string;
-  year: string;
-}
-
 interface EducationSectionProps {
-  education: EducationItem[];
+  // API shape may be wrapped (e.g. `{ education_info: [...] }`) or undefined.
+  education?: any;
 }
 
 export default function EducationSection({ education }: EducationSectionProps) {
-  const safeEducation = Array.isArray(education.education_info)
-    ? education.education_info
+  const safeEducation: any[] = Array.isArray(
+    (education as any)?.education_info
+  )
+    ? (education as any).education_info
     : [];
   console.log("Doctor Education : ", safeEducation);
   return (
@@ -31,7 +26,7 @@ export default function EducationSection({ education }: EducationSectionProps) {
       />
 
       <div className="space-y-4">
-        {safeEducation.map((edu, index) => (
+        {safeEducation.map((edu, index: number) => (
           <ProfileItemCard
             key={index}
             icon={<GraduationCap className="h-6 w-6" />}

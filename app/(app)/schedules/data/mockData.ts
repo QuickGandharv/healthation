@@ -14,7 +14,11 @@ export const patientAppointments: Record<string, PatientAppointment[]> = {
       bookedOn: "Mar 8, 2026 at 11:26 AM",
       status: "confirmed",
       doctorName: "Dr. Amit Sharma",
-      doctorAvatar: "AS"
+      doctorAvatar: "AS",
+      patient: {
+        id: "p1",
+        name: "Maria Rodriguez"
+      }
     },
     // ... more patients (I'll keep the complete data from your original)
   ],

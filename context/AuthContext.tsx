@@ -5,11 +5,14 @@ import { useRouter } from "next/navigation"
 import { setAuthToken } from "@/lib/authToken"
 
 interface User {
+  id?: string
   name: string
   email: string
   first_name: string
   last_name: string
   avatar?: string
+  date_of_birth?: string | null
+  gender?: string | null
   role?: string | "patient" | "doctor" | "admin"
 }
 

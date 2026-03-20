@@ -56,7 +56,7 @@ export default function Profile() {
 
   const awardsQuery = useDoctorProfile<AwardItem>(
     doctorID,
-    "awards_info"
+    "award_info"
   );
 
   const certificatesQuery = useDoctorProfile<CertificateItem[]>(
@@ -165,11 +165,11 @@ export default function Profile() {
   };
 
   const address = addressQuery.data?.data || null;
-  const experience = experienceQuery.data?.data || [];
-  const education = educationQuery.data?.data || [];
-  const awards = awardsQuery.data?.data || [];
+  const experience = experienceQuery.data?.data;
+  const education = educationQuery.data?.data;
+  const awards = awardsQuery.data?.data;
   const certificates = certificatesQuery.data?.data || [];
-  const socialMedia = socialQuery.data?.data || [];
+  const socialMedia = socialQuery.data?.data;
 
   // Keep static only until you have a reviews API
   const reviews = [

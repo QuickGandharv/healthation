@@ -42,6 +42,14 @@ export interface Appointment {
   reason: string;
   status: string;
   notes?: string;
+  /**
+   * Telehealth/in-person metadata (API may provide these fields).
+   * Used by doctor appointment actions in `AppointmentCard`.
+   */
+  consultation_type?: string;
+  video_consultation?: {
+    join_url?: string;
+  };
   email?: string;
   phone?: string;
   emergencyContact?: string;

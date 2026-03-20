@@ -4,20 +4,14 @@ import { SectionHeader } from "./sectionHeader";
 import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
-interface AwardItem {
-  id: number;
-  title: string;
-  issuer: string;
-  year: string;
-}
-
 interface AwardsSectionProps {
-  awards: AwardItem[];
+  // API shape may be wrapped (e.g. `{ awards_info: [...] }`) or undefined.
+  awards?: any;
 }
 
 export default function AwardsSection({ awards }: AwardsSectionProps) {
-  const safeAwards = Array.isArray(awards.awards_info)
-    ? awards.awards_info
+  const safeAwards: any[] = Array.isArray((awards as any)?.awards_info)
+    ? (awards as any).awards_info
     : [];
   console.log("Doctor Awards : ", safeAwards);
   return (
@@ -30,7 +24,7 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
       />
 
       <div className="grid gap-4 md:grid-cols-2">
-        {safeAwards.map((index, award) => (
+        {safeAwards.map((award, index: number) => (
           <ProfileItemCard
           key={index}
           imageSrc={award.award_image}

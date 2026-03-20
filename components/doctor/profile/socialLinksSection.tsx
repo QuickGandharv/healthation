@@ -4,18 +4,20 @@ import { ProfileItemCard } from "./profileItemCard";
 import { ActionButtons } from "./actionButtons";
 
 interface SocialItem {
-  id: number;
-  platform: string;
-  url: string;
+  id?: string | number;
+  platform?: string;
+  url?: string;
 }
 
 interface SocialLinksSectionProps {
-  socialMedia: SocialItem;
+  // API shape may be wrapped (e.g. `{ social_media: [...] }`) or undefined.
+  socialMedia?: any;
 }
 
 export default function SocialLinksSection({ socialMedia }: SocialLinksSectionProps) {
-
-  const safeSocialMedia = Array.isArray(socialMedia.social_media)
+  const safeSocialMedia: SocialItem[] = Array.isArray(
+    socialMedia?.social_media
+  )
     ? socialMedia.social_media
     : [];
   console.log("Doctor Social Media : ", safeSocialMedia);
@@ -33,12 +35,12 @@ export default function SocialLinksSection({ socialMedia }: SocialLinksSectionPr
         {safeSocialMedia.length === 0 ? (
           <p className="text-center text-muted-foreground col-span-2">No social media found</p>
         ) : (
-          safeSocialMedia.map((social) => (
+          safeSocialMedia.map((social, index) => (
           <ProfileItemCard
-            key={social.id}
+            key={social.id ?? index}
             icon={<Globe className="h-6 w-6" />}
-            title={social.platform}
-            subtitle={social.url}
+            title={social.platform ?? ""}
+            subtitle={social.url ?? ""}
             actions={<ActionButtons />}
           />
         ))

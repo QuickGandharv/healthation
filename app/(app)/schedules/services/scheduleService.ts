@@ -414,6 +414,13 @@ class ScheduleService {
       consultation_type: appt.consultation_type,
       start_time: appt.start_time,
       end_time: appt.end_time,
+      patient: appt.patient || {
+        id: appt.patient_id,
+        name: appt.patient_name || "Unknown Patient",
+        patient_name: appt.patient_name,
+        avatar: appt.patient_avatar,
+        user_id: appt.user_id,
+      },
     }
   }
 }

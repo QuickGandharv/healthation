@@ -56,9 +56,10 @@ import { useUnreadCount } from "@/queries/doctor/useUnreadCount";
 interface HeaderProps {
   user?: User;
   onLogout?: () => void;
+  onNotificationClick?: (notification: any) => void;
 }
 
-export default function Header({ onLogout }: HeaderProps) {
+export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
   const isDesktop = useMediaQuery("(min-width: 768px)");
@@ -197,6 +198,8 @@ export default function Header({ onLogout }: HeaderProps) {
   };
 
   const handleNotificationClick = (notificationId: string) => {
+    // Optional external callback from route layouts.
+    onNotificationClick?.(notificationId);
     readNotificationMutation.mutate(notificationId);
   };
 

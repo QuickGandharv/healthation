@@ -288,12 +288,17 @@ export const MonthView = ({
                     <AppointmentCard
                       key={appointment.patient.id}
                       type="patient"
-                      title={appointment.patient.name || appointment.patient.patient_name}
-                      avatar={appointment.patient.patient_avatar || appointment.patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
+                      // title={appointment.patient.name || appointment.patient.patient_name}
+                      title={
+                        appointment.patient.name ||
+                        appointment.patient.patient_name ||
+                        "Unknown Patient"
+                      }
+                      avatar={appointment.patient.avatar || appointment.patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
                       doctor={selectedMonthSlot.doctorName || ""}
                       time={appointment.appointment_time_formatted || appointment.appointmentTime}
                       appointmentType={appointment.consultation_type === "video" ? "Video" : "In-Person"}
-                      status={appointment?.status_label || "Scheduled"}
+                      status={(appointment.status_label as any) || "Scheduled"}
                       onClick={() => {
                         if (appointment.appointment_id) {
                           window.location.href = `/doctor/appointments/${appointment.appointment_id}`;

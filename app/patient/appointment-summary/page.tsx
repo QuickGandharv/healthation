@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from 'react';
 import { Stethoscope } from 'lucide-react';
 import { useBooking } from '@/context/BookingContext';
 import { useAuth } from '@/context/AuthContext';
@@ -9,7 +10,8 @@ import { getAppointmentDetailsById } from '@/queries/patient/getAppointmentDetai
 
 const doctorPlaceholder = 'https://telehealthwebapplive.cmcludhiana.in/storage/user_avatar/bbe7ad3e-fd77-4048-9bd9-3272433d79f0.jpeg';
 
-const calculateAge = (dob: string) => {
+const calculateAge = (dob?: string | null) => {
+    if (!dob) return "";
 
     const birthDate = new Date(dob);
     const today = new Date();
@@ -43,7 +45,7 @@ const calculateAge = (dob: string) => {
     return `${days} day${days > 1 ? "s" : ""}`;
 };
 
-const Page = () => {
+const AppointmentSummaryContent = () => {
 
     const searchParams = useSearchParams();
     const bookingId = searchParams.get("bookingId");
@@ -159,4 +161,12 @@ const Page = () => {
     );
 }
 
-export default Page
+const Page = () => {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-gray-50 flex items-center justify-center"><p className="text-gray-700">Loading appointment details...</p></div>}>
+            <AppointmentSummaryContent />
+        </Suspense>
+    );
+};
+
+export default Page;
