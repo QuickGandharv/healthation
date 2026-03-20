@@ -300,7 +300,8 @@ export default function AppointmentDetailsPage() {
             </Card>
 
             <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full max-w-5xl grid-cols-6 mb-6">
+                <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden">
+                    {/* <TabsList className="grid w-full max-w-5xl grid-cols-6 mb-6"> */}
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="medical">Medical History</TabsTrigger>
                     <TabsTrigger value="labs">Medical Reports</TabsTrigger>

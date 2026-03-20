@@ -82,8 +82,8 @@ export default function CertificatesSection({
       <SectionHeader
         title="Certificates & Licenses"
         description="Your professional certifications"
-        actionLabel="Add Certificate"
-        actionIcon={<Plus className="h-4 w-4 mr-2" />}
+      // actionLabel="Add Certificate"
+      // actionIcon={<Plus className="h-4 w-4 mr-2" />}
       />
 
       <div className="space-y-4">

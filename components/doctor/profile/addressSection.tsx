@@ -47,8 +47,8 @@ export default function AddressSection({ address }: AddressSectionProps) {
       <SectionHeader
         title="Address Management"
         description="Manage your practice locations"
-        actionLabel="Add Address"
-        actionIcon={<Plus className="h-4 w-4 mr-2" />}
+      // actionLabel="Add Address"
+      // actionIcon={<Plus className="h-4 w-4 mr-2" />}
       />
 
       <div className="grid gap-4 md:grid-cols-2">

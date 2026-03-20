@@ -53,8 +53,8 @@ export default function SocialLinksSection({
       <SectionHeader
         title="Social Media Links"
         description="Your professional online presence"
-        actionLabel="Add Link"
-        actionIcon={<Plus className="h-4 w-4 mr-2" />}
+      // actionLabel="Add Link"
+      // actionIcon={<Plus className="h-4 w-4 mr-2" />}
       />
 
       <div className="grid gap-4 md:grid-cols-2">

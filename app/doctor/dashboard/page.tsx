@@ -418,7 +418,7 @@ export default function Dashboard() {
             {/* Bottom clickable text */}
             <button
               className="mt-4 text-sm text-primary hover:underline text-center"
-              onClick={() => router.push('/dashboard/notifications')}
+              onClick={() => router.push('/doctor/notifications')}
             >
               View All Notifications
             </button>

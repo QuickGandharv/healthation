@@ -40,8 +40,8 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
       <SectionHeader
         title="Awards & Recognition"
         description="Your professional achievements"
-        actionLabel="Add Award"
-        actionIcon={<Plus className="h-4 w-4 mr-2" />}
+      // actionLabel="Add Award"
+      // actionIcon={<Plus className="h-4 w-4 mr-2" />}
       />
 
       <div className="grid gap-4 md:grid-cols-2">

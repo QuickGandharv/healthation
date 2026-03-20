@@ -33,8 +33,8 @@ export default function EducationSection({ education }: EducationSectionProps) {
       <SectionHeader
         title="Education History"
         description="Your academic qualifications"
-        actionLabel="Add Education"
-        actionIcon={<Plus className="h-4 w-4 mr-2" />}
+      // actionLabel="Add Education"
+      // actionIcon={<Plus className="h-4 w-4 mr-2" />}
       />
 
       <div className="space-y-4">

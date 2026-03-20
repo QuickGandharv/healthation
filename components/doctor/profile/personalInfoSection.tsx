@@ -61,10 +61,10 @@ export default function PersonalInfoSection({
           <CardDescription>Manage your personal details and bio</CardDescription>
         </div>
 
-        <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
+        {/* <Button variant="outline" onClick={() => setIsEditing(!isEditing)}>
           <Edit className="h-4 w-4 mr-2" />
           {isEditing ? "Cancel" : "Edit"}
-        </Button>
+        </Button> */}
       </CardHeader>
 
       <CardContent className="space-y-4">
