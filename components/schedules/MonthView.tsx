@@ -284,7 +284,7 @@ export const MonthView = ({
                 //   />
                 // ))
                 selectedMonthSlot && patientAppointments.map((appointment) => {
-                  return(
+                  return (
                     <AppointmentCard
                       key={appointment.patient.id}
                       type="patient"
@@ -294,7 +294,8 @@ export const MonthView = ({
                         appointment.patient.patient_name ||
                         "Unknown Patient"
                       }
-                      avatar={appointment.patient.avatar || appointment.patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
+                      // avatar={appointment.patient.avatar || appointment.patient.name?.split(' ').map((n: string) => n[0]).join('') || "PT"}
+                      avatar={appointment.patient.avatar || ""}
                       doctor={selectedMonthSlot.doctorName || ""}
                       time={appointment.appointment_time_formatted || appointment.appointmentTime}
                       appointmentType={appointment.consultation_type === "video" ? "Video" : "In-Person"}
@@ -313,9 +314,9 @@ export const MonthView = ({
         </div>
 
         {/* Month Summary */}
-        <MonthStats 
-          monthTotal={monthTotal} 
-          appointmentDays={appointmentDays} 
+        <MonthStats
+          monthTotal={monthTotal}
+          appointmentDays={appointmentDays}
           peakDayValue={peakDayValue}
           isLoading={isLoading}
         />

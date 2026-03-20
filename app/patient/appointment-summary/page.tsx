@@ -56,7 +56,7 @@ const AppointmentSummaryContent = () => {
     const { data, isLoading, error, isError, refetch } = getAppointmentDetailsById(appointmentId);
     const AppointmentDetails = data?.data;
     const calAge = calculateAge(user?.date_of_birth);
-    
+
 
     if (!bookingData) {
         return (
@@ -72,16 +72,14 @@ const AppointmentSummaryContent = () => {
         ? new Date(bookingData.date).toLocaleDateString('en-US', { weekday: 'long' })
         : '';
 
-    console.log('data', data)
-
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-2xl mx-auto bg-white min-h-screen">
 
                 {/* Doctor Header with Illustration */}
                 <div className="bg-gradient-to-br from-teal-200 to-teal-300">
-                    <img 
-                        src={doctorPlaceholder} 
+                    <img
+                        src={doctorPlaceholder}
                         alt="Doctor"
                         className="w-full h-auto"
                     />

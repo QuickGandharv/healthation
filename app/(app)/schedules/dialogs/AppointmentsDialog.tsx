@@ -33,11 +33,10 @@ export const AppointmentsDialog = ({
   schedule,
   patientAppointments,
 }: AppointmentsDialogProps) => {
-  console.log('patientAppointments', patientAppointments)
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="mx-4 max-h-[80vh] w-full max-w-4xl! overflow-y-auto">
-        
+
         <DialogHeader>
           <DialogTitle>Booked Appointments sdfdsf</DialogTitle>
           <DialogDescription>
@@ -105,27 +104,27 @@ export const AppointmentsDialog = ({
               <h3 className="font-semibold">Patient Appointments</h3>
               {slot
                 ? slot.appointments?.map((patient) => (
-                    <PatientAppointmentCard
-                      key={patient.id}
-                      patient={patient}
-                      onClick={() => {
-                        if (patient.id) {
-                          window.location.href = `/doctor/appointments/${patient.id}`;
-                        }
-                      }}
-                    />
-                  ))
+                  <PatientAppointmentCard
+                    key={patient.id}
+                    patient={patient}
+                    onClick={() => {
+                      if (patient.id) {
+                        window.location.href = `/doctor/appointments/${patient.id}`;
+                      }
+                    }}
+                  />
+                ))
                 : schedule &&
-                    patientAppointments?.map((patient) => (
-                    <PatientAppointmentCard
-                      key={patient.appointment_id}
-                      patient={patient}
-                      onClick={() => {
-                        window.location.href = `/doctor/appointments/${patient.appointment_id}`;
-                      }}
-                    />
-                  ))
-                  }
+                patientAppointments?.map((patient) => (
+                  <PatientAppointmentCard
+                    key={patient.appointment_id}
+                    patient={patient}
+                    onClick={() => {
+                      window.location.href = `/doctor/appointments/${patient.appointment_id}`;
+                    }}
+                  />
+                ))
+              }
             </div>
           </div>
         )}

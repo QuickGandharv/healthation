@@ -1,6 +1,6 @@
 // components/AppointmentCard.tsx
 import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Video, Phone, MapPin } from "lucide-react";
 
@@ -129,9 +129,15 @@ export function AppointmentCard({
         >
             <CardContent className="p-3">
                 <div className="flex gap-2">
-                    <Avatar className="h-8 w-8">
+                    {/* <Avatar className="h-8 w-8">
                         <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
                             {avatar}
+                        </AvatarFallback>
+                    </Avatar> */}
+                    <Avatar className="h-8 w-8">
+                        <AvatarImage src={avatar} />
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                            {title?.split(' ').map((n: string) => n[0]).join('') || "PT"}
                         </AvatarFallback>
                     </Avatar>
                     <div className="flex-1">
