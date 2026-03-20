@@ -43,7 +43,6 @@ export default function ExperienceSection({
               ) : undefined
             }
             description={exp.description}
-            actions={<ActionButtons />}
           />
         ))}
       </div>

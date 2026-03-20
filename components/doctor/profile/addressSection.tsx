@@ -91,8 +91,6 @@ export default function AddressSection({ address }: AddressSectionProps) {
                 <p className="text-sm">{address.country}</p>
               )}
             </div>
-
-            <ActionButtons fullWidthEdit deleteOnlyIcon />
           </CardContent>
         </Card>
       </div>

@@ -228,7 +228,7 @@ export default function Profile() {
       />
 
       <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="w-full justify-start overflow-x-auto flex-wrap h-auto">
+        <TabsList className="w-full justify-start overflow-x-auto overflow-y-hidden">
           <TabsTrigger value="personal">Personal Info</TabsTrigger>
           <TabsTrigger value="address">Address</TabsTrigger>
           <TabsTrigger value="experience">Experience</TabsTrigger>

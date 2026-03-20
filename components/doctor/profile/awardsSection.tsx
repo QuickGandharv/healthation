@@ -55,7 +55,6 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
             subtitle={award.organization || "Organization not provided"}
             description={award.description || "No description available"}
             badge={<Badge variant="secondary">{award.year || "N/A"}</Badge>}
-            actions={<ActionButtons />}
             iconClassName="bg-amber-50 text-amber-500"
           />
         ))}
