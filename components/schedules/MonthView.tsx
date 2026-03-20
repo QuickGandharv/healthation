@@ -286,7 +286,7 @@ export const MonthView = ({
                 selectedMonthSlot && patientAppointments.map((appointment) => {
                   return (
                     <AppointmentCard
-                      key={appointment.patient.id}
+                      key={appointment.appointment_id}
                       type="patient"
                       // title={appointment.patient.name || appointment.patient.patient_name}
                       title={
