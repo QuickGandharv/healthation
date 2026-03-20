@@ -91,7 +91,7 @@ export default function Schedules() {
         onNewAppointment={() => { }}
       />
 
-      <ScheduleTabs defaultValue="month">
+      {/* <ScheduleTabs defaultValue="month">
         <TabsContent value="day">
           <DayView
             dayDoctorSchedules={dayDoctorSchedules}
@@ -153,7 +153,35 @@ export default function Schedules() {
             patientAppointments={filteredAppointments}
           />
         </TabsContent>
-      </ScheduleTabs>
+      </ScheduleTabs> */}
+
+      <MonthView
+        currentDate={currentDate}
+        selectedDate={selectedDate}
+        selectedMonthSlot={selectedMonthSlot}
+        monthTotal={monthTotal}
+        appointmentDays={appointmentDays}
+        peakDayValue={peakDayValue}
+        isLoading={isLoadingMonth}
+        isLoadingDay={isLoadingDay}
+        onMonthChange={(date) => setCurrentDate(date)}
+        onDateClick={(date) => handleDateClick(date)}
+        onSlotClick={(slot) => setSelectedMonthSlot(slot)}
+        onViewAllSlots={(slots) => {
+          setSelectedDaySlots(slots)
+          setIsDayDialogOpen(true)
+        }}
+        onViewAllPatients={(slot) => {
+          handleSlotAppointmentsClick(slot)
+          setIsAppointmentsDialogOpen(true)
+        }}
+        getOPDSlotsForDate={getOPDSlotsForDate}
+        getOPDCount={getOPDCount}
+        hasAppointments={hasAppointments}
+        isToday={isToday}
+        getPatientsForSelectedSlot={getPatientsForSelectedSlot}
+        patientAppointments={filteredAppointments}
+      />
 
       <DayScheduleDialog
         open={isDayDialogOpen}

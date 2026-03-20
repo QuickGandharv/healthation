@@ -314,12 +314,12 @@ export const MonthView = ({
         </div>
 
         {/* Month Summary */}
-        <MonthStats
+        {/* <MonthStats
           monthTotal={monthTotal}
           appointmentDays={appointmentDays}
           peakDayValue={peakDayValue}
           isLoading={isLoading}
-        />
+        /> */}
       </CardContent>
     </Card>
   );
