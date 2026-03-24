@@ -1,721 +1,30 @@
-// // "use client";
-
-// // import { Card, CardContent } from "@/components/ui/card";
-// // import { Button } from "@/components/ui/button";
-// // import { Badge } from "@/components/ui/badge";
-// // import { Calendar, CheckCircle, Clock, FileText, MoreVertical, Phone, Trash2, User, Video, Edit } from "lucide-react";
-// // import { Appointment } from "@/types/doctor/appointment";
-// // import { getStatusColor } from "@/utils/appointment-helpers";
-// // import {
-// //   DropdownMenu,
-// //   DropdownMenuContent,
-// //   DropdownMenuItem,
-// //   DropdownMenuSeparator,
-// //   DropdownMenuTrigger,
-// // } from "@/components/ui/dropdown-menu";
-// // import { useRouter } from "next/navigation";
-
-// // interface AppointmentCardProps {
-// //   appointment: Appointment;
-// //   variant?: "all" | "today" | "upcoming" | "past";
-// //   onCardClick?: () => void;
-// // }
-
-// // export default function AppointmentCard({
-// //   appointment,
-// //   variant = "all",
-// //   onCardClick,
-// // }: AppointmentCardProps) {
-// //   const router = useRouter();
-// //   return (
-// //     <Card
-// //       className={`rounded-xl border border-gray-200 ${variant === "all" || variant === "past"
-// //         ? "cursor-pointer transition hover:border-primary/50 hover:shadow-md"
-// //         : ""
-// //         } ${variant === "past" ? "bg-gray-50/50 opacity-75" : ""}`}
-// //       onClick={onCardClick}
-// //     >
-// //       <CardContent className="p-5">
-// //         <div className="mb-4 flex items-start justify-between">
-// //           <div className="flex items-center gap-3">
-// //             <img
-// //               src={(appointment.patient as any)?.avatar || appointment.avatar || "/placeholder-avatar.png"}
-// //               className="h-10 w-10 rounded-full object-cover"
-// //               alt={typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name || "Patient"}
-// //             />
-// //             <div>
-// //               <h3 className="font-semibold text-primary">{typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name}</h3>
-// //             </div>
-// //           </div>
-
-// //           {variant !== "all" && (
-// //             <div className="mt-1 flex items-center gap-2">
-// //               <Badge className={getStatusColor(appointment.status)}>
-// //                 {appointment.status}
-// //               </Badge>
-// //             </div>
-// //           )}
-// //         </div>
-
-// //         <div className="mb-4 space-y-1 text-sm text-gray-600">
-// //           <div className="flex items-center gap-2">
-// //             <Calendar className="h-4 w-4" />
-// //             {(appointment as any).appointment_date_formatted || appointment.date}
-// //           </div>
-// //           <div className="flex items-center gap-2">
-// //             <Clock className="h-4 w-4" />
-// //             {(appointment as any).appointment_time_formatted || appointment.time}
-// //           </div>
-// //         </div>
-
-// //         {variant === "all" && (
-// //           <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-// //             <Button
-// //               size="sm"
-// //               className="flex-1 bg-primary text-white"
-// //               onClick={(e) => {
-// //                 e.stopPropagation();
-// //                 console.log("Call now:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-// //               }}
-// //             >
-// //               Call Now
-// //             </Button>
-
-// //             <Button
-// //               size="sm"
-// //               variant="outline"
-// //               className="flex-1 border-gray-300"
-// //               onClick={(e) => {
-// //                 e.stopPropagation();
-// //                 console.log("Reschedule:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-// //               }}
-// //             >
-// //               Reschedule
-// //             </Button>
-// //           </div>
-// //         )}
-
-// //         {(variant === "today" || variant === "upcoming") && (
-// //           <div className="flex gap-3">
-// //             {appointment.status === "pending" && (
-// //               <Button
-// //                 size="sm"
-// //                 variant="outline"
-// //                 className="flex-1 border-success text-success hover:bg-success/10"
-// //                 onClick={(e) => {
-// //                   e.stopPropagation();
-// //                   console.log("Confirm:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-// //                 }}
-// //               >
-// //                 <CheckCircle className="mr-1 h-4 w-4" />
-// //                 Confirm
-// //               </Button>
-// //             )}
-
-// //             {appointment.status === "confirmed" && appointment.type === "video" && (
-// //               <Button
-// //                 size="sm"
-// //                 className="flex-1 bg-primary text-white"
-// //                 onClick={(e) => {
-// //                   e.stopPropagation();
-// //                   console.log("Join:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-// //                 }}
-// //               >
-// //                 <Video className="mr-1 h-4 w-4" />
-// //                 Join
-// //               </Button>
-// //             )}
-
-// //             {appointment.status === "confirmed" &&
-// //               appointment.consultation_type === "video" && (
-// //                 <Button
-// //                   size="sm"
-// //                   className="flex-1 bg-primary text-white"
-// //                   onClick={() => {
-// //                     const url = appointment?.video_consultation?.join_url;
-// //                     if (url) {
-// //                       window.open(url, "_blank", "noopener,noreferrer");
-// //                     }
-// //                   }}
-// //                 >
-// //                   <Phone className="mr-1 h-4 w-4" />
-// //                   Call Now
-// //                 </Button>
-// //             )}
-
-// //             {/* <DropdownMenu>
-// //               <DropdownMenuTrigger asChild>
-// //                 <Button variant="ghost" size="icon" className="h-9 w-9">
-// //                   <MoreVertical className="h-4 w-4" />
-// //                 </Button>
-// //               </DropdownMenuTrigger>
-// //               <DropdownMenuContent align="end">
-// //                 <DropdownMenuItem>
-// //                   <User className="mr-2 h-4 w-4" />
-// //                   View Patient
-// //                 </DropdownMenuItem>
-// //                 <DropdownMenuItem>
-// //                   <FileText className="mr-2 h-4 w-4" />
-// //                   View Notes
-// //                 </DropdownMenuItem>
-// //                 <DropdownMenuItem>
-// //                   <Edit className="mr-2 h-4 w-4" />
-// //                   Edit Appointment
-// //                 </DropdownMenuItem>
-// //                 <DropdownMenuSeparator />
-// //                 <DropdownMenuItem className="text-danger">
-// //                   <Trash2 className="mr-2 h-4 w-4" />
-// //                   Cancel Appointment
-// //                 </DropdownMenuItem>
-// //               </DropdownMenuContent>
-// //             </DropdownMenu> */}
-// //           </div>
-// //         )}
-
-// //         {variant === "past" && (
-// //           <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-// //             <Button
-// //               size="sm"
-// //               variant="outline"
-// //               className="flex-1"
-// //               onClick={(e) => {
-// //                 e.stopPropagation();
-// //                 console.log("View details:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-// //               }}
-// //             >
-// //               <FileText className="mr-1 h-4 w-4" />
-// //               View Details
-// //             </Button>
-
-// //             <DropdownMenu>
-// //               <DropdownMenuTrigger asChild>
-// //                 <Button variant="ghost" size="icon" className="h-9 w-9">
-// //                   <MoreVertical className="h-4 w-4" />
-// //                 </Button>
-// //               </DropdownMenuTrigger>
-// //               <DropdownMenuContent align="end">
-// //                 <DropdownMenuItem>
-// //                   <User className="mr-2 h-4 w-4" />
-// //                   View Patient
-// //                 </DropdownMenuItem>
-// //                 <DropdownMenuItem>
-// //                   <FileText className="mr-2 h-4 w-4" />
-// //                   View Notes
-// //                 </DropdownMenuItem>
-// //               </DropdownMenuContent>
-// //             </DropdownMenu>
-// //           </div>
-// //         )}
-
-// //         <Button
-// //           onClick={(e) => {
-// //             e.stopPropagation();
-// //             const id = (appointment as any).appointment_id || appointment.id || (appointment as any)._id;
-// //             sessionStorage.setItem(`appointment_${id}`, JSON.stringify(appointment));
-// //             router.push(`/doctor/appointments/${id}`);
-// //           }}
-// //           className="[&]:py-2 max-w-32 mt-2"
-// //         >
-// //           View Details
-// //         </Button>
-
-// //         <span
-// //           className={`rounded-full px-3 py-1 text-xs font-medium ${appointment.type === "video" || appointment.type === "phone"
-// //             ? "bg-primary text-white"
-// //             : "bg-gray-100 text-gray-700"
-// //             }`}
-// //           onClick={(e) => e.stopPropagation()}
-// //         >
-// //           {appointment.type === "video" || appointment.type === "phone"
-// //             ? "Telehealth"
-// //             : "In-Person"}
-// //         </span>
-// //       </CardContent>
-// //     </Card>
-// //   );
-// // }
-
-// "use client";
-
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-// import { Badge } from "@/components/ui/badge";
-// import {
-//   Calendar,
-//   CheckCircle,
-//   Clock,
-//   FileText,
-//   MoreVertical,
-//   Phone,
-//   Trash2,
-//   User,
-//   Video,
-//   Edit,
-//   MapPin,
-//   ArrowRight
-// } from "lucide-react";
-// import { Appointment } from "@/types/doctor/appointment";
-// import { getStatusColor } from "@/utils/appointment-helpers";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { useRouter } from "next/navigation";
-// import { useState } from "react";
-
-// interface AppointmentCardProps {
-//   appointment: Appointment;
-//   variant?: "all" | "today" | "upcoming" | "past";
-//   onCardClick?: () => void;
-//   onStatusChange?: (appointmentId: string, newStatus: string) => void;
-//   onCancel?: (appointmentId: string) => void;
-// }
-
-// // Helper function to safely get patient info
-// const getPatientInfo = (appointment: Appointment) => {
-//   const patient = appointment.patient as any;
-//   return {
-//     id: typeof patient === "string" ? patient : patient?.id || patient?._id,
-//     name: typeof patient === "string" ? patient : patient?.name || "Unknown Patient",
-//     avatar: patient?.avatar || "/placeholder-avatar.png",
-//   };
-// };
-
-// // Helper function to get appointment ID
-// const getAppointmentId = (appointment: Appointment): string => {
-//   return (appointment as any).appointment_id || appointment.id || (appointment as any)._id || "";
-// };
-
-// export default function AppointmentCard({
-//   appointment,
-//   variant = "all",
-//   onCardClick,
-//   onStatusChange,
-//   onCancel,
-// }: AppointmentCardProps) {
-//   console.log("Appointment : ", appointment);
-//   const router = useRouter();
-//   const [isLoading, setIsLoading] = useState(false);
-
-//   const patientInfo = getPatientInfo(appointment);
-//   const appointmentId = getAppointmentId(appointment);
-
-//   const isPastVariant = variant === "past";
-//   const isInteractive = variant === "all" || variant === "past";
-//   const isDisabled = isPastVariant;
-
-//   const handleAction = async (action: () => void | Promise<void>) => {
-//     setIsLoading(true);
-//     try {
-//       await action();
-//     } catch (error) {
-//       console.error("Action failed:", error);
-//     } finally {
-//       setIsLoading(false);
-//     }
-//   };
-
-//   const handleViewDetails = () => {
-//     sessionStorage.setItem(`appointment_${appointmentId}`, JSON.stringify(appointment));
-//     router.push(`/doctor/appointments/${appointmentId}`);
-//   };
-
-//   const renderStatusBadge = () => (
-//     <Badge className={`${getStatusColor(appointment.status_label)} capitalize`}>
-//       {appointment.status_label}
-//     </Badge>
-//   );
-
-//   const renderAppointmentType = () => {
-//     const isTelehealth = appointment.consultation_type === "video" || appointment.consultation_type === "in-person";
-//     const Icon = isTelehealth ? Video : MapPin;
-
-//     return (
-//       <Badge
-//         variant="outline"
-//         className={`flex items-center gap-1 ${isTelehealth ? "border-primary/30 bg-primary/5 text-primary" : "border-gray-300 bg-gray-50"}`}
-//       >
-//         <Icon className="h-3 w-3" />
-//         <span>{appointment.consultation_type_label}</span>
-//       </Badge>
-//     );
-//   };
-
-//   const renderHeader = () => (
-//     <div className="mb-4 flex items-start justify-between">
-//       <div className="flex items-center gap-3">
-//         <div className="relative">
-//           <img
-//             src={patientInfo.avatar}
-//             className="h-12 w-12 rounded-full object-cover ring-2 ring-gray-100"
-//             alt={patientInfo.name}
-//           />
-//           {appointment.status === "confirmed" && (
-//             <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-success ring-2 ring-white" />
-//           )}
-//         </div>
-//         <div>
-//           <h3 className="font-semibold text-gray-900">{patientInfo.name}</h3>
-//           {variant !== "all" && (
-//             <div className="mt-1">
-//               {renderStatusBadge()}
-//             </div>
-//           )}
-//         </div>
-//       </div>
-
-//       {variant !== "all" && variant !== "today" && variant !== "upcoming" && (
-//         <DropdownMenu>
-//           <DropdownMenuTrigger asChild>
-//             <Button variant="ghost" size="icon" className="h-8 w-8">
-//               <MoreVertical className="h-4 w-4" />
-//             </Button>
-//           </DropdownMenuTrigger>
-//           <DropdownMenuContent align="end">
-//             <DropdownMenuItem onClick={() => handleAction(() => console.log("View patient"))}>
-//               <User className="mr-2 h-4 w-4" />
-//               View Patient
-//             </DropdownMenuItem>
-//             <DropdownMenuItem onClick={() => handleAction(() => console.log("View notes"))}>
-//               <FileText className="mr-2 h-4 w-4" />
-//               View Notes
-//             </DropdownMenuItem>
-//           </DropdownMenuContent>
-//         </DropdownMenu>
-//       )}
-//     </div>
-//   );
-
-//   const renderDateTime = () => (
-//     <div className="flex items-center gap-4 mb-4 text-sm text-gray-600">
-//       <div className="flex items-center gap-2">
-//         <Calendar className="h-4 w-4 text-gray-400" />
-//         <span>{(appointment as any).appointment_date_formatted || appointment.date}</span>
-//       </div>
-//       <div className="flex items-center gap-2">
-//         <Clock className="h-4 w-4 text-gray-400" />
-//         <span>{(appointment as any).appointment_time_formatted || appointment.time}</span>
-//       </div>
-//     </div>
-//   );
-
-//   const renderActionButtons = () => {
-//     if (isPastVariant) {
-//       return (
-//         <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-//           <Button
-//             size="sm"
-//             variant="outline"
-//             className="flex-1"
-//             onClick={() => handleAction(() => console.log("View details"))}
-//             disabled={isLoading}
-//           >
-//             <FileText className="mr-2 h-4 w-4" />
-//             View Details
-//           </Button>
-//         </div>
-//       );
-//     }
-
-//     if (variant === "all") {
-//       return (
-//         <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-//           <Button
-//             size="sm"
-//             className="flex-1 bg-primary text-white hover:bg-primary/90"
-//             onClick={() => handleAction(() => console.log("Call now:", patientInfo.name))}
-//             disabled={isLoading}
-//           >
-//             <Phone className="mr-2 h-4 w-4" />
-//             Call Now
-//           </Button>
-
-//           <Button
-//             size="sm"
-//             variant="outline"
-//             className="flex-1"
-//             onClick={() => handleAction(() => console.log("Reschedule:", patientInfo.name))}
-//             disabled={isLoading}
-//           >
-//             <Calendar className="mr-2 h-4 w-4" />
-//             Reschedule
-//           </Button>
-//         </div>
-//       );
-//     }
-
-//     // Today/Upcoming variant actions
-//     return (
-//       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
-//         {appointment.status === "pending" && (
-//           <Button
-//             size="sm"
-//             variant="outline"
-//             className="flex-1 border-success text-success hover:bg-success/10"
-//             onClick={() => handleAction(() => onStatusChange?.(appointmentId, "confirmed"))}
-//             disabled={isLoading}
-//           >
-//             <CheckCircle className="mr-2 h-4 w-4" />
-//             Confirm
-//           </Button>
-//         )}
-
-//         {appointment.status === "confirmed" && (
-//           <Button
-//             size="sm"
-//             className="flex-1 bg-primary text-white hover:bg-primary/90"
-//             onClick={() => {
-//               const joinUrl = (appointment as any)?.video_consultation?.join_url;
-//               if (joinUrl) {
-//                 window.open(joinUrl, "_blank", "noopener,noreferrer");
-//               } else {
-//                 handleAction(() => console.log("Join call:", patientInfo.name));
-//               }
-//             }}
-//             disabled={isLoading}
-//           >
-//             {appointment.type === "video" ? (
-//               <Video className="mr-2 h-4 w-4" />
-//             ) : (
-//               <Phone className="mr-2 h-4 w-4" />
-//             )}
-//             {appointment.type === "video" ? "Join" : "Call Now"}
-//           </Button>
-//         )}
-//       </div>
-//     );
-//   };
-
-//   return (
-//     <Card
-//       className={`
-//         group rounded-xl border border-gray-200 transition-all duration-200 p-5
-//         ${isInteractive && !isDisabled ? "cursor-pointer hover:border-primary/50 hover:shadow-md hover:scale-[1.02]" : ""}
-//         ${isDisabled ? "bg-gray-50/50 opacity-75" : "bg-white"}
-//       `}
-//       onClick={() => isInteractive && !isDisabled && onCardClick?.()}
-//     >
-//       <CardContent className="p-0">
-//         {renderHeader()}
-//         {renderDateTime()}
-//         <div className="mb-4 flex items-center justify-between">
-//           {renderAppointmentType()}
-//           {variant !== "all" && variant !== "today" && variant !== "upcoming" && (
-//             <span className="text-xs text-gray-500">
-//               ID: {appointmentId.slice(-6)}
-//             </span>
-//           )}
-//         </div>
-
-// <<<<<<< Updated upstream
-//         {variant === "all" && (
-//           <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-//             <Button
-//               size="sm"
-//               className="flex-1 bg-primary text-white"
-//               onClick={(e) => {
-//                 e.stopPropagation();
-//                 console.log("Call now:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-//               }}
-//             >
-//               Call Now
-//             </Button>
-
-//             {/* <Button
-//               size="sm"
-//               variant="outline"
-//               className="flex-1 border-gray-300"
-//               onClick={(e) => {
-//                 e.stopPropagation();
-//                 console.log("Reschedule:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-//               }}
-//             >
-//               Reschedule
-//             </Button> */}
-// =======
-//         <div className="grid grid-cols-2 gap-5">
-//           <div>
-//             {renderActionButtons()}
-// >>>>>>> Stashed changes
-//           </div>
-
-// <<<<<<< Updated upstream
-//         {(variant === "today" || variant === "upcoming") && (
-//           <div className="flex gap-3">
-//             {appointment.status === "pending" && (
-//               <Button
-//                 size="sm"
-//                 variant="outline"
-//                 className="flex-1 border-success text-success hover:bg-success/10"
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   console.log("Confirm:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-//                 }}
-//               >
-//                 <CheckCircle className="mr-1 h-4 w-4" />
-//                 Confirm
-//               </Button>
-//             )}
-
-//             {appointment.status === "confirmed" && appointment.type === "video" && (
-//               <Button
-//                 size="sm"
-//                 className="flex-1 bg-primary text-white"
-//                 onClick={(e) => {
-//                   e.stopPropagation();
-//                   console.log("Join:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-//                 }}
-//               >
-//                 <Video className="mr-1 h-4 w-4" />
-//                 Join
-//               </Button>
-//             )}
-
-//             {appointment.status === "confirmed" &&
-//               appointment.consultation_type === "video" && (
-//                 <Button
-//                   size="sm"
-//                   className="flex-1 bg-primary text-white"
-//                   onClick={() => {
-//                     const url = appointment?.video_consultation?.join_url;
-//                     if (url) {
-//                       window.open(url, "_blank", "noopener,noreferrer");
-//                     }
-//                   }}
-
-//                 >
-//                   <Phone className="mr-1 h-4 w-4" />
-//                   Call Now
-//                 </Button>
-//               )}
-
-//             {/* <DropdownMenu>
-//               <DropdownMenuTrigger asChild>
-//                 <Button variant="ghost" size="icon" className="h-9 w-9">
-//                   <MoreVertical className="h-4 w-4" />
-//                 </Button>
-//               </DropdownMenuTrigger>
-//               <DropdownMenuContent align="end">
-//                 <DropdownMenuItem>
-//                   <User className="mr-2 h-4 w-4" />
-//                   View Patient
-//                 </DropdownMenuItem>
-//                 <DropdownMenuItem>
-//                   <FileText className="mr-2 h-4 w-4" />
-//                   View Notes
-//                 </DropdownMenuItem>
-//                 <DropdownMenuItem>
-//                   <Edit className="mr-2 h-4 w-4" />
-//                   Edit Appointment
-//                 </DropdownMenuItem>
-//                 <DropdownMenuSeparator />
-//                 <DropdownMenuItem className="text-danger">
-//                   <Trash2 className="mr-2 h-4 w-4" />
-//                   Cancel Appointment
-//                 </DropdownMenuItem>
-//               </DropdownMenuContent>
-//             </DropdownMenu> */}
-//           </div>
-//         )}
-
-//         {variant === "past" && (
-//           <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
-//             <Button
-//               size="sm"
-//               variant="outline"
-//               className="flex-1"
-//               onClick={(e) => {
-//                 e.stopPropagation();
-//                 console.log("View details:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-//               }}
-//             >
-//               <FileText className="mr-1 h-4 w-4" />
-//               View Details
-//             </Button>
-
-//             <DropdownMenu>
-//               <DropdownMenuTrigger asChild>
-//                 <Button variant="ghost" size="icon" className="h-9 w-9">
-//                   <MoreVertical className="h-4 w-4" />
-//                 </Button>
-//               </DropdownMenuTrigger>
-//               <DropdownMenuContent align="end">
-//                 <DropdownMenuItem>
-//                   <User className="mr-2 h-4 w-4" />
-//                   View Patient
-//                 </DropdownMenuItem>
-//                 <DropdownMenuItem>
-//                   <FileText className="mr-2 h-4 w-4" />
-//                   View Notes
-//                 </DropdownMenuItem>
-//               </DropdownMenuContent>
-//             </DropdownMenu>
-//           </div>
-//         )}
-
-//         <Button
-//           onClick={(e) => {
-//             e.stopPropagation();
-//             const id = (appointment as any).appointment_id || appointment.id || (appointment as any)._id;
-//             sessionStorage.setItem(`appointment_${id}`, JSON.stringify(appointment));
-//             router.push(`/doctor/appointments/${id}`);
-//           }}
-//           className="[&]:py-2 max-w-32 mt-2"
-//         >
-//           View Details
-//         </Button>
-
-//         <span
-//           className={`rounded-full px-3 py-1 text-xs font-medium ${appointment.type === "video" || appointment.type === "phone"
-//             ? "bg-primary text-white"
-//             : "bg-gray-100 text-gray-700"
-//             }`}
-//           onClick={(e) => e.stopPropagation()}
-//         >
-//           {appointment.type === "video" || appointment.type === "phone"
-//             ? "Telehealth"
-//             : "In-Person"}
-//         </span>
-// =======
-//           <Button
-//             onClick={(e) => {
-//               e.stopPropagation();
-//               handleViewDetails();
-//             }}
-//             variant="ghost"
-//             className="w-full justify-between text-primary hover:bg-primary/5"
-//             disabled={isLoading}
-//           >
-//             <span>View Details</span>
-//             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-//           </Button>
-//         </div>
-// >>>>>>> Stashed changes
-//       </CardContent>
-//     </Card>
-//   );
-// }
-
-
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CheckCircle, Clock, FileText, MoreVertical, Phone, Trash2, User, Video, Edit } from "lucide-react";
+import {
+  Calendar,
+  CheckCircle,
+  Clock,
+  FileText,
+  MoreVertical,
+  Phone,
+  User,
+  Video,
+  MapPin,
+  ArrowUpRight
+} from "lucide-react";
 import { Appointment } from "@/types/doctor/appointment";
 import { getStatusColor } from "@/utils/appointment-helpers";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface AppointmentCardProps {
   appointment: Appointment;
@@ -729,211 +38,197 @@ export default function AppointmentCard({
   onCardClick,
 }: AppointmentCardProps) {
   const router = useRouter();
+
+  const patientName =
+    typeof appointment.patient === "string"
+      ? appointment.patient
+      : (appointment.patient as any)?.name || "Unknown Patient";
+
+  const patientAvatar =
+    (appointment.patient as any)?.avatar || appointment.avatar || "/placeholder-avatar.png";
+
+  const appointmentDate = (appointment as any).appointment_date_formatted || appointment.date;
+  const appointmentTime = (appointment as any).appointment_time_formatted || appointment.time;
+
+  const isVideo = appointment.type === "video" || appointment.consultation_type === "video";
+  const isPhone = appointment.type === "phone" || appointment.consultation_type === "phone";
+  const isTelehealth = isVideo || isPhone;
+
+  const appointmentId = (appointment as any).appointment_id || appointment.id || (appointment as any)._id;
+
+  const handleViewDetails = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (appointmentId) {
+      sessionStorage.setItem(`appointment_${appointmentId}`, JSON.stringify(appointment));
+      router.push(`/doctor/appointments/${appointmentId}`);
+    }
+  };
+
+  const isInteractive = variant === "all" || variant === "past";
+  const isPast = variant === "past";
+
   return (
     <Card
-      className={`rounded-xl border border-gray-200 p-4 ${variant === "all" || variant === "past"
-        ? "cursor-pointer transition hover:border-primary/50 hover:shadow-md"
-        : ""
-        } ${variant === "past" ? "bg-gray-50/50 opacity-75" : ""}`}
-      onClick={onCardClick}
+      className={`group relative overflow-hidden rounded-2xl border transition-all duration-300 p-0 ${isInteractive
+        ? "cursor-pointer hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5"
+        : "border-border/50"
+        } ${isPast ? "bg-muted/30 opacity-80" : "bg-card"}`}
+      onClick={isInteractive ? onCardClick : undefined}
     >
-      <CardContent className="p-0">
-        <div className="mb-4 flex items-start justify-between">
+      {/* Soft gradient banner at the top */}
+      <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-primary/60 via-primary/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+      <CardContent className="p-4">
+        {/* Header: Patient Info & Status */}
+        <div className="flex items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            <img
-              src={(appointment.patient as any)?.avatar || appointment.avatar || "/placeholder-avatar.png"}
-              className="h-10 w-10 rounded-full object-cover"
-              alt={typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name || "Patient"}
-            />
-            <div>
-              <h3 className="font-semibold text-primary">{typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name}</h3>
+            <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full ring-2 ring-primary/10 transition-transform duration-300 group-hover:scale-105">
+              <Image
+                src={patientAvatar}
+                alt={patientName}
+                fill
+                className="object-cover"
+              />
+            </div>
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-foreground line-clamp-1">{patientName}</h3>
+              {/* {appointmentId && (
+                <span className="text-xs font-medium text-muted-foreground mt-0.5">
+                  ID: <span className="uppercase">{String(appointmentId).slice(-6)}</span>
+                </span>
+              )} */}
             </div>
           </div>
 
           {variant !== "all" && (
-            <div className="mt-1 flex items-center gap-2">
-              <Badge className={getStatusColor(appointment.status)}>
-                {appointment.status}
-              </Badge>
-            </div>
+            <Badge
+              className={`capitalize px-2.5 py-0.5 whitespace-nowrap mt-1 ${getStatusColor(
+                appointment.status
+              )}`}
+            >
+              {appointment.status}
+            </Badge>
           )}
         </div>
 
-        <div className="mb-4 space-y-1 text-sm text-gray-600">
-          <div className="flex items-center gap-2">
-            <Calendar className="h-4 w-4" />
-            {(appointment as any).appointment_date_formatted || appointment.date}
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
-            {(appointment as any).appointment_time_formatted || appointment.time}
+        {/* Middle: Details Card */}
+        <div className="mt-5 rounded-xl bg-muted/20 p-3.5 transition-colors group-hover:bg-muted/40" onClick={(e) => {
+          if (!isInteractive) { e.stopPropagation(); }
+        }}>
+          <div className="grid grid-cols-2 gap-y-3 gap-x-2 mt-3">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Calendar className="h-4 w-4 shrink-0 text-primary/70" />
+              <span className="font-medium text-foreground truncate">{appointmentDate}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Clock className="h-4 w-4 shrink-0 text-primary/70" />
+              <span className="font-medium text-foreground truncate">{appointmentTime}</span>
+            </div>
+            <div className="col-span-2 flex items-center justify-between my-2">
+              <div className="flex items-center gap-2">
+                <div className={`p-1.5 rounded-md ${isTelehealth ? 'bg-blue-500/10 text-blue-600' : 'bg-emerald-500/10 text-emerald-600'}`}>
+                  {isVideo ? (
+                    <Video className="h-3.5 w-3.5" />
+                  ) : isPhone ? (
+                    <Phone className="h-3.5 w-3.5" />
+                  ) : (
+                    <MapPin className="h-3.5 w-3.5" />
+                  )}
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  {isTelehealth ? "Video" : "Clinic"}
+                </span>
+              </div>
+
+              {/* <button
+                onClick={handleViewDetails}
+                className="group/link flex items-center gap-1 text-xs font-medium text-primary hover:text-primary/80 transition-colors bg-transparent border-0 cursor-pointer"
+              >
+                View full
+                <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+              </button> */}
+            </div>
           </div>
         </div>
 
-        {variant === "all" && (
-          <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
+        {/* Footer Actions */}
+        <div className="mt-5 flex gap-2" onClick={(e) => e.stopPropagation()}>
+          {variant === "all" && (
             <Button
               size="sm"
-              className="flex-1 bg-primary text-white"
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("Call now:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-              }}
+              className="flex-1 rounded-lg bg-primary text-white shadow-sm transition-all hover:bg-primary/90 hover:shadow"
+              onClick={() => console.log("Call now:", patientName)}
             >
+              <Phone className="mr-1.5 h-3.5 w-3.5" />
               Call Now
             </Button>
+          )}
 
-            {/* <Button
-              size="sm"
-              variant="outline"
-              className="flex-1 border-gray-300"
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("Reschedule:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-              }}
-            >
-              Reschedule
-            </Button> */}
-          </div>
-        )}
-
-        {(variant === "today" || variant === "upcoming") && (
-          <div className="flex gap-3">
-            {appointment.status === "pending" && (
-              <Button
-                size="sm"
-                variant="outline"
-                className="flex-1 border-success text-success hover:bg-success/10"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Confirm:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-                }}
-              >
-                <CheckCircle className="mr-1 h-4 w-4" />
-                Confirm
-              </Button>
-            )}
-
-            {appointment.status === "confirmed" && appointment.type === "video" && (
-              <Button
-                size="sm"
-                className="flex-1 bg-primary text-white"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Join:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-                }}
-              >
-                <Video className="mr-1 h-4 w-4" />
-                Join
-              </Button>
-            )}
-
-            {appointment.status === "confirmed" &&
-              appointment.consultation_type === "video" && (
+          {(variant === "today" || variant === "upcoming") && (
+            <>
+              {appointment.status === "pending" && (
                 <Button
                   size="sm"
-                  className="flex-1 bg-primary text-white"
+                  variant="outline"
+                  className="flex-1 rounded-lg border-emerald-500 text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700"
+                  onClick={() => console.log("Confirm:", patientName)}
+                >
+                  <CheckCircle className="mr-1.5 h-3.5 w-3.5" />
+                  Confirm
+                </Button>
+              )}
+
+              {appointment.status === "confirmed" && isVideo && (
+                <Button
+                  size="sm"
+                  className="flex-1 rounded-lg bg-primary text-white shadow-sm transition-all hover:bg-primary/90 hover:shadow"
                   onClick={() => {
                     const url = appointment?.video_consultation?.join_url;
                     if (url) {
                       window.open(url, "_blank", "noopener,noreferrer");
+                    } else {
+                      console.log("Join:", patientName);
                     }
                   }}
-
                 >
-                  <Phone className="mr-1 h-4 w-4" />
-                  Call Now
+                  <Video className="mr-1.5 h-3.5 w-3.5" />
+                  {appointment?.video_consultation?.join_url ? "Call Now" : "Join Call"}
                 </Button>
               )}
+            </>
+          )}
 
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  View Patient
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileText className="mr-2 h-4 w-4" />
-                  View Notes
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Appointment
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-danger">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Cancel Appointment
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
-          </div>
-        )}
-
-        {variant === "past" && (
-          <div className="flex gap-3" onClick={(e) => e.stopPropagation()}>
+          {variant === "past" && (
             <Button
               size="sm"
               variant="outline"
-              className="flex-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                console.log("View details:", typeof appointment.patient === "string" ? appointment.patient : (appointment.patient as any)?.name);
-              }}
+              className="flex-1 rounded-lg"
+              onClick={handleViewDetails}
             >
-              <FileText className="mr-1 h-4 w-4" />
-              View Details
+              <FileText className="mr-1.5 h-3.5 w-3.5" />
+              View Notes
             </Button>
+          )}
 
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  View Patient
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <FileText className="mr-2 h-4 w-4" />
-                  View Notes
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        )}
-
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            const id = (appointment as any).appointment_id || appointment.id || (appointment as any)._id;
-            sessionStorage.setItem(`appointment_${id}`, JSON.stringify(appointment));
-            router.push(`/doctor/appointments/${id}`);
-          }}
-          className="[&]:py-2 max-w-32 mt-2"
-        >
-          View Details
-        </Button>
-
-        <span
-          className={`rounded-full px-3 py-1 text-xs font-medium ${appointment.type === "video" || appointment.type === "phone"
-            ? "bg-primary text-white"
-            : "bg-gray-100 text-gray-700"
-            }`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {appointment.type === "video" || appointment.type === "phone"
-            ? "Telehealth"
-            : "In-Person"
-          }
-        </span>
+          {/* Quick Actions Dropdown */}
+          {/* <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon" className="h-9 w-9 rounded-lg shrink-0">
+                <MoreVertical className="h-4 w-4 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48 rounded-xl shadow-lg border-border/50">
+              <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
+                <User className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
+                View Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleViewDetails} className="cursor-pointer">
+                <FileText className="mr-2 h-4 w-4 text-muted-foreground shrink-0" />
+                View Notes
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu> */}
+        </div>
       </CardContent>
     </Card>
   );

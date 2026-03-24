@@ -62,7 +62,7 @@ interface HeaderProps {
 export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
   const { user, logout } = useAuth();
   const pathname = usePathname();
-  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
   const queryClient = useQueryClient();
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -215,7 +215,7 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
       <div className="container mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <Link href="/" className="flex items-center space-x-2">
-            <Image src={icon} alt="Logo" width={180} height={32} />
+            <Image src={icon} alt="Logo" width={180} height={32} className="w-32 md:w-44 h-auto" />
           </Link>
         </div>
 
@@ -260,7 +260,7 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-80">
+            <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-80">
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>Notifications</span>
 
@@ -279,7 +279,7 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
 
               <DropdownMenuSeparator />
 
-              <ScrollArea className="h-75">
+              <ScrollArea className="h-[300px]">
                 {isLoading ? (
                   <div className="flex items-center justify-center p-4">
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -295,14 +295,14 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
                       onClick={() => handleNotificationClick(notification.id)}
                     >
                       <div className="flex w-full items-start justify-between gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className={getNotificationTypeColor(notification.group)}>
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <span className={cn("shrink-0", getNotificationTypeColor(notification.group))}>
                             {getNotificationTypeIcon(notification.group)}
                           </span>
-                          <span className="text-sm font-medium">{notification.title}</span>
+                          <span className="text-sm font-medium truncate">{notification.title}</span>
                         </div>
 
-                        <span className="text-xs whitespace-nowrap text-muted-foreground">
+                        <span className="text-xs shrink-0 whitespace-nowrap text-muted-foreground">
                           {formatNotificationTime(notification.created_at)}
                         </span>
                       </div>
@@ -360,9 +360,9 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
 
             <DropdownMenuContent className="w-56" align="end" forceMount>
               <DropdownMenuLabel className="font-normal">
-                <div className="flex flex-col space-y-1">
-                  <p className="text-sm leading-none font-medium">{name}</p>
-                  <p className="text-xs leading-none text-muted-foreground">
+                <div className="flex flex-col space-y-1 min-w-0">
+                  <p className="text-sm leading-none font-medium truncate">{name}</p>
+                  <p className="text-xs leading-none text-muted-foreground truncate">
                     {user?.email || "Not signed in"}
                   </p>
                   {user?.role && (
@@ -411,9 +411,9 @@ export default function Header({ onLogout, onNotificationClick }: HeaderProps) {
                 </Button>
               </SheetTrigger>
 
-              <SheetContent side="right" className="w-75 sm:w-100">
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
                 <SheetHeader>
-                  <SheetTitle className="flex items-center gap-2">
+                  <SheetTitle className="flex items-center gap-2 text-left">
                     <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                       <span className="text-lg font-bold text-primary-foreground">HP</span>
                     </div>

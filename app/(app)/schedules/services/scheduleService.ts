@@ -369,15 +369,15 @@ class ScheduleService {
       ...slot,
       // For UI compatibility
       timeSlot: slot.time_range || `${slot.start_time} - ${slot.end_time}`,
-      type: slot.consultation_type === "video" ? "Telehealth" : "In-Person",
+      type: slot.consultation_type === "video" ? "video" : "In-Person",
       platform:
         slot.consultation_type === "video"
-          ? "Video Consultation"
-          : "In-Person Visit",
+          ? "video Consultation"
+          : "In-Person",
       location:
         slot.doctor_room ||
         (slot.consultation_type === "video"
-          ? "Virtual Consultation"
+          ? "video Consultation"
           : "Clinic"),
       totalCapacity: slot.capacity || slot.slot_capacity || 10,
       // Ensure we don't overwrite the appointments array if it exists
@@ -386,7 +386,7 @@ class ScheduleService {
         ? slot.appointments.map((appt: any) => this.transformToPatientAppointment(appt))
         : [],
       // Add doctor info if available
-      doctorName: doctorInfo?.name || "Dr. Amit Sharma",
+      doctorName: doctorInfo?.name || "858",
       doctorSpecialization: doctorInfo?.specialization || "General Medicine",
       doctorAvatar: doctorInfo?.avatar || "DR",
     }

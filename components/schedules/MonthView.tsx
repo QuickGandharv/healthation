@@ -68,7 +68,7 @@ export const MonthView = ({
               <span className="font-semibold text-primary">{monthTotal} OPD sessions</span> this month
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <Button
               variant="outline"
               size="icon"
@@ -91,7 +91,7 @@ export const MonthView = ({
             >
               <ChevronRight className="h-4 w-4" />
             </Button>
-          </div>
+          </div> */}
         </div>
       </CardHeader>
 
@@ -159,11 +159,13 @@ export const MonthView = ({
                               <div className="flex flex-col items-center justify-center">
                                 <span>{date.getDate()}</span>
                                 {count > 0 && (
-                                  <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
-                                    <Badge variant="outline" className="h-4 px-1 text-[8px] bg-primary/10">
-                                      {count} {count === 1 ? 'OPD' : "OPD's"}
-                                    </Badge>
-                                  </span>
+                                  // <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
+                                  //   <Badge variant="outline" className="h-4 px-1 text-[8px] bg-primary/10">
+                                  //     {/* {count} {count === 1 ? 'OPD' : "OPD's"} */}
+                                  //     {count}
+                                  //   </Badge>
+                                  // </span>
+                                  <span className="relative bottom-2 right-0.2 h-1 w-1 bg-primary rounded-full"></span>
                                 )}
                                 {isTodayDate && !isSelected && (
                                   <span className="absolute top-0 right-0 h-3 w-3 bg-primary rounded-full" />
@@ -209,8 +211,8 @@ export const MonthView = ({
                 ? selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                 : 'Select a date'}
               count={selectedDate ? getOPDCount(selectedDate) : 0}
-              countLabel="Doctors"
-              viewAllText="View All Doctors"
+              countLabel={(selectedDate ? getOPDCount(selectedDate) : 0) <= 1 ? "OPD" : "OPDs"}
+              viewAllText="View All OPD"
               viewAllCount={selectedDate ? getOPDCount(selectedDate) : 0}
               onViewAll={() => {
                 if (selectedDate && hasAppointments(selectedDate)) {
@@ -249,8 +251,8 @@ export const MonthView = ({
                   ? selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
                   : 'Select a date'}
               count={selectedMonthSlot ? selectedMonthSlot.booked_count || 0 : 0}
-              countLabel="Patients"
-              viewAllText="View All Patients"
+              countLabel={(selectedMonthSlot ? selectedMonthSlot.booked_count || 0 : 0) <= 1 ? "Appointment" : "Appointments"}
+              viewAllText="View All Appointments"
               viewAllCount={selectedMonthSlot ? selectedMonthSlot.booked_count || 0 : 0}
               onViewAll={() => {
                 if (selectedMonthSlot) {

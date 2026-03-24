@@ -328,12 +328,12 @@ export function DataTable<T>({
                         <TableHeader>
                             <TableRow className="bg-muted/50">
                                 {/* Select Checkbox Column */}
-                                <TableHead className="w-10">
+                                {/* <TableHead className="w-10">
                                     <Checkbox
                                         checked={selectedRows.size === paginatedData.length && paginatedData.length > 0}
                                         onCheckedChange={handleSelectAll}
                                     />
-                                </TableHead>
+                                </TableHead> */}
                                 {columns.map((column) => (
                                     <TableHead key={column.key as string} className={column.className}>
                                         {column.header}
@@ -352,12 +352,12 @@ export function DataTable<T>({
                                             onClick={() => onRowClick && onRowClick(item)}
                                         >
                                             {/* Select Checkbox */}
-                                            <TableCell onClick={(e) => e.stopPropagation()}>
+                                            {/* <TableCell onClick={(e) => e.stopPropagation()}>
                                                 <Checkbox
                                                     checked={selectedRows.has(id)}
                                                     onCheckedChange={() => handleSelectRow(id)}
                                                 />
-                                            </TableCell>
+                                            </TableCell> */}
 
                                             {/* Data Columns */}
                                             {columns.map((column) => (

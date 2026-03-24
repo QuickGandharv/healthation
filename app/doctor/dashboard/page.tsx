@@ -295,8 +295,8 @@ export default function Dashboard() {
               title="No Appointments Yet"
               message="You don't have any appointments scheduled."
               icon={<Calendar size={40} className="text-gray-400" />}
-              actionLabel="Book Appointment"
-              onAction={() => console.log("clicked")}
+            // actionLabel="Book Appointment"
+            // onAction={() => console.log("clicked")}
             />
           ) : (
             <CardContent className="space-y-4">

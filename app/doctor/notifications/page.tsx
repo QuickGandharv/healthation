@@ -547,7 +547,8 @@ export default function NotificationsPage() {
       </div>
 
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="flex h-auto flex-wrap">
+        {/* <TabsList className="flex h-auto flex-wrap overflow-x-auto"> */}
+        <TabsList className="inline-flex items-center rounded-full bg-muted p-1">
           <TabsTrigger value="all">
             All
             {unreadCount > 0 && (
