@@ -282,17 +282,17 @@ export function DataTable<T>({
                         ))}
 
                         {/* Clear Filters Button */}
-                        {activeFiltersCount > 0 && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={handleClearFilters}
-                                className="h-8 gap-1"
-                            >
-                                <X className="h-3 w-3" />
-                                Clear {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''}
-                            </Button>
-                        )}
+                        {/* {activeFiltersCount > 0 && ( */}
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={handleClearFilters}
+                            className="h-8 gap-1"
+                        >
+                            <X className="h-3 w-3" />
+                            Clear {activeFiltersCount} filter{activeFiltersCount > 1 ? 's' : ''}
+                        </Button>
+                        {/* )} */}
                     </div>
                 </div>
             )}

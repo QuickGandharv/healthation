@@ -731,13 +731,13 @@ export default function AppointmentCard({
   const router = useRouter();
   return (
     <Card
-      className={`rounded-xl border border-gray-200 ${variant === "all" || variant === "past"
+      className={`rounded-xl border border-gray-200 p-4 ${variant === "all" || variant === "past"
         ? "cursor-pointer transition hover:border-primary/50 hover:shadow-md"
         : ""
         } ${variant === "past" ? "bg-gray-50/50 opacity-75" : ""}`}
       onClick={onCardClick}
     >
-      <CardContent className="p-5">
+      <CardContent className="p-0">
         <div className="mb-4 flex items-start justify-between">
           <div className="flex items-center gap-3">
             <img
@@ -931,7 +931,8 @@ export default function AppointmentCard({
         >
           {appointment.type === "video" || appointment.type === "phone"
             ? "Telehealth"
-            : "In-Person"}
+            : "In-Person"
+          }
         </span>
       </CardContent>
     </Card>

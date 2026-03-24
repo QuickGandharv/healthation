@@ -60,6 +60,7 @@ interface NotificationsResponse {
 export default function Dashboard() {
   const router = useRouter()
   const { user, loading, token } = useAuth()
+  console.log(token);
 
   const [dashboardData, setDashboardData] = useState<any>(null)
   const [apiLoading, setApiLoading] = useState(false)
@@ -94,7 +95,7 @@ export default function Dashboard() {
           }
         )
 
-        console.log("Dashboard API response:", response.data)
+        // console.log("Dashboard API response:", response.data)
         setDashboardData(response.data.data)
       } catch (error: any) {
         console.error("Dashboard API error:", error)
@@ -128,7 +129,7 @@ export default function Dashboard() {
 
         console.log("Notifications API response:", response.data)
         const notificationsData = response.data.data
-        console.log("Notifications data:", notificationsData)
+        // console.log("Notifications data:", notificationsData)
 
         setNotifications(notificationsData)
 
@@ -300,11 +301,11 @@ export default function Dashboard() {
           ) : (
             <CardContent className="space-y-4">
               {todaysAppointments.map((appointment: any, index: number) => (
-                <Link href={`/doctor/appointments/${appointment.id}`}>
-                  <div
-                    key={appointment.id || index}
-                    className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4"
-                  >
+                <Link
+                  key={appointment.id || index}  // ✅ Fixed: key moved to Link
+                  href={`/doctor/appointments/${appointment.id}`}
+                >
+                  <div className="flex items-center justify-between rounded-lg border border-border bg-accent/30 p-4">
                     <div className="flex items-center gap-4">
                       <Avatar className="h-12 w-12">
                         <AvatarImage
@@ -335,7 +336,6 @@ export default function Dashboard() {
                     </div>
                   </div>
                 </Link>
-
               ))}
             </CardContent>
           )}
@@ -439,7 +439,7 @@ export default function Dashboard() {
             <Button
               variant="outline"
               className="h-auto flex-col gap-2 py-6"
-              onClick={() => router.push("/doctor/dashboard/patients")}
+              onClick={() => router.push("/doctor/dashboard/all-patients")}
             >
               <Calendar className="h-6 w-6 text-primary" />
               <span>All Patients</span>

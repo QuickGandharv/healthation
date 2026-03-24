@@ -185,7 +185,8 @@ export default function AppointmentDetailsPage() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
                 <Button
                     variant="ghost"
-                    onClick={() => router.push("/doctor/appointments")}
+                    // onClick={() => router.push("/doctor/appointments")}
+                    onClick={() => router.back()}
                     className="w-fit"
                 >
                     <ArrowLeft className="h-4 w-4 mr-2" />
