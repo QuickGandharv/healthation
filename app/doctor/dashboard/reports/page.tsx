@@ -1188,11 +1188,9 @@ export default function PatientReportsPage() {
                                                     </CardDescription>
                                                 </div>
                                             </div>
-
-                                            <Badge variant="outline">
-                                                {/* {reports.length} Reports */}
+                                            {/* <Badge variant="outline">
                                                 {patient.blood_group || "N/A"}
-                                            </Badge>
+                                            </Badge> */}
                                         </div>
                                     </CardHeader>
 
