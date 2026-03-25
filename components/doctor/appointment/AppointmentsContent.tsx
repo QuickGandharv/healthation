@@ -234,6 +234,11 @@ export default function AppointmentsContent({
                         router.push(`/doctor/appointments/${id}`)
                       }
                     }}
+                    onClick={() => {
+                        if (appointment.appointment_id) {
+                          window.location.href = `/doctor/appointments/${appointment.appointment_id}`;
+                        }
+                      }}
                   />
                 ))}
               </div>
@@ -263,6 +268,11 @@ export default function AppointmentsContent({
                     key={appointment.id || (appointment as any)._id || index}
                     appointment={appointment}
                     variant="today"
+                    onClick={() => {
+                        if (appointment.appointment_id) {
+                          window.location.href = `/doctor/appointments/${appointment.appointment_id}`;
+                        }
+                      }}
                   />
                 ))}
               </div>
@@ -292,6 +302,11 @@ export default function AppointmentsContent({
                     key={appointment.id || (appointment as any)._id || index}
                     appointment={appointment}
                     variant="upcoming"
+                    onClick={() => {
+                        if (appointment.appointment_id) {
+                          window.location.href = `/doctor/appointments/${appointment.appointment_id}`;
+                        }
+                      }}
                   />
                 ))}
               </div>
@@ -321,6 +336,11 @@ export default function AppointmentsContent({
                     key={appointment.id || (appointment as any)._id || index}
                     appointment={appointment}
                     variant="past"
+                    onClick={() => {
+                        if (appointment.appointment_id) {
+                          window.location.href = `/doctor/appointments/${appointment.appointment_id}`;
+                        }
+                      }}
                   />
                 ))}
               </div>

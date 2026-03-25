@@ -180,6 +180,10 @@ export default function AppointmentDetailsPage() {
     const paymentStatus = payment.status_label || payment.status || "N/A";
     const paymentMethod = payment.payment_method || "N/A";
 
+    console.log("call now", appointment.call_now);
+    console.log("join url", appointment.join_url);
+    console.log("status label", appointment.status_label);
+
     return (
         <div className="container mx-auto px-4 w-full">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
@@ -193,7 +197,7 @@ export default function AppointmentDetailsPage() {
                     Back to Appointments
                 </Button>
 
-                <div className="flex items-center gap-3">
+                {/* <div className="flex items-center gap-3">
                     <Button variant="outline" className="gap-2">
                         <Share2 className="h-4 w-4" />
                         Share
@@ -206,7 +210,7 @@ export default function AppointmentDetailsPage() {
                         <Edit className="h-4 w-4" />
                         Edit
                     </Button>
-                </div>
+                </div> */}
             </div>
 
             <Card className="border-border mb-6 overflow-hidden py-0">
@@ -243,16 +247,16 @@ export default function AppointmentDetailsPage() {
                                         {consultationType}
                                     </Badge>
 
-                                    <Badge variant="outline" className="text-sm">
+                                    {/* <Badge variant="outline" className="text-sm">
                                         {bookingType}
-                                    </Badge>
+                                    </Badge> */}
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex gap-3">
                             {/* Call Now / Join Consultation button */}
-                            {appointment.call_now || appointment.join_url ? (
+                            {appointment.call_now && appointment.join_url && (
                                 <Button
                                     size="lg"
                                     className="bg-primary hover:bg-primary/90 gap-2"
@@ -262,19 +266,20 @@ export default function AppointmentDetailsPage() {
                                 >
                                     <Video className="h-4 w-4" /> Join Consultation
                                 </Button>
-                            ) : (
-                                <Button
-                                    size="lg"
-                                    className="bg-primary/50 gap-2 cursor-not-allowed"
-                                    disabled
-                                >
-                                    {appointment.status_label}
-                                </Button>
                             )}
-                            <Button size="lg" variant="outline" className="gap-2">
+                            {/* // ) : (
+                            //     <Button
+                            //         size="lg"
+                            //         className="bg-primary/50 gap-2 cursor-not-allowed"
+                            //         disabled
+                            //     >
+                            //         {appointment.status_label}
+                            //     </Button>
+                            // } */}
+                            {/* <Button size="lg" variant="outline" className="gap-2">
                                 <MessageSquare className="h-4 w-4" />
                                 Message
-                            </Button>
+                            </Button> */}
                         </div>
                     </div>
                 </CardContent>
@@ -629,7 +634,18 @@ export default function AppointmentDetailsPage() {
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-muted-foreground">No previous appointments</p>
+                                // <p className="text-muted-foreground">No previous appointments</p>
+                                <Card className="border-border">
+                                    <CardContent className="flex flex-col items-center justify-center py-16">
+                                        <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
+                                            <FileText className="h-8 w-8 text-muted-foreground/50" />
+                                        </div>
+                                        <h3 className="text-lg font-semibold mb-1">No Previous Appointments</h3>
+                                        <p className="text-sm text-muted-foreground text-center max-w-xs">
+                                            No previous appointments found for this patient.
+                                        </p>
+                                    </CardContent>
+                                </Card>
                             )}
                         </CardContent>
                     </Card>

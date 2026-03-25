@@ -56,6 +56,7 @@ export interface Appointment {
   vitals?: Vitals;
   labResults?: LabResult[];
   appointments?: AppointmentHistory[];
+  join_url?: string;
   video_consultation?: {
     join_url?: string;
   };
