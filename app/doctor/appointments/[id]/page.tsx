@@ -1,6 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -33,9 +34,13 @@ import {
     Droplet,
     Brain,
     IndianRupee,
+    Star,
 } from "lucide-react";
 import { useAppointmentDetail } from "@/queries/doctor/useAppointmentDetail";
+import { useAppointmentReview } from "@/queries/doctor/useAppointmentReview";
 import { useAuth } from "@/context/AuthContext"; // adjust path if your auth context path is different
+import ReviewForm from "@/components/doctor/appointment/ReviewForm";
+import ReviewDisplay from "@/components/doctor/appointment/ReviewDisplay";
 
 export default function AppointmentDetailsPage() {
 
@@ -49,6 +54,9 @@ export default function AppointmentDetailsPage() {
         isLoading: loading,
         isError,
     } = useAppointmentDetail(appointmentId || "", token || "");
+
+    const { data: reviewData, isLoading: reviewLoading, refetch: refetchReview } = useAppointmentReview(appointmentId || "");
+    const [showReviewForm, setShowReviewForm] = useState(false);
 
     const getInitials = (value: any) => {
         const name =
@@ -183,6 +191,16 @@ export default function AppointmentDetailsPage() {
     console.log("call now", appointment.call_now);
     console.log("join url", appointment.join_url);
     console.log("status label", appointment.status_label);
+    console.log("reviews", appointment?.doctor?.review);
+
+    const handleReviewSubmit = () => {
+        setShowReviewForm(false);
+        refetchReview();
+    };
+
+    const handleReviewCancel = () => {
+        setShowReviewForm(false);
+    };
 
     return (
         <div className="container mx-auto px-4 w-full">
@@ -745,22 +763,44 @@ export default function AppointmentDetailsPage() {
                 </TabsContent>
 
                 <TabsContent value="review" className="space-y-6">
-                    <Card className="border-border">
-                        <CardContent className="text-center py-12">
-                            {appointment.can_add_review ? (
-                                <>
-                                    <MessageSquare className="h-12 w-12 mx-auto text-primary/50 mb-3" />
-                                    <p className="font-medium mb-2">Review can be added for this appointment</p>
-                                    <p className="text-muted-foreground">No review available yet</p>
-                                </>
-                            ) : (
-                                <>
-                                    <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
-                                    <p className="text-muted-foreground">No review available for this appointment</p>
-                                </>
-                            )}
-                        </CardContent>
-                    </Card>
+                    {reviewLoading ? (
+                        <Card className="border-border">
+                            <CardContent className="flex items-center justify-center py-12">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                            </CardContent>
+                        </Card>
+                    ) : showReviewForm ? (
+                        <ReviewForm
+                            appointmentId={appointmentId || ""}
+                            patientName={patientName}
+                            onSuccess={handleReviewSubmit}
+                            onCancel={handleReviewCancel}
+                        />
+                    ) : reviewData?.data ? (
+                        <ReviewDisplay
+                            review={reviewData.data}
+                            patientName={patientName}
+                        />
+                    ) : appointment.can_add_review ? (
+                        <Card className="border-border">
+                            <CardContent className="text-center py-12">
+                                <MessageSquare className="h-12 w-12 mx-auto text-primary/50 mb-3" />
+                                <p className="font-medium mb-2">No review available yet</p>
+                                <p className="text-muted-foreground mb-4">You can add a review for this appointment</p>
+                                <Button onClick={() => setShowReviewForm(true)} className="gap-2">
+                                    <MessageSquare className="h-4 w-4" />
+                                    Add Review
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card className="border-border">
+                            <CardContent className="text-center py-12">
+                                <MessageSquare className="h-12 w-12 mx-auto text-muted-foreground/30 mb-3" />
+                                <p className="text-muted-foreground">No review available for this appointment</p>
+                            </CardContent>
+                        </Card>
+                    )}
                 </TabsContent>
             </Tabs>
         </div>
