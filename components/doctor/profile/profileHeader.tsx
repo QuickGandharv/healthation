@@ -29,6 +29,7 @@ export default function ProfileHeader({
   averageRating,
   reviewsCount,
 }: ProfileHeaderProps) {
+  console.log("Average Rating : ", averageRating);
   return (
     <Card className="border-border">
       <CardContent className="pt-6">
